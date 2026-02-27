@@ -151,17 +151,6 @@
 }
 
   </style>
-</head>
-  <script>
-  function updateTime() {
-    const now = new Date();
-    const formatted = now.toLocaleString();
-    document.getElementById("lastSync").textContent = formatted;
-  }
-
-  updateTime();
-  setInterval(updateTime, 1000);
-  </script>
 
 <body>
 
@@ -181,7 +170,7 @@
   Last Sync: <span id="lastSync"></span>
 </p>
 <div class="status-bar">
-  SYSTEM STATUS: ONLINE | CLEARANCE: TIER-2 | NODE: INT-04 | LAST SYNC: 00:14 AGO
+  CLEARANCE: TIER-2 | NODE: INT-04
 </div>
 
 <div class="grid">
@@ -229,6 +218,18 @@
   archived material is prohibited. All sessions are monitored and logged.
 </div>
   </div>
+  <script>
+  function updateTime() {
+    const now = new Date();
+    const formatted = now.toLocaleString();
+    document.getElementById("lastSync").textContent = formatted;
+  }
+
+  updateTime();
+  setInterval(updateTime, 1000);
+</script>
+
+</body>
 
 </body>
 </html>
