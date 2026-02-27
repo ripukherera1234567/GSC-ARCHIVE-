@@ -1,82 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GSC | Secure Access</title>
+  <title>GSC | About</title>
   <style>
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       background-color: #0b1118;
       color: #cfd8e6;
-    }
-
-    /* Top Navigation */
-    .topbar {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px 30px;
-      background-color: #0f1621;
-      border-bottom: 1px solid #1f2a38;
     }
 
-    .topbar img {
-      height: 45px;
+    /* Main Content */
+    .content {
+      flex: 1;
+      padding: 80px;
     }
 
-    .topbar span {
-      font-size: 13px;
-      color: #6c87a8;
-      letter-spacing: 1px;
-    }
-
-    /* Main Section */
-    .main {
-      text-align: center;
-      padding: 100px 20px;
-    }
-
-    .main h1 {
-      font-size: 38px;
-      margin-bottom: 10px;
+    h1 {
       color: #7fa9ff;
+      font-size: 34px;
       letter-spacing: 2px;
     }
 
-    .main p {
-      color: #8fa3bd;
-      margin-bottom: 50px;
+    p {
+      color: #9fb3cc;
+      line-height: 1.6;
+      max-width: 700px;
     }
 
-    /* Buttons */
-    .btn {
-      display: inline-block;
-      padding: 15px 35px;
-      margin: 10px;
-      background-color: #162131;
-      border: 1px solid #25354d;
-      color: #cfd8e6;
+    /* Right Navigation Panel */
+    .sidebar {
+      width: 260px;
+      background-color: #0f1621;
+      border-left: 1px solid #1f2a38;
+      padding-top: 100px;
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100vh;
+    }
+
+    .nav-link {
+      display: block;
+      padding: 18px 30px;
+      color: #9fb3cc;
       text-decoration: none;
-      font-size: 16px;
+      border-bottom: 1px solid #1a2432;
       transition: 0.3s;
+      letter-spacing: 1px;
     }
 
-    .btn:hover {
-      background-color: #1f2e45;
-      border-color: #7fa9ff;
+    .nav-link:hover {
+      background-color: #162131;
       color: #ffffff;
     }
 
-    /* Footer */
-    .footer {
-      text-align: center;
-      padding: 25px;
-      font-size: 12px;
-      color: #5c708f;
-      border-top: 1px solid #1f2a38;
+    .logo {
       position: absolute;
-      width: 100%;
-      bottom: 0;
+      top: 20px;
+      right: 30px;
+      width: 80px;
     }
 
   </style>
@@ -84,21 +68,31 @@
 
 <body>
 
-  <div class="topbar">
-    <img src="gsc-logo.png" alt="GSC Logo">
-    <span>SECURE INTERNAL NETWORK</span>
-  </div>
-
-  <div class="main">
+  <div class="content">
     <h1>GLOBAL SECURITY COOPERATION</h1>
-    <p>Authorized personnel access only</p>
 
-    <a href="archive.html" class="btn">ENTER ARCHIVE</a>
-    <a href="alex-journal.html" class="btn">ALEX'S JOURNAL</a>
+    <p>
+      The Global Security Cooperation (GSC) is an independent multinational
+      organization tasked with the identification, containment, and research
+      of anomalous phenomena worldwide.
+    </p>
+
+    <p>
+      Operating beyond public jurisdiction, GSC maintains secure facilities,
+      classified research divisions, and rapid-response containment teams.
+      All information within this network is restricted to authorized personnel.
+    </p>
+
+    <p>
+      This portal serves as an internal archive system for anomaly documentation
+      and field reports.
+    </p>
   </div>
 
-  <div class="footer">
-    Clearance Level: Tier-2 • Monitoring Enabled • Session Logged
+  <div class="sidebar">
+    <a href="index.html" class="nav-link">ABOUT GSC</a>
+    <a href="archive.html" class="nav-link">ANOMALY ARCHIVE</a>
+    <a href="alex-journal.html" class="nav-link">ALEX'S JOURNAL</a>
   </div>
 
 </body>
