@@ -3,6 +3,11 @@
 <head>
   <title>GSC | About</title>
   <style>
+    .divider {
+  height: 1px;
+  background: #1f2a38;
+  margin: 15px 0 25px 0;
+    }
     .subtitle {
   color: #6f8199;
   margin-top: -10px;
@@ -46,9 +51,9 @@
 .sidebar a {
   color: #cfd8e6;
   text-decoration: none;
-  margin: 18px 0;
+  margin: 12px 0;
   font-size: 17px;
-  transition: 0.3s;
+  transition: all 0.25s ease;
     }
 
 .sidebar a.active {
@@ -59,17 +64,18 @@
 
 .sidebar a:hover {
   color: #8fb6ff;
-  padding-left: 5px;
+  padding-left: 6px;
 }
 
 /* Logo */
 .logo {
-  width: 70%;
-  max-width: 140px;
+  width: 75%;
+  max-width: 150px;
   height: auto;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   align-self: center;
-    }
+  filter: drop-shadow(0 0 6px rgba(143, 182, 255, 0.2));
+                      }
 
 /* Content */
 .content {
@@ -140,7 +146,7 @@
 
   <div class="sidebar">
     <img src="gsc-logo.png" alt="GSC Logo" class="logo">
-
+     <div class="divider"></div>
     <a href="index.html" class="active">About GSC</a>
     <a href="archive.html" class="nav-link">ANOMALY ARCHIVE</a>
     <a href="alex-journal.html" class="nav-link">ALEX'S JOURNAL</a>
