@@ -11,34 +11,22 @@
       display: flex;
     }
 
-    /* Main Content */
-    .content {
-      flex: 1;
-      padding: 80px;
-    }
-
-    h1 {
-      color: #7fa9ff;
-      font-size: 34px;
-      letter-spacing: 2px;
-    }
-
-    p {
-      color: #9fb3cc;
-      line-height: 1.6;
-      max-width: 700px;
-    }
-
-    /* Right Navigation Panel */
+    /* LEFT SIDEBAR */
     .sidebar {
       width: 260px;
       background-color: #0f1621;
-      border-left: 1px solid #1f2a38;
-      padding-top: 100px;
-      position: fixed;
-      right: 0;
-      top: 0;
+      border-right: 1px solid #1f2a38;
       height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding-top: 40px;
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 30px auto;
+      width: 80px;
     }
 
     .nav-link {
@@ -56,17 +44,43 @@
       color: #ffffff;
     }
 
-    .logo {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      width: 80px;
+    .active {
+      background-color: #162131;
+      color: #7fa9ff;
+      font-weight: bold;
+    }
+
+    /* MAIN CONTENT */
+    .content {
+      margin-left: 260px;
+      padding: 80px;
+      flex: 1;
+    }
+
+    h1 {
+      color: #7fa9ff;
+      font-size: 34px;
+      letter-spacing: 2px;
+    }
+
+    p {
+      color: #9fb3cc;
+      line-height: 1.6;
+      max-width: 700px;
     }
 
   </style>
 </head>
 
 <body>
+
+  <div class="sidebar">
+    <img src="gsc-logo.png" alt="GSC Logo" class="logo">
+
+    <a href="index.html" class="nav-link active">ABOUT GSC</a>
+    <a href="archive.html" class="nav-link">ANOMALY ARCHIVE</a>
+    <a href="alex-journal.html" class="nav-link">ALEX'S JOURNAL</a>
+  </div>
 
   <div class="content">
     <h1>GLOBAL SECURITY COOPERATION</h1>
@@ -87,12 +101,6 @@
       This portal serves as an internal archive system for anomaly documentation
       and field reports.
     </p>
-  </div>
-
-  <div class="sidebar">
-    <a href="index.html" class="nav-link">ABOUT GSC</a>
-    <a href="archive.html" class="nav-link">ANOMALY ARCHIVE</a>
-    <a href="alex-journal.html" class="nav-link">ALEX'S JOURNAL</a>
   </div>
 
 </body>
