@@ -3,24 +3,50 @@
 <head>
   <title>GSC | About</title>
   <style>
-    .logo {
-  width: 90px;
-  margin-bottom: 20px;
-  opacity: 0.9;
-      }
     body {
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
   background: radial-gradient(circle at top left, #111a28, #0a0f18 60%);
   color: #cfd8e6;
   display: flex;
-    }
-    .content {
-  padding: 50px;
-  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background: #0f1722;
+  padding: 40px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  border-right: 1px solid #1f2a38;
+  min-height: 100vh;
+}
+
+.sidebar a {
+  color: #cfd8e6;
+  text-decoration: none;
+  margin: 18px 0;
+  font-size: 17px;
+  transition: 0.3s;
+}
+
+.sidebar a:hover {
+  color: #8fb6ff;
+  padding-left: 5px;
+}
+
+/* Logo */
+.logo {
+  width: 90px;
+  margin-bottom: 40px;
+  align-self: center;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 60px;
+  max-width: 900px;
     }
           .status-bar {
   margin-top: 20px;
