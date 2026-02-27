@@ -8,6 +8,17 @@
   background: #1f2a38;
   margin: 15px 0 25px 0;
     }
+    .online {
+  color: #4cff4c;
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(76, 255, 76, 0.4);
+    }
+
+.system-status {
+  font-size: 14px;
+  color: #8a9bb5;
+  margin-top: 20px;
+}
     .subtitle {
   color: #6f8199;
   margin-top: -10px;
@@ -141,6 +152,16 @@
 
   </style>
 </head>
+  <script>
+  function updateTime() {
+    const now = new Date();
+    const formatted = now.toLocaleString();
+    document.getElementById("lastSync").textContent = formatted;
+  }
+
+  updateTime();
+  setInterval(updateTime, 1000);
+  </script>
 
 <body>
 
@@ -155,7 +176,10 @@
   <div class="content">
     <h1>Global Security Cooperation</h1>
 <p class="subtitle">Internal Overview – Clearance Level 1</p>
-
+<p class="system-status">
+  Status: <span class="online">ONLINE</span><br>
+  Last Sync: <span id="lastSync"></span>
+</p>
 <div class="status-bar">
   SYSTEM STATUS: ONLINE | CLEARANCE: TIER-2 | NODE: INT-04 | LAST SYNC: 00:14 AGO
 </div>
