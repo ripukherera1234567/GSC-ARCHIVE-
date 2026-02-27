@@ -3,71 +3,53 @@
 <head>
   <title>GSC | About</title>
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background-color: #0b1118;
-      color: #cfd8e6;
-      display: flex;
-    }
+          .status-bar {
+  margin-top: 20px;
+  margin-bottom: 40px;
+  padding: 12px;
+  background-color: #121c29;
+  border: 1px solid #1f2a38;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: #7fa9ff;
+}
 
-    /* LEFT SIDEBAR */
-    .sidebar {
-      width: 260px;
-      background-color: #0f1621;
-      border-right: 1px solid #1f2a38;
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      padding-top: 40px;
-    }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
 
-    .logo {
-      display: block;
-      margin: 0 auto 30px auto;
-      width: 80px;
-    }
+.card {
+  background-color: #121c29;
+  padding: 20px;
+  border: 1px solid #1f2a38;
+  transition: 0.3s;
+}
 
-    .nav-link {
-      display: block;
-      padding: 18px 30px;
-      color: #9fb3cc;
-      text-decoration: none;
-      border-bottom: 1px solid #1a2432;
-      transition: 0.3s;
-      letter-spacing: 1px;
-    }
+.card:hover {
+  border-color: #7fa9ff;
+}
 
-    .nav-link:hover {
-      background-color: #162131;
-      color: #ffffff;
-    }
+.card h3 {
+  margin-top: 0;
+  font-size: 16px;
+  letter-spacing: 1px;
+  color: #7fa9ff;
+}
 
-    .active {
-      background-color: #162131;
-      color: #7fa9ff;
-      font-weight: bold;
-    }
+.card ul {
+  padding-left: 18px;
+  color: #9fb3cc;
+}
 
-    /* MAIN CONTENT */
-    .content {
-      margin-left: 260px;
-      padding: 80px;
-      flex: 1;
-    }
-
-    h1 {
-      color: #7fa9ff;
-      font-size: 34px;
-      letter-spacing: 2px;
-    }
-
-    p {
-      color: #9fb3cc;
-      line-height: 1.6;
-      max-width: 700px;
-    }
+.notice {
+  margin-top: 50px;
+  padding: 15px;
+  border-top: 1px solid #1f2a38;
+  font-size: 13px;
+  color: #6c87a8;
+}
 
   </style>
 </head>
@@ -85,40 +67,54 @@
   <div class="content">
     <h1>GLOBAL SECURITY COOPERATION</h1>
 
-<p>
-Established in 1963 under a multinational security directive, the Global
-Security Cooperation (GSC) operates as a covert intergovernmental task
-structure responsible for the identification, containment, and analysis of
-anomalous phenomena posing potential risk to civil stability.
-</p>
+<div class="status-bar">
+  SYSTEM STATUS: ONLINE | CLEARANCE: TIER-2 | NODE: INT-04 | LAST SYNC: 00:14 AGO
+</div>
 
-<p>
-GSC operates through decentralized regional divisions, specialized research
-facilities, and rapid containment units. Personnel are recruited from
-military, scientific, intelligence, and medical backgrounds under strict
-non-disclosure agreements and tiered clearance protocols.
-</p>
+<div class="grid">
 
-<p>
-Operational priorities include:
-</p>
+  <div class="card">
+    <h3>MISSION DIRECTIVE</h3>
+    <p>
+      Identify, contain, and analyze anomalous phenomena that pose risk to
+      civil stability and global security.
+    </p>
+  </div>
 
-<ul style="color:#9fb3cc; line-height:1.6;">
-  <li>Detection and classification of anomalous entities and events</li>
-  <li>Containment and environmental stabilization</li>
-  <li>Controlled research under ethical oversight framework</li>
-  <li>Information suppression and public narrative management when required</li>
-</ul>
+  <div class="card">
+    <h3>JURISDICTION</h3>
+    <p>
+      Multinational oversight authority operating outside public legal
+      frameworks under classified intergovernmental agreements.
+    </p>
+  </div>
 
-<p>
-The organization does not operate within public jurisdiction and reports
-through secured international oversight channels. All materials within this
-network are restricted to personnel with verified clearance levels.
-</p>
+  <div class="card">
+    <h3>ACTIVE DIVISIONS</h3>
+    <ul>
+      <li>Research & Analysis Division</li>
+      <li>Field Containment Unit</li>
+      <li>Biohazard Response Unit</li>
+      <li>Intelligence Oversight Council</li>
+    </ul>
+  </div>
 
-<p style="margin-top:40px; color:#6c87a8; font-size:14px;">
-Internal System Notice: Unauthorized access is monitored and archived.
-</p>
+  <div class="card">
+    <h3>GLOBAL STATUS</h3>
+    <ul>
+      <li>Active Containments: 17</li>
+      <li>High-Risk Entities: 2</li>
+      <li>Personnel Deployed: 43</li>
+      <li>Facilities Operational: 6</li>
+    </ul>
+  </div>
+
+</div>
+
+<div class="notice">
+  INTERNAL NOTICE: Unauthorized replication or external distribution of
+  archived material is prohibited. All sessions are monitored and logged.
+</div>
   </div>
 
 </body>
