@@ -117,6 +117,42 @@ background-size:
   align-self: center;
   filter: drop-shadow(0 0 6px rgba(143, 182, 255, 0.2));
                       }
+.hero {
+  position: relative;
+  text-align: center;
+  padding: 60px 20px;
+  margin-bottom: 40px;
+  border: 1px solid #1f2a38;
+  background: linear-gradient(145deg, #121c29, #0f1722);
+  overflow: hidden;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 36px;
+  letter-spacing: 3px;
+  color: #8fb6ff;
+}
+
+.hero .subtitle {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #6f8199;
+  letter-spacing: 2px;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  background: url("gsc-logo.png") no-repeat center;
+  background-size: contain;
+  transform: translate(-50%, -50%);
+  opacity: 0.04;
+  pointer-events: none;
+      }
 
 /* Content */
 .content {
@@ -196,8 +232,11 @@ background-size:
   </div>
 
   <div class="content">
-    <h1>Global Security Cooperation</h1>
-<p class="subtitle">Internal Overview – Clearance Level 1</p>
+    <div class="hero">
+  <div class="hero-overlay"></div>
+  <h1>GLOBAL SECURITY COOPERATION</h1>
+  <p class="subtitle">INTERNAL OVERVIEW – CLEARANCE LEVEL 1</p>
+    </div>
 <p class="system-status">
   Status: <span class="online">ONLINE</span><br>
   Last Sync: <span id="lastSync"></span>
