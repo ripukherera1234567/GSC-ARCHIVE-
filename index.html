@@ -11,8 +11,14 @@
     .online {
   color: #4cff4c;
   font-weight: bold;
-  text-shadow: 0 0 6px rgba(76, 255, 76, 0.4);
-    }
+  position: relative;
+  animation: flicker 3s infinite;
+}
+
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.4; }
+}
 
 .system-status {
   font-size: 14px;
@@ -40,6 +46,14 @@
   margin-bottom: 40px;
 }
     body {
+  
+  animation: subtlePulse 8s ease-in-out infinite alternate;
+
+  background-blend-mode: overlay;
+@keyframes subtlePulse {
+  from { background-position: 0% 0%; }
+  to { background-position: 5% 5%; }
+      }
   margin: 0;
   font-family: "Segoe UI", Arial, sans-serif;
   background: radial-gradient(circle at top left, #111a28, #0a0f18 60%);
@@ -76,6 +90,13 @@
 .sidebar a:hover {
   color: #8fb6ff;
   padding-left: 6px;
+}
+.footer {
+  margin-top: 60px;
+  font-size: 12px;
+  color: #5f7a9c;
+  border-top: 1px solid #1f2a38;
+  padding-top: 15px;
 }
 
 /* Logo */
@@ -117,11 +138,13 @@
   padding: 30px;
   border: 1px solid #1f2a38;
   border-radius: 6px;
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 .card:hover {
   border-color: #7fa9ff;
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(127, 169, 255, 0.15);
 }
 
 .card h3 {
@@ -229,8 +252,8 @@
   updateTime();
   setInterval(updateTime, 1000);
 </script>
-
-</body>
-
+<footer class="footer">
+  GSC Internal Network © 2026 | Node INT-04
+</footer>
 </body>
 </html>
