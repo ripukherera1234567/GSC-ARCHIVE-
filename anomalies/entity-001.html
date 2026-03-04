@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GSC | Restricted File</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #eef3f8;
+      color: #1e2a38;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 190px;
+      background: #1e2a38;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #c5d1df;
+      min-height: 100vh;
+    }
+
+    .sidebar a {
+      color: #d8e2f0;
+      text-decoration: none;
+      margin: 12px 0;
+      font-size: 17px;
+      transition: 0.25s ease;
+    }
+
+    .sidebar a:hover {
+      color: #2f5fa8;
+      padding-left: 6px;
+    }
+
+    .logo {
+      width: 75%;
+      max-width: 150px;
+      margin-bottom: 25px;
+      align-self: center;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 60px;
+      max-width: 900px;
+    }
+
+    .entity-header {
+      margin-bottom: 30px;
+    }
+
+    .entity-header h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: #2f5fa8;
+    }
+
+    .entity-header p {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #6f8199;
+      letter-spacing: 1px;
+    }
+
+    .restricted-box {
+      margin-top: 40px;
+      padding: 40px;
+      background: #ffffff;
+      border: 1px solid #d2dbe5;
+      text-align: center;
+      border-radius: 8px;
+    }
+
+    .restricted-title {
+      font-size: 20px;
+      letter-spacing: 2px;
+      color: #a83232;
+      margin-bottom: 15px;
+    }
+
+    .restricted-text {
+      font-size: 15px;
+      color: #2e3b4e;
+      margin-bottom: 10px;
+    }
+
+    .clearance-required {
+      font-size: 13px;
+      color: #6f8199;
+      margin-top: 20px;
+      letter-spacing: 1px;
+    }
+
+    .redacted {
+      margin-top: 30px;
+      font-family: monospace;
+      color: #9aa8b8;
+      letter-spacing: 2px;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <img src="../gsc-logo.png" alt="GSC Logo" class="logo">
+    <a href="../index.html">ABOUT GSC</a>
+    <a href="index.html">ANOMALY ARCHIVE</a>
+    <a href="../journal/">ALEX'S JOURNAL</a>
+    <a href="../incidents/">INCIDENT REPORTS</a>
+  </div>
+
+  <div class="content">
+
+    <div class="entity-header">
+      <h1>ENTITY ID: GSC-01</h1>
+      <p>DESIGNATION: [REDACTED]</p>
+    </div>
+
+    <div class="restricted-box">
+      <div class="restricted-title">
+        ACCESS RESTRICTED
+      </div>
+
+      <div class="restricted-text">
+        This file is classified under Tier-3 clearance.
+      </div>
+
+      <div class="restricted-text">
+        Observer Units do not possess sufficient authorization.
+      </div>
+
+      <div class="clearance-required">
+        REQUIRED CLEARANCE: TIER-3
+      </div>
+
+      <div class="redacted">
+        ███████████████████████████████
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
