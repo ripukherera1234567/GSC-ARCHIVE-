@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GSC | Anomaly Archive</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #eef3f8;
+      color: #1e2a38;
+      display: flex;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 190px;
+      background: #1e2a38;
+      padding: 25px 20px;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid #c5d1df;
+      min-height: 100vh;
+    }
+    .search-container {
+  margin-bottom: 20px;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #d2dbe5;
+  border-radius: 6px;
+  background: #ffffff;
+  outline: none;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+#searchInput:focus {
+  border-color: #2f5fa8;
+  box-shadow: 0 0 0 3px rgba(47, 95, 168, 0.1);
+                             }
+
+    .sidebar a {
+      color: #d8e2f0;
+      text-decoration: none;
+      margin: 12px 0;
+      font-size: 17px;
+      transition: all 0.25s ease;
+    }
+
+    .sidebar a.active {
+      color: #2f5fa8;
+      border-left: 3px solid #2f5fa8;
+      padding-left: 10px;
+    }
+
+    .sidebar a:hover {
+      color: #2f5fa8;
+      padding-left: 6px;
+    }
+
+    .logo {
+      width: 75%;
+      max-width: 150px;
+      margin-bottom: 25px;
+      align-self: center;
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 60px;
+      max-width: 1000px;
+    }
+
+    .page-header {
+      margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 2px;
+      color: #2f5fa8;
+    }
+
+    .page-header p {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #6f8199;
+      letter-spacing: 1px;
+    }
+
+    .status-bar {
+      margin-bottom: 40px;
+      padding: 12px;
+      background-color: #e4ebf3;
+      border: 1px solid #d2dbe5;
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: #2e3b4e;
+    }
+
+    /* Archive Table */
+    .archive-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+    }
+
+    .archive-table th {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 2px solid #d2dbe5;
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: #6f8199;
+    }
+
+    .archive-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid #dbe3ed;
+    }
+
+    .archive-table tr {
+      transition: background 0.2s ease;
+      cursor: pointer;
+    }
+
+    .archive-table tr:hover {
+      background: #e4ebf3;
+    }
+
+    .status-contained {
+      color: #2f8a4c;
+      font-weight: 600;
+    }
+
+    .status-observation {
+      color: #c28a2e;
+      font-weight: 600;
+    }
+
+    .status-restricted {
+      color: #a83232;
+      font-weight: 600;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="sidebar">
+    <img src="../gsc-logo.png" alt="GSC Logo" class="logo">
+    <a href="../index.html">ABOUT GSC</a>
+    <a href="index.html" class="active">ANOMALY ARCHIVE</a>
+    <a href="../journal/">ALEX'S JOURNAL</a>
+    <a href="../incidents/">INCIDENT REPORTS</a>
+  </div>
+
+  <div class="content">
+
+    <div class="page-header">
+      <h1>ANOMALY ARCHIVE</h1>
+      <p>CLASSIFIED ENTITY DATABASE – OBSERVER VIEW</p>
+    </div>
+
+    <div class="status-bar">
+      <div class="search-container">
+  <input type="text" id="searchInput" placeholder="Search by Entity ID or Designation..." onkeyup="filterTable()">
+      </div>
+      TOTAL REGISTERED ENTITIES: 04 | LAST UPDATE: AUTO-SYNC ENABLED
+    </div>
+
+    <table class="archive-table">
+      <tr>
+        <th>ENTITY ID</th>
+        <th>DESIGNATION</th>
+        <th>CONTAINMENT STATUS</th>
+        <th>CLEARANCE</th>
+      </tr>
+
+      <tr onclick="location.href='entity-01.html'">
+        <td>GSC-01</td>
+        <td>Redacted Designation</td>
+        <td class="status-contained">CONTAINED</td>
+        <td>TIER-2</td>
+      </tr>
+
+      <tr onclick="location.href='entity-02.html'">
+        <td>GSC-02</td>
+        <td>Redacted Designation</td>
+        <td class="status-observation">UNDER OBSERVATION</td>
+        <td>TIER-2</td>
+      </tr>
+
+      <tr onclick="location.href='entity-03.html'">
+        <td>GSC-03</td>
+        <td>Restricted Entry</td>
+        <td class="status-restricted">RESTRICTED</td>
+        <td>TIER-3</td>
+      </tr>
+
+    </table>
+
+  </div>
+  <script>
+function filterTable() {
+  const input = document.getElementById("searchInput");
+  const filter = input.value.toUpperCase();
+  const table = document.querySelector(".archive-table");
+  const tr = table.getElementsByTagName("tr");
+
+  for (let i = 1; i < tr.length; i++) {
+    let td1 = tr[i].getElementsByTagName("td")[0];
+    let td2 = tr[i].getElementsByTagName("td")[1];
+
+    if (td1 || td2) {
+      let txtValue1 = td1.textContent || td1.innerText;
+      let txtValue2 = td2.textContent || td2.innerText;
+
+      if (
+        txtValue1.toUpperCase().indexOf(filter) > -1 ||
+        txtValue2.toUpperCase().indexOf(filter) > -1
+      ) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+  </script>
+
+</body>
+</html>
