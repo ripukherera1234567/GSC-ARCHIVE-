@@ -60,13 +60,17 @@
       max-width: 900px;
       position: relative;
     }
-    .locked-preview {
+.locked-preview {
   margin-top: 25px;
   font-family: monospace;
   font-size: 13px;
   color: #9aa8b8;
   line-height: 1.8;
-    }
+  
+  display: flex;
+  flex-direction: column; /* force items one below the other */
+  gap: 6px; /* small spacing between lines */
+}
 .system-warning {
   margin-top: 30px;
   font-size: 12px;
@@ -184,10 +188,10 @@
         REQUIRED CLEARANCE: TIER-3
       </div>
       <div class="locked-preview">
-  FILE SUMMARY: ██████████████████████████████████████  
-  INCIDENT HISTORY: █████████████████████████████  
-  RESEARCH NOTES: ███████████████████████████
-      </div>
+  <p>FILE SUMMARY: ██████████████████████████████████████</p>
+  <p>INCIDENT HISTORY: █████████████████████████████</p>
+  <p>RESEARCH NOTES: ███████████████████████████</p>
+</div>
 
       <div class="redacted">
         ███████████████████████████████
