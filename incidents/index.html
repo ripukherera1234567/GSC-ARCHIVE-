@@ -2,24 +2,18 @@
 <html>
 
 <head>
-
-<title>GSC Incident Archive</title>
+<title>GSC | Incident Archive</title>
 
 <style>
 
 body{
-display:flex;
 margin:0;
-font-family:Arial;
-background:#f4f6f8;
-font-family: Arial;
-background:#f4f6f8;
-margin:40px;
+font-family: Arial, sans-serif;
+background:#eef3f8;
+display:flex;
 }
 
-body > :not(.sidebar){
-margin-left:240px;
-}
+/* Sidebar */
 
 .sidebar{
 width:190px;
@@ -27,10 +21,9 @@ background:#1e2a38;
 padding:25px 20px;
 display:flex;
 flex-direction:column;
+border-right:1px solid #c5d1df;
+min-height:100vh;
 position:fixed;
-top:0;
-left:0;
-height:100vh;
 }
 
 .sidebar a{
@@ -38,29 +31,52 @@ color:#d8e2f0;
 text-decoration:none;
 margin:12px 0;
 font-size:16px;
+transition:0.2s;
+}
+
+.sidebar a:hover{
+color:#2f5fa8;
+padding-left:5px;
 }
 
 .logo{
 width:120px;
-margin-bottom:20px;
+margin-bottom:25px;
+align-self:center;
 }
+
+/* Main Content */
+
+.content{
+margin-left:230px;
+padding:40px;
+max-width:900px;
+}
+
+/* Header */
+
 h1{
 margin-bottom:5px;
+color:#2f5fa8;
 }
 
 .warning{
-color:#555;
+color:#6f8199;
 margin-bottom:25px;
 }
+
+/* Search Bar */
 
 #searchBar{
 padding:10px;
 width:300px;
 font-size:16px;
 margin-bottom:25px;
-border:1px solid #ccc;
+border:1px solid #c5d1df;
 border-radius:6px;
 }
+
+/* Incident Cards */
 
 .incident-list{
 display:flex;
@@ -72,12 +88,13 @@ gap:20px;
 border:1px solid #d2dbe5;
 padding:20px;
 border-radius:8px;
-background:white;
-transition:0.2s;
+background:#e4ebf3;
+transition:0.25s;
 }
 
 .incident-card:hover{
 background:#eef3f8;
+border-color:#2f5fa8;
 }
 
 .incident-title{
@@ -88,21 +105,25 @@ margin-bottom:6px;
 
 .incident-meta{
 font-size:14px;
-color:#555;
+color:#5f7a9c;
 }
 
-a{
+.incident-card a{
+display:block;
 text-decoration:none;
-color:black;
+color:#1e2a38;
 }
 
 </style>
-
 </head>
 
 
 <body>
-  <div class="sidebar">
+
+<!-- Sidebar -->
+
+<div class="sidebar">
+
 <img src="../gsc-logo.png" alt="GSC Logo" class="logo">
 
 <a href="../index.html">ABOUT GSC</a>
@@ -110,9 +131,14 @@ color:black;
 <a href="../journal/">ALEX'S JOURNAL</a>
 <a href="index.html">INCIDENT REPORTS</a>
 
-  </div>
+</div>
 
-<h1>GSC Incident Archive</h1>
+
+<!-- Content -->
+
+<div class="content">
+
+<h1>INCIDENT REPORT ARCHIVE</h1>
 
 <p class="warning">
 Access to incident documentation may require appropriate clearance.
@@ -126,6 +152,7 @@ onkeyup="searchIncidents()"
 >
 
 <div class="incident-list" id="incidentList">
+
 
 <div class="incident-card">
 <a href="incident-001.html">
@@ -159,6 +186,8 @@ Date: 21 Feb 2026 | Location: Site-01
 
 </div>
 
+</div>
+
 
 <script>
 
@@ -173,9 +202,8 @@ for(let i=0;i<incidents.length;i++){
 let text=incidents[i].innerText.toLowerCase();
 
 if(text.includes(input)){
-incidents[i].style.display="block";
+incidents[i].style.display="";
 }
-
 else{
 incidents[i].style.display="none";
 }
@@ -185,7 +213,6 @@ incidents[i].style.display="none";
 }
 
 </script>
-
 
 </body>
 </html>
