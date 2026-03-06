@@ -1,299 +1,186 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
-  <title>GSC | About</title>
-  <style>
-    .divider {
-  height: 1px;
-  background: #1f2a38;
-  margin: 15px 0 25px 0;
-    }
-    .online {
-  color: #4cff4c;
-  font-weight: bold;
-  position: relative;
-  animation: flicker 3s infinite;
+<title>GSC | Incident Reports</title><style>
+
+body{
+margin:0;
+font-family:"Segoe UI", Arial, sans-serif;
+background:#eef3f8;
+color:#1e2a38;
+display:flex;
 }
 
-@keyframes flicker {
-  0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
-  20%, 24%, 55% { opacity: 0.4; }
-}
-
-.system-status {
-  font-size: 14px;
-  color: #2f5fa8;
-  margin-top: 20px;
-}
-    .subtitle {
-  color: #6f8199;
-  margin-top: -10px;
-  margin-bottom: 40px;
-  font-size: 14px;
-  letter-spacing: 1px;
-    }
-    .content {
-  flex: 1;
-  padding: 60px;
-  max-width: 900px;
-}
-
-.content::before {
-  content: "";
-  display: block;
-  height: 1px;
-  background: #1f2a38;
-  margin-bottom: 40px;
-}
-    body {
-  
-  animation: subtlePulse 8s ease-in-out infinite alternate;
-@keyframes subtlePulse {
-  from { background-position: 0% 0%; }
-  to { background-position: 5% 5%; }
-      }
-  
-  
-  margin: 0;
-  font-family: "Segoe UI", Arial, sans-serif;
-  background: #eef3f8;
-  color: #1e2a38;
-  display: flex;
-  
-  
 /* Sidebar */
-.sidebar {
-  width: 190px;
-  background: #1e2a38;
-  padding: 25px 20px;
-  display: flex;
-  flex-direction: column;
-  border-right: 1px solid #c5d1df;
-  min-height: 100vh;
-        }
-.sidebar a {
-  color: #d8e2f0;
-  text-decoration: none;
-  margin: 12px 0;
-  font-size: 17px;
-  transition: all 0.25s ease;
-    }
 
-.sidebar a.active {
-  color: #2f5fa8;
-  border-left: 3px solid #2f5fa8;
-  padding-left: 10px;
-  }
-
-.sidebar a:hover {
-  color: #2f5fa8;
-  padding-left: 6px;
-}
-.footer {
-  margin-top: 60px;
-  font-size: 12px;
-  color: #5f7a9c;
-  border-top: 1px solid #1f2a38;
-  padding-top: 15px;
+.sidebar{
+width:190px;
+background:#1e2a38;
+padding:25px 20px;
+display:flex;
+flex-direction:column;
+border-right:1px solid #c5d1df;
+min-height:100vh;
 }
 
-/* Logo */
-.logo {
-  width: 75%;
-  max-width: 150px;
-  height: auto;
-  margin-bottom: 25px;
-  align-self: center;
-  filter: drop-shadow(0 0 6px rgba(143, 182, 255, 0.2));
-                      }
-.hero {
-  position: relative;
-  text-align: center;
-  padding: 60px 20px;
-  margin-bottom: 40px;
-  border: 1px solid #dde5ef;
-  background: linear-gradient(135deg, #ffffff, #e9f0f7);
-  overflow: hidden;
+.sidebar a{
+color:#d8e2f0;
+text-decoration:none;
+margin:12px 0;
+font-size:17px;
+transition:all 0.25s ease;
 }
 
-.hero h1 {
-  margin: 0;
-  font-size: 36px;
-  letter-spacing: 3px;
-  color: #2f5fa8;
+.sidebar a.active{
+color:#2f5fa8;
+border-left:3px solid #2f5fa8;
+padding-left:10px;
 }
 
-.hero .subtitle {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #6f8199;
-  letter-spacing: 2px;
+.sidebar a:hover{
+color:#2f5fa8;
+padding-left:6px;
 }
 
-.hero-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
-  height: 400px;
-  background: url("gsc-logo.png") no-repeat center;
-  background-size: contain;
-  transform: translate(-50%, -50%);
-  opacity: 0.04;
-  pointer-events: none;
-      }
-
-/* Content */
-.content {
-  flex: 1;
-  padding: 60px;
-  max-width: 900px;
-    }
-          .status-bar {
-  margin-top: 20px;
-  margin-bottom: 40px;
-  padding: 12px;
-  background-color: #121c29;
-  border: 1px solid #1f2a38;
-  font-size: 13px;
-  letter-spacing: 1px;
-  color: #7fa9ff;
+.logo{
+width:75%;
+max-width:150px;
+margin-bottom:25px;
+align-self:center;
 }
 
-.grid {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
-  max-width: 800px;
+/* Main content */
+
+.content{
+flex:1;
+padding:60px;
+max-width:900px;
 }
 
-.card {
-  background: #e4ebf3;
-  padding: 30px;
-  border: 1px solid #d2dbe5;
-  border-radius: 8px;
-  transition: all 0.25s ease;
+/* Header */
+
+.hero{
+text-align:center;
+padding:50px;
+border:1px solid #dde5ef;
+background:linear-gradient(135deg,#ffffff,#e9f0f7);
+margin-bottom:40px;
 }
 
-.card:hover {
-  border-color: #2f5fa8;
-  transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-                              }
-
-.card h3 {
-   
-  margin-top: 0;
-  font-size: 20px;
-  letter-spacing: 1px;
-  color: #2f5fa8;
-  font-weight: 600;
-      
-  
+.hero h1{
+margin:0;
+font-size:34px;
+letter-spacing:3px;
+color:#2f5fa8;
 }
 
-.card ul {
-  padding-left: 18px;
-  color: #9fb3cc;
-}
-.card p, .card ul {
-  font-size: 16px;
-  line-height: 1.6;
-  color: #2e3b4e;
-}
-.notice {
-  margin-top: 50px;
-  padding: 15px;
-  border-top: 1px solid #1f2a38;
-  font-size: 13px;
-  color: #6c87a8;
+.subtitle{
+font-size:14px;
+letter-spacing:2px;
+color:#6f8199;
+margin-top:10px;
 }
 
-  </style>
+/* Search */
 
-<body>
+.search-bar{
+margin-bottom:35px;
+}
 
-  <div class="sidebar">
-    <img src="gsc-logo.png" alt="GSC Logo" class="logo">
-     <div class="divider"></div>
-      <a href="index.html">ABOUT GSC</a>
-      <a href="anomalies/">ANOMALY ARCHIVE</a>
-      <a href="journal/">ALEX'S JOURNAL</a>
-      <a href="incidents/">INCIDENT REPORTS</a>
-  </div>
+.search-bar input{
+width:100%;
+padding:12px;
+border:1px solid #cfd8e3;
+border-radius:6px;
+font-size:15px;
+}
 
-  <div class="content">
-    <div class="hero">
-  <div class="hero-overlay"></div>
-  <h1>GLOBAL SECURITY COOPERATION</h1>
-  <p class="subtitle">INTERNAL OVERVIEW – CLEARANCE LEVEL 1</p>
-    </div>
-<p class="system-status">
-  Status: <span class="online">ONLINE</span><br>
-  Last Sync: <span id="lastSync"></span>
-</p>
-    <footer class="footer">
-  GSC Internal Network © 2026 | Node INT-04
-    </footer>
-<div class="status-bar">
-  CLEARANCE: TIER-2 | NODE: INT-04
-</div>
+/* Incident cards */
 
-<div class="grid">
+.incident-list{
+display:flex;
+flex-direction:column;
+gap:25px;
+}
 
-  <div class="card">
-    <h3>MISSION DIRECTIVE</h3>
-    <p>
-      Identify, contain, and analyze anomalous phenomena that pose risk to
-      civil stability and global security.
-    </p>
-  </div>
+.incident-card{
+background:#e4ebf3;
+padding:25px;
+border:1px solid #d2dbe5;
+border-radius:8px;
+transition:all 0.25s ease;
+}
 
-  <div class="card">
-    <h3>JURISDICTION</h3>
-    <p>
-      Multinational oversight authority operating outside public legal
-      frameworks under classified intergovernmental agreements.
-    </p>
-  </div>
+.incident-card:hover{
+border-color:#2f5fa8;
+transform:translateY(-3px);
+box-shadow:0 6px 18px rgba(0,0,0,0.06);
+}
 
-  <div class="card">
-    <h3>ACTIVE DIVISIONS</h3>
-    <ul>
-      <li>Research & Analysis Division</li>
-      <li>Field Containment Unit</li>
-      <li>Biohazard Response Unit</li>
-      <li>Intelligence Oversight Council</li>
-    </ul>
-  </div>
+.incident-card h3{
+margin-top:0;
+color:#2f5fa8;
+}
 
-  <div class="card">
-    <h3>GLOBAL STATUS</h3>
-    <ul>
-      <li>Active Containments: 17</li>
-      <li>High-Risk Entities: 2</li>
-      <li>Personnel Deployed: 43</li>
-      <li>Facilities Operational: 6</li>
-    </ul>
-  </div>
+.incident-card a{
+text-decoration:none;
+color:inherit;
+}
 
-</div>
+.status{
+font-size:13px;
+margin-top:10px;
+color:#5f7a9c;
+}
 
-<div class="notice">
-  INTERNAL NOTICE: Unauthorized replication or external distribution of
-  archived material is prohibited. All sessions are monitored and logged.
-</div>
-  </div>
-  <script>
-  function updateTime() {
-    const now = new Date();
-    const formatted = now.toLocaleString();
-    document.getElementById("lastSync").textContent = formatted;
-  }
+</style></head><body><div class="sidebar"><img src="../gsc-logo.png" class="logo"><a href="../index.html">ABOUT GSC</a>
+<a href="../anomalies/">ANOMALY ARCHIVE</a>
+<a href="../journal/">ALEX'S JOURNAL</a>
+<a href="index.html" class="active">INCIDENT REPORTS</a>
 
-  updateTime();
-  setInterval(updateTime, 1000);
-</script>
+</div><div class="content"><div class="hero">
+<h1>INCIDENT ARCHIVE</h1>
+<p class="subtitle">AUTHORIZED PERSONNEL LOG</p>
+</div><div class="search-bar">
+<input type="text" id="searchInput" placeholder="Search incident reports...">
+</div><div class="incident-list" id="incidentList"><div class="incident-card">
+<a href="incident-001.html">
+<h3>INCIDENT-001</h3>
+<p>Hemoglobin Tree Containment Disturbance</p>
+</a>
+<div class="status">Status: Contained</div>
+</div><div class="incident-card">
+<a href="incident-002.html">
+<h3>INCIDENT-002</h3>
+<p>Observation Chamber Power Failure</p>
+</a>
+<div class="status">Status: Investigation Ongoing</div>
+</div><div class="incident-card">
+<a href="incident-003.html">
+<h3>INCIDENT-003</h3>
+<p>Unauthorized Research File Access</p>
+</a>
+<div class="status">Status: Classified</div>
+</div></div></div><script>
 
-</body>
+const searchInput = document.getElementById("searchInput");
+
+searchInput.addEventListener("keyup", function(){
+let filter = searchInput.value.toLowerCase();
+let cards = document.querySelectorAll(".incident-card");
+
+cards.forEach(card=>{
+let text = card.innerText.toLowerCase();
+
+if(text.includes(filter)){
+card.style.display="block";
+}
+else{
+card.style.display="none";
+}
+
+});
+
+});
+
+</script></body>
 </html>
