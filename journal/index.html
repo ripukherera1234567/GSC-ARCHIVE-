@@ -9,6 +9,7 @@
     :root {
       --bg:         #0b1018;
       --panel:      #101820;
+      --panel2:     #0d1520;
       --border:     #1a2a3a;
       --border2:    #1f3048;
       --blue:       #2f6acd;
@@ -17,362 +18,204 @@
       --text:       #c8d8ea;
       --text-dim:   #5a7a9a;
       --text-faint: #2e4a62;
-      --green:      #3ddc84;
       --amber:      #e0a040;
+      --amber-dim:  rgba(224,160,64,0.15);
+      --green:      #3ddc84;
+      --red:        rgba(224,80,80,0.6);
       --mono:       'Share Tech Mono', monospace;
       --hand:       'Caveat', cursive;
       --cond:       'Barlow Condensed', sans-serif;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; }
 
-    html, body {
-      height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      overflow-x: hidden;
-    }
-
-    /* Scanlines */
     body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background: repeating-linear-gradient(
-        0deg, transparent, transparent 2px,
-        rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
     }
 
     /* ── LAYOUT ── */
     .shell { display: flex; min-height: 100vh; }
 
     /* ── SIDEBAR ── */
-    .sidebar {
-      width: 200px; min-width: 200px;
-      background: var(--panel);
-      border-right: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      padding: 28px 0;
-      position: sticky; top: 0;
-      height: 100vh;
-    }
-
-    .sidebar-logo {
-      display: flex; flex-direction: column; align-items: center;
-      padding: 0 20px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .logo-img {
-      width: 64px; height: 64px; object-fit: contain;
-      filter: drop-shadow(0 0 10px rgba(47,106,205,0.4));
-      margin-bottom: 10px;
-    }
-
-    .logo-placeholder {
-      width: 64px; height: 64px;
-      border: 2px solid var(--blue-dim); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 10px;
-    }
-    .logo-placeholder::after {
-      content: 'GSC';
-      font-family: var(--cond); font-weight: 700;
-      font-size: 13px; letter-spacing: 2px; color: var(--blue);
-    }
-
-    .sidebar-org {
-      font-family: var(--cond); font-size: 10px;
-      letter-spacing: 2px; color: var(--text-dim);
-      text-align: center; text-transform: uppercase;
-    }
-
+    .sidebar { width: 200px; min-width: 200px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; position: sticky; top: 0; height: 100vh; }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; }
+    .logo-placeholder { width: 64px; height: 64px; border: 2px solid var(--blue-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .logo-placeholder::after { content: 'GSC'; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 2px; color: var(--blue); }
+    .sidebar-org { font-family: var(--cond); font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-align: center; text-transform: uppercase; }
     .sidebar-nav { flex: 1; padding: 20px 0; display: flex; flex-direction: column; }
-
-    .nav-label {
-      font-family: var(--mono); font-size: 9px;
-      letter-spacing: 3px; color: var(--text-faint);
-      padding: 0 20px; margin-bottom: 8px; margin-top: 16px;
-    }
-
-    .sidebar-nav a {
-      display: flex; align-items: center; gap: 10px;
-      padding: 10px 20px;
-      color: var(--text-dim); text-decoration: none;
-      font-family: var(--cond); font-size: 13px;
-      letter-spacing: 1.5px; text-transform: uppercase;
-      border-left: 2px solid transparent;
-      transition: all 0.2s; position: relative;
-    }
-    .sidebar-nav a::before {
-      content: ''; position: absolute;
-      left: 0; top: 0; bottom: 0; width: 0;
-      background: var(--blue-glow); transition: width 0.2s;
-    }
-    .sidebar-nav a:hover, .sidebar-nav a.active {
-      color: var(--blue); border-left-color: var(--blue);
-    }
+    .nav-label { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); padding: 0 20px; margin-bottom: 8px; margin-top: 16px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text-dim); text-decoration: none; font-family: var(--cond); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; border-left: 2px solid transparent; transition: all 0.2s; position: relative; }
+    .sidebar-nav a::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue-glow); transition: width 0.2s; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--blue); border-left-color: var(--blue); }
     .sidebar-nav a:hover::before, .sidebar-nav a.active::before { width: 100%; }
-
-    .nav-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: var(--text-faint); flex-shrink: 0; transition: background 0.2s;
-    }
-    .sidebar-nav a:hover .nav-dot, .sidebar-nav a.active .nav-dot {
-      background: var(--blue); box-shadow: 0 0 6px var(--blue);
-    }
-
-    .sidebar-footer {
-      padding: 16px 20px 0;
-      border-top: 1px solid var(--border);
-      font-size: 9px; color: var(--text-faint); line-height: 1.8;
-    }
+    .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; transition: background 0.2s; }
+    .sidebar-nav a:hover .nav-dot, .sidebar-nav a.active .nav-dot { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+    .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
 
     /* ── MAIN ── */
-    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
 
-    .topbar {
-      background: var(--panel); border-bottom: 1px solid var(--border);
-      padding: 10px 48px;
-      display: flex; align-items: center; justify-content: space-between;
-      font-size: 11px; color: var(--text-faint); letter-spacing: 1px;
-    }
+    .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 36px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
     .topbar-right { display: flex; gap: 16px; align-items: center; }
+    .warning-badge { background: var(--amber-dim); color: var(--amber); padding: 2px 8px; font-size: 10px; letter-spacing: 2px; border: 1px solid rgba(224,160,64,0.3); }
 
-    .warning-badge {
-      background: rgba(224,160,64,0.15);
-      color: var(--amber); padding: 2px 8px;
-      font-size: 10px; letter-spacing: 2px;
-      border: 1px solid rgba(224,160,64,0.3);
+    /* ── TWO-COLUMN BODY ── */
+    .body-layout { display: flex; flex: 1; min-height: 0; }
+
+    /* ── LEFT: ENTRIES ── */
+    .entries-col { flex: 1; min-width: 0; overflow-y: auto; padding: 36px 36px 36px 36px; display: flex; flex-direction: column; }
+
+    /* ── RIGHT: PANEL ── */
+    .right-panel { width: 260px; min-width: 260px; background: var(--panel2); border-left: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; flex-shrink: 0; }
+
+    /* ── PAGE HEADER ── */
+    .page-header { margin-bottom: 28px; animation: fadein 0.4s ease both; }
+    .sys-label { font-size: 9px; letter-spacing: 4px; color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .sys-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--amber); }
+    .page-header h1 { font-family: var(--hand); font-size: 48px; font-weight: 700; color: #e8d8c0; line-height: 1; margin-bottom: 6px; }
+    .page-header .meta { font-size: 10px; color: var(--text-faint); letter-spacing: 2px; }
+
+    /* ── TOOLBAR ── */
+    .toolbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; animation: fadein 0.4s 0.05s ease both; }
+
+    /* Search */
+    .search-wrap { position: relative; flex: 1; min-width: 180px; }
+    .search-wrap::before { content: '//'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text-faint); pointer-events: none; }
+    .search-input {
+      width: 100%; background: var(--panel); border: 1px solid var(--border2);
+      color: var(--text); font-family: var(--mono); font-size: 12px;
+      padding: 9px 12px 9px 34px; letter-spacing: 1px;
+      outline: none; transition: border-color 0.2s;
     }
+    .search-input::placeholder { color: var(--text-faint); }
+    .search-input:focus { border-color: var(--blue); }
 
-    /* ── CONTENT ── */
-    .content { padding: 48px; flex: 1; max-width: 860px; }
-
-    /* Page header */
-    .page-header {
-      margin-bottom: 36px;
-      animation: fadein 0.4s ease both;
+    /* Filter buttons */
+    .filters { display: flex; gap: 6px; flex-wrap: wrap; }
+    .filter-btn {
+      background: var(--panel); border: 1px solid var(--border2);
+      color: var(--text-dim); font-family: var(--mono); font-size: 10px;
+      letter-spacing: 1.5px; padding: 8px 14px; cursor: pointer;
+      transition: all 0.2s; text-transform: uppercase; white-space: nowrap;
     }
+    .filter-btn:hover { border-color: var(--blue-dim); color: var(--text); }
+    .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
 
-    .page-header .sys-label {
-      font-size: 9px; letter-spacing: 4px;
-      color: var(--amber); margin-bottom: 10px;
-      display: flex; align-items: center; gap: 10px;
+    /* Sort */
+    .sort-btn {
+      background: var(--panel); border: 1px solid var(--border2);
+      color: var(--text-dim); font-family: var(--mono); font-size: 10px;
+      letter-spacing: 1.5px; padding: 8px 14px; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap;
     }
-    .page-header .sys-label::before {
-      content: ''; display: inline-block;
-      width: 20px; height: 1px; background: var(--amber);
-    }
+    .sort-btn:hover { border-color: var(--blue-dim); color: var(--text); }
 
-    .page-header h1 {
-      font-family: var(--hand);
-      font-size: 52px; font-weight: 700;
-      color: #e8d8c0;
-      line-height: 1;
-      margin-bottom: 6px;
-      letter-spacing: 1px;
-    }
+    /* Results info */
+    .results-info { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; margin-bottom: 20px; }
+    .results-info span { color: var(--blue); }
 
-    .page-header .meta {
-      font-size: 10px; color: var(--text-faint);
-      letter-spacing: 2px;
-    }
-
-    /* Warning strip */
-    .warn-strip {
-      background: rgba(224,160,64,0.06);
-      border: 1px solid rgba(224,160,64,0.2);
-      border-left: 3px solid var(--amber);
-      padding: 10px 18px;
-      font-size: 11px; letter-spacing: 1px;
-      color: rgba(224,160,64,0.7);
-      margin-bottom: 36px;
-      animation: fadein 0.4s 0.1s ease both;
-    }
-    .warn-strip .wl { color: var(--amber); font-weight: bold; }
-
-    /* Journal entries */
-    .entries { display: flex; flex-direction: column; gap: 28px; }
+    /* ── ENTRIES ── */
+    .entries { display: flex; flex-direction: column; gap: 24px; flex: 1; }
 
     .entry {
-      position: relative;
-      background: #0e1a26;
-      border: 1px solid var(--border);
-      border-left: none;
-      padding: 32px 36px 32px 48px;
-      transition: border-color 0.25s;
-      animation: fadein 0.5s ease both;
+      position: relative; background: #0e1a26;
+      border: 1px solid var(--border); border-left: none;
+      padding: 28px 32px 28px 44px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      animation: fadein 0.4s ease both;
     }
+    .entry::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: repeating-linear-gradient(180deg, #c8a87a 0px, #c8a87a 8px, #b89060 8px, #b89060 16px, #d4b48a 16px, #d4b48a 24px); opacity: 0.6; }
+    .entry::after { content: ''; position: absolute; top: 0; left: 6px; right: 0; bottom: 0; background: repeating-linear-gradient(180deg, transparent 0px, transparent 27px, rgba(47,106,205,0.04) 27px, rgba(47,106,205,0.04) 28px); pointer-events: none; }
+    .entry:hover { border-color: var(--border2); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
 
-    /* Torn left edge effect */
-    .entry::before {
-      content: '';
-      position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
-      background: repeating-linear-gradient(
-        180deg,
-        #c8a87a 0px, #c8a87a 8px,
-        #b89060 8px, #b89060 16px,
-        #d4b48a 16px, #d4b48a 24px
-      );
-      opacity: 0.6;
-    }
+    /* Latest badge */
+    .entry.is-latest::before { opacity: 1; background: repeating-linear-gradient(180deg, #4a8aff 0px, #4a8aff 8px, #2f6acd 8px, #2f6acd 16px, #5a9aff 16px, #5a9aff 24px); }
+    .latest-badge { position: absolute; top: 14px; right: 14px; background: var(--blue-dim); color: var(--blue); font-size: 9px; letter-spacing: 2px; padding: 2px 8px; border: 1px solid var(--blue-dim); z-index: 5; }
 
-    /* Subtle paper texture line */
-    .entry::after {
-      content: '';
-      position: absolute; top: 0; left: 6px; right: 0; bottom: 0;
-      background: repeating-linear-gradient(
-        180deg,
-        transparent 0px, transparent 27px,
-        rgba(47,106,205,0.04) 27px, rgba(47,106,205,0.04) 28px
-      );
-      pointer-events: none;
-    }
+    .entry-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; position: relative; z-index: 1; gap: 12px; flex-wrap: wrap; }
+    .entry-header-left { display: flex; align-items: baseline; gap: 14px; }
+    .entry-num { font-size: 10px; letter-spacing: 3px; color: var(--text-faint); }
+    .entry-date { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; }
+    .entry-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .entry-tag { font-size: 9px; letter-spacing: 1px; padding: 2px 7px; border: 1px solid var(--border2); color: var(--text-faint); cursor: pointer; transition: all 0.15s; }
+    .entry-tag:hover { border-color: var(--blue-dim); color: var(--blue); }
 
-    .entry:hover { border-color: var(--border2); }
+    .entry-title { font-family: var(--hand); font-size: 24px; font-weight: 600; color: #ddc8a8; margin-bottom: 12px; position: relative; z-index: 1; }
+    .entry-body { font-family: var(--hand); font-size: 19px; color: #b8c8d8; line-height: 1.75; position: relative; z-index: 1; white-space: pre-line; }
 
-    .entry-header {
-      display: flex; align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 18px;
-      position: relative; z-index: 1;
-    }
+    /* Highlighted search match */
+    .entry-body mark { background: rgba(47,106,205,0.3); color: #9ecbff; border-radius: 2px; padding: 0 2px; }
 
-    .entry-num {
-      font-family: var(--mono); font-size: 10px;
-      letter-spacing: 3px; color: var(--text-faint);
-    }
+    .redact-s { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 2.5em; user-select: none; cursor: not-allowed; vertical-align: middle; }
+    .redact-m { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 5em;   user-select: none; cursor: not-allowed; vertical-align: middle; }
+    .redact-l { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 8.5em; user-select: none; cursor: not-allowed; vertical-align: middle; }
 
-    .entry-date {
-      font-family: var(--mono); font-size: 10px;
-      color: var(--text-faint); letter-spacing: 1px;
-    }
+    .stamp { display: inline-block; border: 2px solid var(--red); color: var(--red); font-family: var(--cond); font-size: 11px; letter-spacing: 3px; padding: 3px 10px; transform: rotate(-3deg); margin-top: 12px; position: relative; z-index: 1; }
 
-    .entry-title {
-      font-family: var(--hand);
-      font-size: 26px; font-weight: 600;
-      color: #ddc8a8;
-      margin-bottom: 14px;
-      position: relative; z-index: 1;
-    }
+    .margin-note { position: absolute; right: -10px; top: 50%; transform: translateY(-50%) rotate(2deg); background: #1c2a1a; border: 1px solid #2a4a28; padding: 8px 12px; font-family: var(--hand); font-size: 13px; color: #7ab870; max-width: 120px; line-height: 1.4; z-index: 10; box-shadow: 2px 2px 8px rgba(0,0,0,0.4); display: none; }
 
-    .entry-body {
-      font-family: var(--hand);
-      font-size: 20px;
-      color: #b8c8d8;
-      line-height: 1.75;
-      position: relative; z-index: 1;
-    }
+    .entry.locked { opacity: 0.45; pointer-events: none; filter: blur(0.4px); }
+    .entry.locked .entry-body { filter: blur(4px); user-select: none; }
+    .lock-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 20; pointer-events: all; }
+    .lock-label { font-size: 11px; letter-spacing: 3px; color: var(--text-faint); border: 1px solid var(--border2); padding: 6px 16px; background: var(--bg); }
 
-    /* Redaction inline */
-    .redact {
-      display: inline-block;
-      background: #1a1a1a;
-      color: transparent;
-      border-radius: 2px;
-      padding: 0 4px;
-      user-select: none;
-      cursor: not-allowed;
-      position: relative;
-    }
+    /* No results */
+    .no-results { text-align: center; padding: 60px 20px; color: var(--text-faint); font-size: 12px; letter-spacing: 2px; display: none; }
+    .no-results .nr-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.3; }
 
-    /* Margin note */
-    .margin-note {
-      position: absolute;
-      right: -10px; top: 50%;
-      transform: translateY(-50%) rotate(2deg);
-      background: #1c2a1a;
-      border: 1px solid #2a4a28;
-      padding: 8px 12px;
-      font-family: var(--hand);
-      font-size: 14px;
-      color: #7ab870;
-      max-width: 130px;
-      line-height: 1.4;
-      z-index: 10;
-      box-shadow: 2px 2px 8px rgba(0,0,0,0.4);
-      display: none; /* shown on wider screens */
-    }
+    /* ── RIGHT PANEL ── */
+    .panel-section { padding: 20px; border-bottom: 1px solid var(--border); }
+    .panel-title { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .panel-title::before { content: ''; display: inline-block; width: 12px; height: 1px; background: var(--text-faint); }
 
-    @media (min-width: 1100px) {
-      .content { max-width: 960px; }
-      .margin-note { display: block; right: -150px; }
-    }
+    /* Stats */
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { color: var(--text-faint); letter-spacing: 1px; }
+    .stat-val { color: var(--blue); font-size: 14px; }
+    .stat-val.amber { color: var(--amber); }
+    .stat-val.red { color: rgba(224,80,80,0.9); }
 
-    /* Stamp */
-    .stamp {
-      display: inline-block;
-      border: 2px solid rgba(224,80,80,0.5);
-      color: rgba(224,80,80,0.5);
-      font-family: var(--cond);
-      font-size: 11px; letter-spacing: 3px;
-      padding: 3px 10px;
-      transform: rotate(-3deg);
-      margin-top: 14px;
-      position: relative; z-index: 1;
-    }
+    /* Latest entries list */
+    .latest-item { padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+    .latest-item:last-child { border-bottom: none; }
+    .latest-item:hover .li-title { color: var(--blue); }
+    .li-num { font-size: 9px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 3px; }
+    .li-title { font-family: var(--hand); font-size: 16px; color: var(--text-dim); transition: color 0.15s; }
+    .li-date { font-size: 9px; color: var(--text-faint); margin-top: 2px; }
 
-    /* Locked entry */
-    .entry.locked {
-      opacity: 0.5;
-      pointer-events: none;
-      filter: blur(0.5px);
-    }
-    .entry.locked .entry-body {
-      filter: blur(3px);
-      user-select: none;
-    }
-    .lock-overlay {
-      position: absolute; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 20; pointer-events: all; cursor: default;
-    }
-    .lock-label {
-      font-family: var(--mono); font-size: 11px;
-      letter-spacing: 3px; color: var(--text-faint);
-      border: 1px solid var(--border2);
-      padding: 6px 16px; background: var(--bg);
-    }
+    /* Tag cloud */
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag-pill { font-size: 9px; letter-spacing: 1px; padding: 4px 10px; border: 1px solid var(--border2); color: var(--text-faint); cursor: pointer; transition: all 0.15s; }
+    .tag-pill:hover, .tag-pill.active { border-color: var(--blue-dim); color: var(--blue); background: var(--blue-glow); }
 
-    /* Bottom bar */
-    .clearance-bar {
-      background: var(--panel); border-top: 1px solid var(--border);
-      padding: 10px 48px;
-      font-size: 10px; letter-spacing: 2px; color: var(--text-faint);
-      display: flex; gap: 32px;
-    }
+    /* ── BOTTOM BAR ── */
+    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 10px 36px; font-size: 10px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 32px; flex-shrink: 0; }
     .cl-val { color: var(--text-dim); }
 
-    /* Animations */
-    @keyframes fadein {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    /* ── ANIMATIONS ── */
+    @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
-    .entry:nth-child(1) { animation-delay: 0.15s; }
-    .entry:nth-child(2) { animation-delay: 0.25s; }
-    .entry:nth-child(3) { animation-delay: 0.35s; }
-    .entry:nth-child(4) { animation-delay: 0.45s; }
-
-    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
-    @media (max-width: 768px) {
+    @media (max-width: 900px) {
+      .right-panel { display: none; }
+    }
+    @media (max-width: 700px) {
       .shell { flex-direction: column; }
       .sidebar { width: 100%; height: auto; position: static; }
-      .content { padding: 24px; }
-      .topbar { padding: 10px 24px; }
-      .clearance-bar { padding: 10px 24px; flex-wrap: wrap; gap: 12px; }
+      .entries-col { padding: 20px; }
+      .topbar, .clearance-bar { padding: 10px 20px; flex-wrap: wrap; gap: 10px; }
     }
   </style>
 </head>
 <body>
-
 <div class="shell">
 
   <!-- SIDEBAR -->
@@ -408,95 +251,65 @@
       </div>
     </div>
 
-    <div class="content">
+    <div class="body-layout">
 
-      <!-- Header -->
-      <div class="page-header">
-        <div class="sys-label">PERSONNEL FILE — UNSANITIZED</div>
-        <h1>Alex's Journal</h1>
-        <div class="meta">SUBJECT: KOVACS, ALEX M. &nbsp;|&nbsp; CLEARANCE: TIER-1 &nbsp;|&nbsp; ROLE: RESEARCH INTERN</div>
-      </div>
+      <!-- ENTRIES COLUMN -->
+      <div class="entries-col">
 
-      <!-- Warning -->
-      <div class="warn-strip">
-        <span class="wl">// WARNING:</span> This file has not been reviewed or approved by the Intelligence Oversight Council. Contents may contain sensitive operational information. Reading constitutes acknowledgment of GSC Charter §6.1.
-      </div>
-
-      <!-- Entries -->
-      <div class="entries">
-
-        <!-- Entry 01 -->
-        <div class="entry">
-          <div class="entry-header">
-            <span class="entry-num">ENTRY // 01</span>
-            <span class="entry-date">2026-01-09</span>
-          </div>
-          <div class="entry-title">First Day</div>
-          <div class="entry-body">
-            I didn't know organizations like GSC existed. The building doesn't have a sign outside. 
-            They gave me a badge with a number on it — no name. Just a number. I asked why. 
-            The woman at the desk looked at me like I'd said something dangerous.<br><br>
-            They told me not to ask questions. I'm going to try my best. I really am.
-            But I've never been good at that.
-          </div>
+        <div class="page-header">
+          <div class="sys-label">PERSONNEL FILE — UNSANITIZED</div>
+          <h1>Alex's Journal</h1>
+          <div class="meta">SUBJECT: KOVACS, ALEX M. &nbsp;|&nbsp; CLEARANCE: TIER-1 &nbsp;|&nbsp; ROLE: RESEARCH INTERN</div>
         </div>
 
-        <!-- Entry 02 -->
-        <div class="entry" style="position:relative;">
-          <div class="margin-note">why was it incomplete??</div>
-          <div class="entry-header">
-            <span class="entry-num">ENTRY // 02</span>
-            <span class="entry-date">2026-01-14</span>
+        <!-- TOOLBAR -->
+        <div class="toolbar">
+          <div class="search-wrap">
+            <input class="search-input" id="searchInput" type="text" placeholder="SEARCH ENTRIES..." autocomplete="off" spellcheck="false">
           </div>
-          <div class="entry-title">The File</div>
-          <div class="entry-body">
-            They assigned me to review a biological anomaly discovered decades ago. 
-            The file was incomplete. Not like pages were missing — it felt more like the file 
-            had been written around something. Like someone had removed the middle 
-            and stitched the edges back together.<br><br>
-            I flagged it to my supervisor, Dr. <span class="redact">████████</span>. 
-            He said that was normal. He didn't look at me when he said it.
+          <div class="filters">
+            <button class="filter-btn active" data-filter="all">ALL</button>
+            <button class="filter-btn" data-filter="flagged">FLAGGED</button>
+            <button class="filter-btn" data-filter="locked">LOCKED</button>
           </div>
+          <button class="sort-btn" id="sortBtn" title="Toggle sort order">↓ NEWEST</button>
         </div>
 
-        <!-- Entry 03 -->
-        <div class="entry">
-          <div class="entry-header">
-            <span class="entry-num">ENTRY // 03</span>
-            <span class="entry-date">2026-01-22</span>
-          </div>
-          <div class="entry-title">I Heard Something</div>
-          <div class="entry-body">
-            I stayed late tonight. Most of the floor was empty. 
-            The lights in the east corridor were off — they're never off.<br><br>
-            I heard two people arguing behind a door marked <span class="redact">███-C</span>. 
-            I couldn't make out words. Just tone. One of them was scared. 
-            The other one was not.<br><br>
-            I went home and couldn't sleep. I keep thinking about that file.
-          </div>
-          <div class="stamp">FLAGGED FOR REVIEW</div>
-        </div>
+        <div class="results-info" id="resultsInfo"></div>
 
-        <!-- Entry 04 — LOCKED -->
-        <div class="entry locked">
-          <div class="lock-overlay">
-            <span class="lock-label">// ACCESS DENIED — CLEARANCE INSUFFICIENT</span>
-          </div>
-          <div class="entry-header">
-            <span class="entry-num">ENTRY // 04</span>
-            <span class="entry-date">2026-02-03</span>
-          </div>
-          <div class="entry-title">████████</div>
-          <div class="entry-body">
-            They called me into a room I had never seen before. 
-            There were three people I didn't recognize. One of them knew my mother's name.
-            I don't know how. I've never put that in any form.<br><br>
-            They asked me what I'd seen. I told them nothing. They smiled.
-            That was worse than if they hadn't.
-          </div>
+        <div class="entries" id="entriesContainer"></div>
+        <div class="no-results" id="noResults">
+          <div class="nr-icon">//</div>
+          NO ENTRIES MATCH QUERY
         </div>
 
       </div>
+
+      <!-- RIGHT PANEL -->
+      <aside class="right-panel">
+
+        <!-- Stats -->
+        <div class="panel-section">
+          <div class="panel-title">FILE STATS</div>
+          <div class="stat-row"><span class="stat-label">TOTAL ENTRIES</span><span class="stat-val" id="statTotal">—</span></div>
+          <div class="stat-row"><span class="stat-label">FLAGGED</span><span class="stat-val amber" id="statFlagged">—</span></div>
+          <div class="stat-row"><span class="stat-label">LOCKED</span><span class="stat-val red" id="statLocked">—</span></div>
+          <div class="stat-row"><span class="stat-label">LAST ENTRY</span><span class="stat-val" id="statLast" style="font-size:11px;">—</span></div>
+        </div>
+
+        <!-- Latest entries -->
+        <div class="panel-section">
+          <div class="panel-title">LATEST ENTRIES</div>
+          <div id="latestList"></div>
+        </div>
+
+        <!-- Tag filter -->
+        <div class="panel-section">
+          <div class="panel-title">FILTER BY TAG</div>
+          <div class="tag-cloud" id="tagCloud"></div>
+        </div>
+
+      </aside>
     </div>
 
     <div class="clearance-bar">
@@ -505,28 +318,52 @@
       <span>STATUS: <span class="cl-val">ACTIVE</span></span>
       <span>© 2026 GSC INTERNAL NETWORK</span>
     </div>
-
   </div>
 </div>
 
+<script src="journal-entries.js"></script>
 <script>
-  function updateTime() {
-    const now = new Date();
-    document.getElementById('syncTime').textContent =
-      now.toLocaleString('en-GB', { hour12: false });
-  }
-  updateTime(); setInterval(updateTime, 1000);
+  // ── State ─────────────────────────────────────────────────
+  let activeFilter  = 'all';
+  let activeTag     = null;
+  let searchQuery   = '';
+  let sortNewest    = true;
+  let searchTimeout = null;
 
-  const start = Date.now();
-  function updateUptime() {
-    const e = Math.floor((Date.now() - start) / 1000);
-    const h = String(Math.floor(e / 3600)).padStart(2,'0');
-    const m = String(Math.floor((e % 3600) / 60)).padStart(2,'0');
-    const s = String(e % 60).padStart(2,'0');
-    document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
+  // ── Parsers ───────────────────────────────────────────────
+  function escHtml(t) {
+    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
-  setInterval(updateUptime, 1000);
-</script>
 
-</body>
-  </html>
+  function parseRedactions(text) {
+    return text
+      .replace(/\[REDACTED-S\]/g, '<span class="redact-s">████</span>')
+      .replace(/\[REDACTED-L\]/g, '<span class="redact-l">██████████████</span>')
+      .replace(/\[REDACTED\]/g,   '<span class="redact-m">████████</span>');
+  }
+
+  function parseBody(text, highlight) {
+    let safe = escHtml(text);
+    safe = parseRedactions(safe);
+    if (highlight) {
+      const esc = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      safe = safe.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
+    }
+    return safe;
+  }
+
+  function parseTitle(text) {
+    return parseRedactions(escHtml(text));
+  }
+
+  // ── Render ────────────────────────────────────────────────
+  function getLatestId() {
+    const visible = JOURNAL_ENTRIES.filter(e => !e.locked);
+    if (!visible.length) return null;
+    return visible.slice().sort((a,b) => b.date.localeCompare(a.date))[0].id;
+  }
+
+  function renderAll() {
+    const container  = document.getElementById('entriesContainer');
+    const noResults  = document.getElementById('noResults');
+    const resultsInfo = document.getElementById('resultsInfo')
