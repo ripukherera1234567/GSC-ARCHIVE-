@@ -1,271 +1,679 @@
-<!DOCTYPE html>  <html>  
-<head>  
-  <title>GSC | About</title>  
-  <style>  
-    .divider {  
-  height: 1px;  
-  background: #1f2a38;  
-  margin: 15px 0 25px 0;  
-    }  
-    .online {  
-  color: #4cff4c;  
-  font-weight: bold;  
-  position: relative;  
-  animation: flicker 3s infinite;  
-}  @keyframes flicker {
-0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
-20%, 24%, 55% { opacity: 0.4; }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GSC | Internal Overview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0b1018;
+      --panel:     #101820;
+      --border:    #1a2a3a;
+      --border2:   #1f3048;
+      --blue:      #2f6acd;
+      --blue-dim:  #1e3f7a;
+      --blue-glow: rgba(47, 106, 205, 0.18);
+      --text:      #c8d8ea;
+      --text-dim:  #5a7a9a;
+      --text-faint:#2e4a62;
+      --green:     #3ddc84;
+      --red:       #e05252;
+      --mono:      'Share Tech Mono', monospace;
+      --sans:      'Barlow', sans-serif;
+      --cond:      'Barlow Condensed', sans-serif;
+    }
 
-.system-status {
-font-size: 14px;
-color: #2f5fa8;
-margin-top: 20px;
-}
-.subtitle {
-color: #6f8199;
-margin-top: -10px;
-margin-bottom: 40px;
-font-size: 14px;
-letter-spacing: 1px;
-}
-.content {
-flex: 1;
-padding: 60px;
-max-width: 900px;
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-.content::before {
-content: "";
-display: block;
-height: 1px;
-background: #1f2a38;
-margin-bottom: 40px;
-}
-body {
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-weight: 300;
+      overflow-x: hidden;
+    }
 
-animation: subtlePulse 8s ease-in-out infinite alternate;
-@keyframes subtlePulse {
-from { background-position: 0% 0%; }
-to { background-position: 5% 5%; }
-}
+    /* Scanline overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.07) 2px,
+        rgba(0,0,0,0.07) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
 
-margin: 0;
-font-family: "Segoe UI", Arial, sans-serif;
-background: #eef3f8;
-color: #1e2a38;
-display: flex;
+    /* Ambient vignette */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+      pointer-events: none;
+      z-index: 998;
+    }
 
-/* Sidebar */
-.sidebar {
-width: 190px;
-background: #1e2a38;
-padding: 25px 20px;
-display: flex;
-flex-direction: column;
-border-right: 1px solid #c5d1df;
-min-height: 100vh;
-}
-.sidebar a {
-color: #d8e2f0;
-text-decoration: none;
-margin: 12px 0;
-font-size: 17px;
-transition: all 0.25s ease;
-}
+    /* ── LAYOUT ── */
+    .shell {
+      display: flex;
+      min-height: 100vh;
+    }
 
-.sidebar a.active {
-color: #2f5fa8;
-border-left: 3px solid #2f5fa8;
-padding-left: 10px;
-}
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 200px;
+      min-width: 200px;
+      background: var(--panel);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      padding: 28px 0;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-.sidebar a:hover {
-color: #2f5fa8;
-padding-left: 6px;
-}
-.footer {
-margin-top: 60px;
-font-size: 12px;
-color: #5f7a9c;
-border-top: 1px solid #1f2a38;
-padding-top: 15px;
-}
+    .sidebar-logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
 
-/* Logo */
-.logo {
-width: 75%;
-max-width: 150px;
-height: auto;
-margin-bottom: 25px;
-align-self: center;
-filter: drop-shadow(0 0 6px rgba(143, 182, 255, 0.2));
-}
-.hero {
-position: relative;
-text-align: center;
-padding: 60px 20px;
-margin-bottom: 40px;
-border: 1px solid #dde5ef;
-background: linear-gradient(135deg, #ffffff, #e9f0f7);
-overflow: hidden;
-}
+    .logo-img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(47,106,205,0.4));
+      margin-bottom: 10px;
+    }
 
-.hero h1 {
-margin: 0;
-font-size: 36px;
-letter-spacing: 3px;
-color: #2f5fa8;
-}
+    /* Placeholder logo if no image */
+    .logo-placeholder {
+      width: 64px;
+      height: 64px;
+      border: 2px solid var(--blue-dim);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .logo-placeholder::after {
+      content: 'GSC';
+      font-family: var(--cond);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--blue);
+    }
 
-.hero .subtitle {
-margin-top: 10px;
-font-size: 14px;
-color: #6f8199;
-letter-spacing: 2px;
-}
+    .sidebar-org {
+      font-family: var(--cond);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      text-align: center;
+      text-transform: uppercase;
+    }
 
-.hero-overlay {
-position: absolute;
-top: 50%;
-left: 50%;
-width: 400px;
-height: 400px;
-background: url("gsc-logo.png") no-repeat center;
-background-size: contain;
-transform: translate(-50%, -50%);
-opacity: 0.04;
-pointer-events: none;
-}
+    .sidebar-nav {
+      flex: 1;
+      padding: 20px 0;
+      display: flex;
+      flex-direction: column;
+    }
 
-/* Content */
-.content {
-flex: 1;
-padding: 60px;
-max-width: 900px;
-}
-.status-bar {
-margin-top: 20px;
-margin-bottom: 40px;
-padding: 12px;
-background-color: #121c29;
-border: 1px solid #1f2a38;
-font-size: 13px;
-letter-spacing: 1px;
-color: #7fa9ff;
-}
+    .nav-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--text-faint);
+      padding: 0 20px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
 
-.grid {
-display: flex;
-flex-direction: column;
-gap: 30px;
-max-width: 800px;
-}
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-family: var(--cond);
+      font-size: 13px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-left: 2px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
 
-.card {
-background: #e4ebf3;
-padding: 30px;
-border: 1px solid #d2dbe5;
-border-radius: 8px;
-transition: all 0.25s ease;
-}
+    .sidebar-nav a::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 0;
+      background: var(--blue-glow);
+      transition: width 0.2s;
+    }
 
-.card:hover {
-border-color: #2f5fa8;
-transform: translateY(-3px);
-box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-}
+    .sidebar-nav a:hover,
+    .sidebar-nav a.active {
+      color: var(--blue);
+      border-left-color: var(--blue);
+    }
 
-.card h3 {
+    .sidebar-nav a:hover::before,
+    .sidebar-nav a.active::before {
+      width: 100%;
+    }
 
-margin-top: 0;
-font-size: 20px;
-letter-spacing: 1px;
-color: #2f5fa8;
-font-weight: 600;
+    .nav-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--text-faint);
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .sidebar-nav a:hover .nav-dot,
+    .sidebar-nav a.active .nav-dot {
+      background: var(--blue);
+      box-shadow: 0 0 6px var(--blue);
+    }
 
-}
+    .sidebar-footer {
+      padding: 16px 20px 0;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-faint);
+      line-height: 1.8;
+    }
 
-.card ul {
-padding-left: 18px;
-color: #9fb3cc;
-}
-.card p, .card ul {
-font-size: 16px;
-line-height: 1.6;
-color: #2e3b4e;
-}
-.notice {
-margin-top: 50px;
-padding: 15px;
-border-top: 1px solid #1f2a38;
-font-size: 13px;
-color: #6c87a8;
-}
+    /* ── MAIN CONTENT ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
 
-  </style>  <body>    <div class="sidebar">  
-    <img src="gsc-logo.png" alt="GSC Logo" class="logo">  
-     <div class="divider"></div>  
-      <a href="index.html">ABOUT GSC</a>  
-      <a href="anomalies/">ANOMALY ARCHIVE</a>  
-      <a href="journal/">ALEX'S JOURNAL</a>  
-      <a href="incidents/">INCIDENT REPORTS</a>  
-  </div>    <div class="content">  
-    <div class="hero">  
-  <div class="hero-overlay"></div>  
-  <h1>GLOBAL SECURITY COOPERATION</h1>  
-  <p class="subtitle">INTERNAL OVERVIEW – CLEARANCE LEVEL 1</p>  
-    </div>  
-<p class="system-status">  
-  Status: <span class="online">ONLINE</span><br>  
-  Last Sync: <span id="lastSync"></span>  
-</p>  
-    <footer class="footer">  
-  GSC Internal Network © 2026 | Node INT-04  
-    </footer>  
-<div class="status-bar">  
-  CLEARANCE: TIER-2 | NODE: INT-04  
-</div>  <div class="grid">    <div class="card">  
-    <h3>MISSION DIRECTIVE</h3>  
-    <p>  
-      Identify, contain, and analyze anomalous phenomena that pose risk to  
-      civil stability and global security.  
-    </p>  
-  </div>    <div class="card">  
-    <h3>JURISDICTION</h3>  
-    <p>  
-      Multinational oversight authority operating outside public legal  
-      frameworks under classified intergovernmental agreements.  
-    </p>  
-  </div>    <div class="card">  
-    <h3>ACTIVE DIVISIONS</h3>  
-    <ul>  
-      <li>Research & Analysis Division</li>  
-      <li>Field Containment Unit</li>  
-      <li>Biohazard Response Unit</li>  
-      <li>Intelligence Oversight Council</li>  
-    </ul>  
-  </div>    <div class="card">  
-    <h3>GLOBAL STATUS</h3>  
-    <ul>  
-      <li>Active Containments: 17</li>  
-      <li>High-Risk Entities: 2</li>  
-      <li>Personnel Deployed: 43</li>  
-      <li>Facilities Operational: 6</li>  
-    </ul>  
-  </div>  </div>  <div class="notice">  
-  INTERNAL NOTICE: Unauthorized replication or external distribution of  
-  archived material is prohibited. All sessions are monitored and logged.  
-</div>  
-  </div>  
-  <script>  
-  function updateTime() {  
-    const now = new Date();  
-    const formatted = now.toLocaleString();  
-    document.getElementById("lastSync").textContent = formatted;  
-  }  updateTime();
-setInterval(updateTime, 1000);
+    /* Top bar */
+    .topbar {
+      background: var(--panel);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      letter-spacing: 1px;
+    }
+
+    .topbar-left { display: flex; gap: 24px; }
+    .topbar-right { display: flex; gap: 16px; align-items: center; }
+
+    .tier-badge {
+      background: var(--blue-dim);
+      color: var(--blue);
+      padding: 2px 8px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      border: 1px solid var(--blue-dim);
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+      50% { opacity: 0.5; box-shadow: 0 0 2px var(--green); }
+    }
+
+    /* Content area */
+    .content {
+      padding: 48px;
+      flex: 1;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      border: 1px solid var(--border2);
+      background: linear-gradient(135deg, #0d1820 0%, #111c2b 100%);
+      padding: 52px 48px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,106,205,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--blue-dim), transparent);
+    }
+
+    .hero-tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: var(--blue);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 20px; height: 1px;
+      background: var(--blue);
+    }
+
+    .hero h1 {
+      font-family: var(--cond);
+      font-weight: 700;
+      font-size: 42px;
+      letter-spacing: 5px;
+      color: #e8f0fa;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .hero-sub {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--text-dim);
+    }
+
+    .hero-meta {
+      position: absolute;
+      top: 52px; right: 48px;
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-faint);
+      line-height: 2;
+    }
+
+    .hero-meta span {
+      color: var(--text-dim);
+    }
+
+    /* Alert strip */
+    .alert-strip {
+      background: #0a1520;
+      border: 1px solid var(--border2);
+      border-left: 3px solid var(--blue);
+      padding: 10px 20px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: #6090c0;
+      margin-bottom: 36px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .alert-strip .label {
+      color: var(--blue);
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    /* Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 28px 30px;
+      position: relative;
+      transition: border-color 0.25s, box-shadow 0.25s;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--blue-dim), transparent);
+      opacity: 0;
+      transition: opacity 0.25s;
+    }
+
+    .card:hover {
+      border-color: var(--blue-dim);
+      box-shadow: 0 0 24px rgba(47,106,205,0.08);
+    }
+
+    .card:hover::before {
+      opacity: 1;
+    }
+
+    .card-tag {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 3px;
+      color: var(--text-faint);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .card h3 {
+      font-family: var(--cond);
+      font-weight: 600;
+      font-size: 17px;
+      letter-spacing: 2px;
+      color: #ccdcf0;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-dim);
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card ul li {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-dim);
+      padding: 5px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card ul li:last-child { border-bottom: none; }
+
+    .card ul li::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--blue-dim);
+      flex-shrink: 0;
+    }
+
+    .stat-val {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--blue);
+    }
+
+    .stat-high {
+      color: var(--red) !important;
+    }
+
+    /* Full-width card */
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    /* Notice */
+    .notice {
+      border-top: 1px solid var(--border);
+      padding-top: 20px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-faint);
+      letter-spacing: 0.5px;
+      line-height: 1.8;
+    }
+
+    .notice strong {
+      color: var(--text-dim);
+    }
+
+    /* Clearance banner */
+    .clearance-bar {
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      padding: 10px 48px;
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--text-faint);
+      display: flex;
+      gap: 32px;
+    }
+
+    .cl-item { display: flex; gap: 8px; }
+    .cl-val { color: var(--text-dim); }
+
+    /* Animations */
+    @keyframes fadein {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero    { animation: fadein 0.5s ease both; }
+    .alert-strip { animation: fadein 0.5s 0.1s ease both; }
+    .card:nth-child(1) { animation: fadein 0.5s 0.15s ease both; }
+    .card:nth-child(2) { animation: fadein 0.5s 0.2s ease both; }
+    .card:nth-child(3) { animation: fadein 0.5s 0.25s ease both; }
+    .card:nth-child(4) { animation: fadein 0.5s 0.3s ease both; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--blue-dim); }
+
+    @media (max-width: 768px) {
+      .shell { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; }
+      .content { padding: 24px; }
+      .grid { grid-template-columns: 1fr; }
+      .hero { padding: 32px 24px; }
+      .hero-meta { display: none; }
+      .topbar { padding: 10px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="gsc-logo.png" alt="GSC" class="logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="logo-placeholder" style="display:none;"></div>
+      <div class="sidebar-org">Global Security<br>Cooperation</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <a href="index.html" class="active">
+        <span class="nav-dot"></span>About GSC
+      </a>
+      <a href="anomalies/">
+        <span class="nav-dot"></span>Anomaly Archive
+      </a>
+      <a href="journal/">
+        <span class="nav-dot"></span>Alex's Journal
+      </a>
+      <a href="incidents/">
+        <span class="nav-dot"></span>Incident Reports
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      NODE: INT-04<br>
+      BUILD: 3.1.7-STABLE<br>
+      UPTIME: <span id="uptime">00:00:00</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- Top bar -->
+    <div class="topbar">
+      <div class="topbar-left">
+        <span>INT-NETWORK // SECURE</span>
+        <span id="syncTime">--</span>
+      </div>
+      <div class="topbar-right">
+        <span class="tier-badge">TIER-2 ACCESS</span>
+        <div class="status-dot"></div>
+        <span>ONLINE</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-tag">INTERNAL DOCUMENT</div>
+        <h1>GLOBAL SECURITY<br>COOPERATION</h1>
+        <div class="hero-sub">INTERNAL OVERVIEW — CLEARANCE LEVEL 1</div>
+        <div class="hero-meta">
+          DOC-ID: <span>GSC-INT-001</span><br>
+          REV: <span>14</span><br>
+          CLASS: <span>RESTRICTED</span>
+        </div>
+      </div>
+
+      <!-- Alert strip -->
+      <div class="alert-strip">
+        <span class="label">// NOTICE</span>
+        All access is logged. Unauthorized distribution of internal documents is a Class-3 violation. Verify clearance before proceeding.
+      </div>
+
+      <!-- Cards -->
+      <div class="grid">
+
+        <div class="card">
+          <div class="card-tag">// 01</div>
+          <h3>Mission Directive</h3>
+          <p>Identify, contain, and analyze anomalous phenomena that pose risk to civil stability and global security. Ensure continuity of operations at all costs.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-tag">// 02</div>
+          <h3>Jurisdiction</h3>
+          <p>Multinational oversight authority operating outside public legal frameworks under classified intergovernmental agreements. Bound by internal charter only.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-tag">// 03</div>
+          <h3>Active Divisions</h3>
+          <ul>
+            <li>Research &amp; Analysis Division</li>
+            <li>Field Containment Unit</li>
+            <li>Biohazard Response Unit</li>
+            <li>Intelligence Oversight Council</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-tag">// 04</div>
+          <h3>Global Status</h3>
+          <ul>
+            <li>Active Containments <span class="stat-val">17</span></li>
+            <li>High-Risk Entities <span class="stat-val stat-high">2</span></li>
+            <li>Personnel Deployed <span class="stat-val">43</span></li>
+            <li>Facilities Operational <span class="stat-val">6</span></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Notice -->
+      <div class="notice">
+        <strong>INTERNAL NOTICE:</strong> Unauthorized replication or external distribution of archived material is prohibited under GSC Charter §4.2. All sessions are monitored, logged, and subject to review by the Intelligence Oversight Council.
+      </div>
+
+    </div>
+
+    <!-- Clearance bar -->
+    <div class="clearance-bar">
+      <span class="cl-item">CLEARANCE: <span class="cl-val">TIER-2</span></span>
+      <span class="cl-item">NODE: <span class="cl-val">INT-04</span></span>
+      <span class="cl-item">SESSION: <span class="cl-val" id="sessionId">--</span></span>
+      <span class="cl-item">© 2026 GSC INTERNAL NETWORK</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Live clock in topbar
+  function updateTime() {
+    const now = new Date();
+    document.getElementById('syncTime').textContent =
+      now.toLocaleString('en-GB', { hour12: false });
+  }
+  updateTime();
+  setInterval(updateTime, 1000);
+
+  // Uptime counter
+  const startTime = Date.now();
+  function updateUptime() {
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+    const s = String(elapsed % 60).padStart(2, '0');
+    document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
+  }
+  setInterval(updateUptime, 1000);
+
+  // Session ID
+  document.getElementById('sessionId').textContent =
+    'SES-' + Math.random().toString(36).substring(2, 8).toUpperCase();
 </script>
 
-</body>  
-</html>  
+</body>
+</html>
