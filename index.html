@@ -14,7 +14,7 @@
       --border2:   #1f3048;
       --blue:      #2f6acd;
       --blue-dim:  #1e3f7a;
-      --blue-glow: rgba(47, 106, 205, 0.18);
+      --blue-glow: rgba(47,106,205,0.18);
       --text:      #c8d8ea;
       --text-dim:  #5a7a9a;
       --text-faint:#2e4a62;
@@ -36,487 +36,324 @@
       overflow-x: hidden;
     }
 
-    /* Scanline overlay */
+    /* Scanlines */
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.07) 2px,
-        rgba(0,0,0,0.07) 4px
-      );
-      pointer-events: none;
-      z-index: 999;
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.07) 2px, rgba(0,0,0,0.07) 4px);
+      pointer-events: none; z-index: 999;
     }
 
-    /* Ambient vignette */
+    /* Vignette */
     body::after {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
-      pointer-events: none;
-      z-index: 998;
+      pointer-events: none; z-index: 998;
     }
 
     /* ── LAYOUT ── */
-    .shell {
-      display: flex;
-      min-height: 100vh;
-    }
+    .shell { display: flex; min-height: 100vh; }
 
     /* ── SIDEBAR ── */
     .sidebar {
-      width: 200px;
-      min-width: 200px;
+      width: 200px; min-width: 200px;
       background: var(--panel);
       border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
+      display: flex; flex-direction: column;
       padding: 28px 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
+      position: sticky; top: 0; height: 100vh;
       overflow: hidden;
     }
 
     .sidebar-logo {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      display: flex; flex-direction: column; align-items: center;
       padding: 0 20px 24px;
       border-bottom: 1px solid var(--border);
     }
 
     .logo-img {
-      width: 64px;
-      height: 64px;
-      object-fit: contain;
+      width: 64px; height: 64px; object-fit: contain;
       filter: drop-shadow(0 0 10px rgba(47,106,205,0.4));
       margin-bottom: 10px;
     }
 
-    /* Placeholder logo if no image */
     .logo-placeholder {
-      width: 64px;
-      height: 64px;
-      border: 2px solid var(--blue-dim);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 64px; height: 64px;
+      border: 2px solid var(--blue-dim); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
       margin-bottom: 10px;
-      position: relative;
     }
     .logo-placeholder::after {
       content: 'GSC';
-      font-family: var(--cond);
-      font-weight: 700;
-      font-size: 13px;
-      letter-spacing: 2px;
-      color: var(--blue);
+      font-family: var(--cond); font-weight: 700;
+      font-size: 13px; letter-spacing: 2px; color: var(--blue);
     }
 
     .sidebar-org {
-      font-family: var(--cond);
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--text-dim);
-      text-align: center;
-      text-transform: uppercase;
+      font-family: var(--cond); font-size: 10px;
+      letter-spacing: 2px; color: var(--text-dim);
+      text-align: center; text-transform: uppercase;
     }
 
-    .sidebar-nav {
-      flex: 1;
-      padding: 20px 0;
-      display: flex;
-      flex-direction: column;
-    }
+    .sidebar-nav { flex: 1; padding: 20px 0; display: flex; flex-direction: column; }
 
     .nav-label {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 3px;
-      color: var(--text-faint);
-      padding: 0 20px;
-      margin-bottom: 8px;
-      margin-top: 16px;
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 3px; color: var(--text-faint);
+      padding: 0 20px; margin-bottom: 8px; margin-top: 16px;
     }
 
     .sidebar-nav a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: flex; align-items: center; gap: 10px;
       padding: 10px 20px;
-      color: var(--text-dim);
-      text-decoration: none;
-      font-family: var(--cond);
-      font-size: 13px;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
+      color: var(--text-dim); text-decoration: none;
+      font-family: var(--cond); font-size: 13px;
+      letter-spacing: 1.5px; text-transform: uppercase;
       border-left: 2px solid transparent;
-      transition: all 0.2s;
-      position: relative;
+      transition: all 0.2s; position: relative;
     }
-
     .sidebar-nav a::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 0;
-      background: var(--blue-glow);
-      transition: width 0.2s;
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 0;
+      background: var(--blue-glow); transition: width 0.2s;
     }
-
-    .sidebar-nav a:hover,
-    .sidebar-nav a.active {
-      color: var(--blue);
-      border-left-color: var(--blue);
+    .sidebar-nav a:hover, .sidebar-nav a.active {
+      color: var(--blue); border-left-color: var(--blue);
     }
-
-    .sidebar-nav a:hover::before,
-    .sidebar-nav a.active::before {
-      width: 100%;
-    }
+    .sidebar-nav a:hover::before, .sidebar-nav a.active::before { width: 100%; }
 
     .nav-dot {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--text-faint);
-      flex-shrink: 0;
-      transition: background 0.2s;
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--text-faint); flex-shrink: 0; transition: background 0.2s;
     }
-    .sidebar-nav a:hover .nav-dot,
-    .sidebar-nav a.active .nav-dot {
-      background: var(--blue);
-      box-shadow: 0 0 6px var(--blue);
+    .sidebar-nav a:hover .nav-dot, .sidebar-nav a.active .nav-dot {
+      background: var(--blue); box-shadow: 0 0 6px var(--blue);
     }
 
     .sidebar-footer {
       padding: 16px 20px 0;
       border-top: 1px solid var(--border);
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--text-faint);
-      line-height: 1.8;
+      font-family: var(--mono); font-size: 9px;
+      color: var(--text-faint); line-height: 1.8;
     }
 
-    /* ── MAIN CONTENT ── */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-    }
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
-    /* Top bar */
     .topbar {
-      background: var(--panel);
-      border-bottom: 1px solid var(--border);
+      background: var(--panel); border-bottom: 1px solid var(--border);
       padding: 10px 48px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-faint);
-      letter-spacing: 1px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-faint); letter-spacing: 1px;
     }
-
-    .topbar-left { display: flex; gap: 24px; }
     .topbar-right { display: flex; gap: 16px; align-items: center; }
 
     .tier-badge {
-      background: var(--blue-dim);
-      color: var(--blue);
-      padding: 2px 8px;
-      font-size: 10px;
-      letter-spacing: 2px;
+      background: var(--blue-dim); color: var(--blue);
+      padding: 2px 8px; font-size: 10px; letter-spacing: 2px;
       border: 1px solid var(--blue-dim);
     }
 
     .status-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 6px var(--green);
       animation: pulse-dot 2s ease-in-out infinite;
     }
-
     @keyframes pulse-dot {
-      0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
+      0%,100% { opacity: 1; box-shadow: 0 0 6px var(--green); }
       50% { opacity: 0.5; box-shadow: 0 0 2px var(--green); }
     }
 
-    /* Content area */
-    .content {
-      padding: 48px;
-      flex: 1;
-    }
+    /* ── CONTENT ── */
+    .content { padding: 48px; flex: 1; }
 
-    /* Hero */
+    /* ── HERO ── */
     .hero {
       position: relative;
       border: 1px solid var(--border2);
       background: linear-gradient(135deg, #0d1820 0%, #111c2b 100%);
-      padding: 52px 48px;
-      margin-bottom: 40px;
+      padding: 48px;
+      margin-bottom: 36px;
       overflow: hidden;
+      animation: fadein 0.5s ease both;
     }
-
     .hero::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 300px; height: 300px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(47,106,205,0.12) 0%, transparent 70%);
+      content: ''; position: absolute;
+      top: -60px; right: -60px; width: 300px; height: 300px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,106,205,0.12), transparent 70%);
       pointer-events: none;
     }
-
     .hero::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 1px;
+      content: ''; position: absolute;
+      bottom: 0; left: 0; right: 0; height: 1px;
       background: linear-gradient(90deg, transparent, var(--blue-dim), transparent);
     }
 
-    .hero-tag {
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 4px;
-      color: var(--blue);
-      margin-bottom: 14px;
+    /* KEY FIX: flex row so meta never overlaps title */
+    .hero-inner {
       display: flex;
-      align-items: center;
-      gap: 10px;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      position: relative; z-index: 1;
     }
 
+    .hero-left { flex: 1; min-width: 0; }
+
+    .hero-tag {
+      font-family: var(--mono); font-size: 10px;
+      letter-spacing: 4px; color: var(--blue);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 10px;
+    }
     .hero-tag::before {
-      content: '';
-      display: inline-block;
-      width: 20px; height: 1px;
-      background: var(--blue);
+      content: ''; display: inline-block;
+      width: 20px; height: 1px; background: var(--blue);
     }
 
     .hero h1 {
-      font-family: var(--cond);
-      font-weight: 700;
-      font-size: 42px;
-      letter-spacing: 5px;
-      color: #e8f0fa;
-      line-height: 1;
-      margin-bottom: 10px;
+      font-family: var(--cond); font-weight: 700;
+      font-size: 42px; letter-spacing: 5px;
+      color: #e8f0fa; line-height: 1; margin-bottom: 10px;
     }
 
     .hero-sub {
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 3px;
-      color: var(--text-dim);
+      font-family: var(--mono); font-size: 11px;
+      letter-spacing: 3px; color: var(--text-dim);
     }
 
+    .online {
+      color: var(--green); font-weight: bold;
+      animation: flicker 3s infinite;
+    }
+    @keyframes flicker {
+      0%,18%,22%,25%,53%,57%,100% { opacity: 1; }
+      20%,24%,55% { opacity: 0.3; }
+    }
+
+    .system-status {
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-dim); margin-top: 18px;
+    }
+
+    /* Meta sits on the right — never overlaps because of flexbox */
     .hero-meta {
-      position: absolute;
-      top: 52px; right: 48px;
-      text-align: right;
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--text-faint);
-      line-height: 2;
+      font-family: var(--mono); font-size: 10px;
+      color: var(--text-faint); line-height: 2.2;
+      text-align: right; flex-shrink: 0; white-space: nowrap;
     }
+    .hero-meta span { color: var(--text-dim); }
 
-    .hero-meta span {
-      color: var(--text-dim);
-    }
-
-    /* Alert strip */
+    /* ── ALERT STRIP ── */
     .alert-strip {
-      background: #0a1520;
-      border: 1px solid var(--border2);
+      background: #0a1520; border: 1px solid var(--border2);
       border-left: 3px solid var(--blue);
-      padding: 10px 20px;
-      font-family: var(--mono);
-      font-size: 11px;
-      letter-spacing: 1px;
-      color: #6090c0;
+      padding: 10px 20px; font-family: var(--mono);
+      font-size: 11px; letter-spacing: 1px; color: #6090c0;
       margin-bottom: 36px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
+      display: flex; align-items: center; gap: 16px;
+      animation: fadein 0.5s 0.1s ease both;
     }
+    .alert-strip .label { color: var(--blue); font-weight: bold; flex-shrink: 0; }
 
-    .alert-strip .label {
-      color: var(--blue);
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-
-    /* Grid */
+    /* ── GRID ── */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 36px;
+      gap: 16px; margin-bottom: 36px;
     }
 
     .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 28px 30px;
-      position: relative;
-      transition: border-color 0.25s, box-shadow 0.25s;
-      overflow: hidden;
+      background: var(--panel); border: 1px solid var(--border);
+      padding: 28px 30px; position: relative;
+      transition: border-color 0.25s, box-shadow 0.25s; overflow: hidden;
     }
-
     .card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
+      content: ''; position: absolute;
+      top: 0; left: 0; right: 0; height: 2px;
       background: linear-gradient(90deg, var(--blue-dim), transparent);
-      opacity: 0;
-      transition: opacity 0.25s;
+      opacity: 0; transition: opacity 0.25s;
     }
-
-    .card:hover {
-      border-color: var(--blue-dim);
-      box-shadow: 0 0 24px rgba(47,106,205,0.08);
-    }
-
-    .card:hover::before {
-      opacity: 1;
-    }
+    .card:hover { border-color: var(--blue-dim); box-shadow: 0 0 24px rgba(47,106,205,0.08); }
+    .card:hover::before { opacity: 1; }
 
     .card-tag {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 3px;
-      color: var(--text-faint);
+      font-family: var(--mono); font-size: 9px;
+      letter-spacing: 3px; color: var(--text-faint);
       margin-bottom: 10px;
-      text-transform: uppercase;
     }
 
     .card h3 {
-      font-family: var(--cond);
-      font-weight: 600;
-      font-size: 17px;
-      letter-spacing: 2px;
-      color: #ccdcf0;
-      margin-bottom: 14px;
-      text-transform: uppercase;
+      font-family: var(--cond); font-weight: 600;
+      font-size: 17px; letter-spacing: 2px;
+      color: #ccdcf0; margin-bottom: 14px; text-transform: uppercase;
     }
 
-    .card p {
-      font-size: 14px;
-      line-height: 1.7;
-      color: var(--text-dim);
-    }
+    .card p { font-size: 14px; line-height: 1.7; color: var(--text-dim); }
 
-    .card ul {
-      list-style: none;
-      padding: 0;
-    }
-
+    .card ul { list-style: none; padding: 0; }
     .card ul li {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--text-dim);
-      padding: 5px 0;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      font-size: 14px; line-height: 1.6; color: var(--text-dim);
+      padding: 5px 0; border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 10px;
     }
-
     .card ul li:last-child { border-bottom: none; }
-
     .card ul li::before {
-      content: '';
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--blue-dim);
-      flex-shrink: 0;
+      content: ''; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--blue-dim); flex-shrink: 0;
     }
 
-    .stat-val {
-      margin-left: auto;
-      font-family: var(--mono);
-      font-size: 13px;
-      color: var(--blue);
-    }
+    .stat-val { margin-left: auto; font-family: var(--mono); font-size: 13px; color: var(--blue); }
+    .stat-high { color: var(--red) !important; }
 
-    .stat-high {
-      color: var(--red) !important;
-    }
-
-    /* Full-width card */
-    .card.full {
-      grid-column: 1 / -1;
-    }
-
-    /* Notice */
+    /* ── NOTICE ── */
     .notice {
-      border-top: 1px solid var(--border);
-      padding-top: 20px;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--text-faint);
-      letter-spacing: 0.5px;
-      line-height: 1.8;
+      border-top: 1px solid var(--border); padding-top: 20px;
+      font-family: var(--mono); font-size: 11px;
+      color: var(--text-faint); letter-spacing: 0.5px; line-height: 1.8;
     }
+    .notice strong { color: var(--text-dim); }
 
-    .notice strong {
-      color: var(--text-dim);
-    }
-
-    /* Clearance banner */
+    /* ── CLEARANCE BAR ── */
     .clearance-bar {
-      background: var(--panel);
-      border-top: 1px solid var(--border);
-      padding: 10px 48px;
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 2px;
-      color: var(--text-faint);
-      display: flex;
-      gap: 32px;
+      background: var(--panel); border-top: 1px solid var(--border);
+      padding: 10px 48px; font-family: var(--mono);
+      font-size: 10px; letter-spacing: 2px; color: var(--text-faint);
+      display: flex; gap: 32px; flex-wrap: wrap;
     }
-
     .cl-item { display: flex; gap: 8px; }
     .cl-val { color: var(--text-dim); }
 
-    /* Animations */
+    /* ── ANIMATIONS ── */
     @keyframes fadein {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
-    .hero    { animation: fadein 0.5s ease both; }
     .alert-strip { animation: fadein 0.5s 0.1s ease both; }
     .card:nth-child(1) { animation: fadein 0.5s 0.15s ease both; }
-    .card:nth-child(2) { animation: fadein 0.5s 0.2s ease both; }
+    .card:nth-child(2) { animation: fadein 0.5s 0.20s ease both; }
     .card:nth-child(3) { animation: fadein 0.5s 0.25s ease both; }
-    .card:nth-child(4) { animation: fadein 0.5s 0.3s ease both; }
+    .card:nth-child(4) { animation: fadein 0.5s 0.30s ease both; }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--blue-dim); }
 
+    /* ── LOCAL MOBILE OVERRIDES ── */
+    /* These work alongside gsc-shared.css mobile rules */
     @media (max-width: 768px) {
-      .shell { flex-direction: column; }
-      .sidebar { width: 100%; height: auto; position: static; }
-      .content { padding: 24px; }
+      .content { padding: 20px; }
       .grid { grid-template-columns: 1fr; }
-      .hero { padding: 32px 24px; }
+      .hero { padding: 24px 20px; margin-bottom: 20px; }
+      .hero-inner { flex-direction: column; gap: 12px; }
       .hero-meta { display: none; }
-      .topbar { padding: 10px 24px; }
+      .hero h1 { font-size: 22px; letter-spacing: 2px; }
+      .topbar { padding: 8px 20px; font-size: 9px; }
+      .clearance-bar { padding: 8px 20px; font-size: 8px; gap: 12px; }
+      .card { padding: 18px 20px; }
     }
   </style>
 </head>
@@ -535,18 +372,10 @@
 
     <nav class="sidebar-nav">
       <div class="nav-label">Navigation</div>
-      <a href="index.html" class="active">
-        <span class="nav-dot"></span>About GSC
-      </a>
-      <a href="anomalies/">
-        <span class="nav-dot"></span>Anomaly Archive
-      </a>
-      <a href="journal/">
-        <span class="nav-dot"></span>Alex's Journal
-      </a>
-      <a href="incidents/">
-        <span class="nav-dot"></span>Incident Reports
-      </a>
+      <a href="index.html" class="active"><span class="nav-dot"></span>About GSC</a>
+      <a href="anomalies/"><span class="nav-dot"></span>Anomaly Archive</a>
+      <a href="journal/"><span class="nav-dot"></span>Alex's Journal</a>
+      <a href="incidents/"><span class="nav-dot"></span>Incident Reports</a>
     </nav>
 
     <div class="sidebar-footer">
@@ -559,12 +388,8 @@
   <!-- MAIN -->
   <div class="main">
 
-    <!-- Top bar -->
     <div class="topbar">
-      <div class="topbar-left">
-        <span>INT-NETWORK // SECURE</span>
-        <span id="syncTime">--</span>
-      </div>
+      <span>INT-NETWORK // SECURE &nbsp;|&nbsp; <span id="syncTime">--</span></span>
       <div class="topbar-right">
         <span class="tier-badge">TIER-2 ACCESS</span>
         <div class="status-dot"></div>
@@ -572,28 +397,34 @@
       </div>
     </div>
 
-    <!-- Content -->
     <div class="content">
 
-      <!-- Hero -->
+      <!-- HERO with flex row inner — no overlap possible -->
       <div class="hero">
-        <div class="hero-tag">INTERNAL DOCUMENT</div>
-        <h1>GLOBAL SECURITY<br>COOPERATION</h1>
-        <div class="hero-sub">INTERNAL OVERVIEW — CLEARANCE LEVEL 1</div>
-        <div class="hero-meta">
-          DOC-ID: <span>GSC-INT-001</span><br>
-          REV: <span>14</span><br>
-          CLASS: <span>RESTRICTED</span>
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="hero-tag">INTERNAL DOCUMENT</div>
+            <h1>GLOBAL SECURITY<br>COOPERATION</h1>
+            <div class="hero-sub">INTERNAL OVERVIEW — CLEARANCE LEVEL 1</div>
+            <div class="system-status">
+              Status: <span class="online">ONLINE</span>
+              &nbsp;|&nbsp; Last Sync: <span id="lastSync">--</span>
+            </div>
+          </div>
+          <div class="hero-meta">
+            DOC-ID: <span>GSC-INT-001</span><br>
+            REV: <span>14</span><br>
+            CLASS: <span>RESTRICTED</span><br>
+            NODE: <span>INT-04</span>
+          </div>
         </div>
       </div>
 
-      <!-- Alert strip -->
       <div class="alert-strip">
         <span class="label">// NOTICE</span>
         All access is logged. Unauthorized distribution of internal documents is a Class-3 violation. Verify clearance before proceeding.
       </div>
 
-      <!-- Cards -->
       <div class="grid">
 
         <div class="card">
@@ -632,14 +463,13 @@
 
       </div>
 
-      <!-- Notice -->
       <div class="notice">
-        <strong>INTERNAL NOTICE:</strong> Unauthorized replication or external distribution of archived material is prohibited under GSC Charter §4.2. All sessions are monitored, logged, and subject to review by the Intelligence Oversight Council.
+        <strong>INTERNAL NOTICE:</strong> Unauthorized replication or external distribution of archived material is prohibited under GSC Charter §4.2.
+        All sessions are monitored, logged, and subject to review by the Intelligence Oversight Council.
       </div>
 
     </div>
 
-    <!-- Clearance bar -->
     <div class="clearance-bar">
       <span class="cl-item">CLEARANCE: <span class="cl-val">TIER-2</span></span>
       <span class="cl-item">NODE: <span class="cl-val">INT-04</span></span>
@@ -651,30 +481,24 @@
 </div>
 
 <script>
-  // Live clock in topbar
   function updateTime() {
-    const now = new Date();
-    document.getElementById('syncTime').textContent =
-      now.toLocaleString('en-GB', { hour12: false });
+    const t = new Date().toLocaleString('en-GB', { hour12: false });
+    document.getElementById('syncTime').textContent = t;
+    document.getElementById('lastSync').textContent = t;
   }
-  updateTime();
-  setInterval(updateTime, 1000);
+  updateTime(); setInterval(updateTime, 1000);
 
-  // Uptime counter
   const startTime = Date.now();
-  function updateUptime() {
-    const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
-    const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
-    const s = String(elapsed % 60).padStart(2, '0');
-    document.getElementById('uptime').textContent = `${h}:${m}:${s}`;
-  }
-  setInterval(updateUptime, 1000);
+  setInterval(() => {
+    const s = Math.floor((Date.now() - startTime) / 1000);
+    document.getElementById('uptime').textContent =
+      [Math.floor(s/3600), Math.floor((s%3600)/60), s%60]
+      .map(n => String(n).padStart(2,'0')).join(':');
+  }, 1000);
 
-  // Session ID
   document.getElementById('sessionId').textContent =
-    'SES-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+    'SES-' + Math.random().toString(36).substring(2,8).toUpperCase();
 </script>
 
 </body>
-</html>
+  </html>
