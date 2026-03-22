@@ -1,204 +1,443 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>GSC | Restricted File</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GSC | Entity File</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #eef3f8;
-      color: #1e2a38;
-      display: flex;
+    :root {
+      --bg:         #0b1018;
+      --panel:      #101820;
+      --panel2:     #0d1520;
+      --border:     #1a2a3a;
+      --border2:    #1f3048;
+      --blue:       #2f6acd;
+      --blue-dim:   #1e3f7a;
+      --blue-glow:  rgba(47,106,205,0.15);
+      --text:       #c8d8ea;
+      --text-dim:   #5a7a9a;
+      --text-faint: #2e4a62;
+      --green:      #3ddc84;
+      --amber:      #e0a040;
+      --red:        #e05252;
+      --mono:       'Share Tech Mono', monospace;
+      --sans:       'Barlow', sans-serif;
+      --cond:       'Barlow Condensed', sans-serif;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 190px;
-      background: #1e2a38;
-      padding: 25px 20px;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #c5d1df;
-      min-height: 100vh;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
     }
 
-    .sidebar a {
-      color: #d8e2f0;
-      text-decoration: none;
-      margin: 12px 0;
-      font-size: 17px;
-      transition: 0.25s ease;
-    }
+    .shell { display: flex; min-height: 100vh; }
 
-    .sidebar a:hover {
-      color: #2f5fa8;
-      padding-left: 6px;
-    }
+    /* ── SIDEBAR ── */
+    .sidebar { width: 200px; min-width: 200px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; position: sticky; top: 0; height: 100vh; }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; }
+    .logo-placeholder { width: 64px; height: 64px; border: 2px solid var(--blue-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .logo-placeholder::after { content: 'GSC'; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 2px; color: var(--blue); }
+    .sidebar-org { font-family: var(--cond); font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-align: center; text-transform: uppercase; }
+    .sidebar-nav { flex: 1; padding: 20px 0; display: flex; flex-direction: column; }
+    .nav-label { font-family: var(--mono); font-size: 9px; letter-spacing: 3px; color: var(--text-faint); padding: 0 20px; margin-bottom: 8px; margin-top: 16px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text-dim); text-decoration: none; font-family: var(--cond); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; border-left: 2px solid transparent; transition: all 0.2s; position: relative; }
+    .sidebar-nav a::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue-glow); transition: width 0.2s; }
+    .sidebar-nav a:hover { color: var(--blue); border-left-color: var(--blue); }
+    .sidebar-nav a:hover::before { width: 100%; }
+    .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; transition: background 0.2s; }
+    .sidebar-nav a:hover .nav-dot { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+    .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
 
-    .logo {
-      width: 75%;
-      max-width: 150px;
-      margin-bottom: 25px;
-      align-self: center;
-    
-    }
-.entity-meta {
-  margin-top: 20px;
-  padding: 15px;
-  background: #e9f0f7;
-  border: 1px solid #d2dbe5;
-  font-size: 14px;
-  letter-spacing: 1px;
-}
-.entity-meta p {
-  margin: 6px 0;
-}
-    /* Content */
-    .content {
-      flex: 1;
-      padding: 60px;
-      max-width: 900px;
-      position: relative;
-    }
-.locked-preview {
-  margin-top: 25px;
-  font-family: monospace;
-  font-size: 13px;
-  color: #9aa8b8;
-  line-height: 1.8;
-  
-  display: flex;
-  flex-direction: column; /* force items one below the other */
-  gap: 6px; /* small spacing between lines */
-}
-.system-warning {
-  margin-top: 30px;
-  font-size: 12px;
-  color: #6f8199;
-  text-align: center;
-  letter-spacing: 1px;
-  }
-    .entity-header {
-      margin-bottom: 30px;
-    }
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
 
-    .entity-header h1 {
-      margin: 0;
-      font-size: 28px;
-      letter-spacing: 2px;
-      color: #2f5fa8;
-    }
-.background-watermark {
-  position: absolute;
-  top: 150px;
-  right: 100px;
-  width: 300px;
-  height: 300px;
-  background: url("../gsc-logo.png") no-repeat center;
-  background-size: contain;
-  opacity: 0.02;
-  pointer-events: none;
-}
-    .entity-header p {
-      margin-top: 6px;
-      font-size: 14px;
-      color: #6f8199;
-      letter-spacing: 1px;
-    }
+    .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 48px; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
+    .topbar-right { display: flex; gap: 16px; align-items: center; }
+    .tier-badge { padding: 2px 8px; font-size: 10px; letter-spacing: 2px; border: 1px solid; }
+    .tier-badge.t1 { background: rgba(47,106,205,0.1);  color: var(--blue);  border-color: var(--blue-dim); }
+    .tier-badge.t2 { background: rgba(224,160,64,0.1); color: var(--amber); border-color: rgba(224,160,64,0.4); }
+    .tier-badge.t3 { background: rgba(224,82,82,0.1);  color: var(--red);   border-color: rgba(224,82,82,0.4); }
 
-    .restricted-box {
-      margin-top: 40px;
-      padding: 40px;
-      background: #ffffff;
-      border: 1px solid #d2dbe5;
-      text-align: center;
-      border-radius: 8px;
-    }
+    /* ── CONTENT ── */
+    .content { padding: 48px; flex: 1; max-width: 960px; }
 
-    .restricted-title {
-      font-size: 20px;
-      letter-spacing: 2px;
-      color: #a83232;
-      margin-bottom: 15px;
-    }
+    /* File header */
+    .file-header { position: relative; border: 1px solid var(--border2); background: linear-gradient(135deg, #0d1820 0%, #111c2b 100%); padding: 40px 48px; margin-bottom: 32px; overflow: hidden; animation: fadein 0.4s ease both; }
+    .file-header::before { content: ''; position: absolute; top: -50px; right: -50px; width: 250px; height: 250px; border-radius: 50%; background: radial-gradient(circle, rgba(47,106,205,0.10) 0%, transparent 70%); pointer-events: none; }
+    .file-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue-dim), transparent); }
 
-    .restricted-text {
-      font-size: 15px;
-      color: #2e3b4e;
-      margin-bottom: 10px;
-    }
+    .file-header-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--blue); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .file-header-tag::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--blue); }
 
-    .clearance-required {
-      font-size: 13px;
-      color: #6f8199;
-      margin-top: 20px;
-      letter-spacing: 1px;
-    }
+    .file-header h1 { font-family: var(--cond); font-weight: 700; font-size: 36px; letter-spacing: 4px; color: #e8f0fa; margin-bottom: 6px; line-height: 1; }
+    .file-header .designation { font-family: var(--mono); font-size: 13px; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 4px; }
 
-    .redacted {
-      margin-top: 30px;
-      font-family: monospace;
-      color: #9aa8b8;
-      letter-spacing: 2px;
-    }
+    .header-right { position: absolute; top: 40px; right: 48px; text-align: right; font-family: var(--mono); font-size: 10px; color: var(--text-faint); line-height: 2.2; }
+    .header-right .hl { color: var(--text-dim); }
 
+    /* Status badge in header */
+    .header-status { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; padding: 4px 12px; border: 1px solid; }
+    .hs-contained   { color: var(--green); border-color: rgba(61,220,132,0.4); background: rgba(61,220,132,0.06); }
+    .hs-observation { color: var(--amber); border-color: rgba(224,160,64,0.4); background: rgba(224,160,64,0.06); }
+    .hs-restricted  { color: var(--red);   border-color: rgba(224,82,82,0.4);  background: rgba(224,82,82,0.06); }
+    .hs-uncontained { color: #ff4444; border-color: rgba(255,68,68,0.5); background: rgba(255,68,68,0.08); animation: blink 2s ease-in-out infinite; }
+    .header-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 5px currentColor; }
+    @keyframes blink { 0%,100%{opacity:1;}50%{opacity:0.6;} }
+
+    /* Meta grid */
+    .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--border); margin-bottom: 36px; animation: fadein 0.4s 0.08s ease both; }
+    .meta-cell { padding: 16px 20px; border-right: 1px solid var(--border); }
+    .meta-cell:last-child { border-right: none; }
+    .meta-cell-label { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 5px; }
+    .meta-cell-val { font-family: var(--cond); font-size: 15px; letter-spacing: 1px; color: var(--text); }
+
+    /* Threat bar */
+    .threat-bar { display: flex; gap: 3px; margin-top: 4px; }
+    .threat-pip { width: 14px; height: 6px; border-radius: 1px; background: var(--border2); }
+    .threat-pip.filled-low    { background: var(--green); }
+    .threat-pip.filled-mid    { background: var(--amber); }
+    .threat-pip.filled-high   { background: var(--red); }
+
+    /* Sections */
+    .sections { display: flex; flex-direction: column; gap: 28px; }
+
+    .section { border: 1px solid var(--border); background: var(--panel); animation: fadein 0.4s ease both; }
+    .section-header { display: flex; align-items: center; gap: 14px; padding: 14px 24px; border-bottom: 1px solid var(--border); background: var(--panel2); }
+    .section-num { font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-faint); }
+    .section-title { font-family: var(--cond); font-weight: 600; font-size: 14px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
+    .section-body { padding: 24px; font-size: 15px; line-height: 1.75; color: var(--text-dim); }
+    .section-body p + p { margin-top: 14px; }
+
+    /* Addendum */
+    .addendum { border: 1px solid var(--border); border-left: 3px solid var(--blue); background: #090f18; animation: fadein 0.4s ease both; }
+    .addendum-header { display: flex; align-items: center; gap: 14px; padding: 12px 24px; border-bottom: 1px solid var(--border); }
+    .addendum-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--blue); }
+    .addendum-date { font-family: var(--mono); font-size: 10px; color: var(--text-faint); margin-left: auto; }
+    .addendum-body { padding: 20px 24px; font-size: 14px; line-height: 1.75; color: var(--text-dim); }
+
+    /* Redaction */
+    .redact { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 3px; user-select: none; cursor: not-allowed; vertical-align: middle; }
+    .redact-s { width: 3em; }
+    .redact-m { width: 6em; }
+    .redact-l { width: 10em; }
+
+    /* Back link */
+    .back-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 11px; letter-spacing: 2px; color: var(--text-faint); text-decoration: none; margin-bottom: 28px; transition: color 0.2s; }
+    .back-link:hover { color: var(--blue); }
+    .back-link::before { content: '←'; }
+
+    /* Bottom bar */
+    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 10px 48px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 32px; flex-shrink: 0; }
+    .cl-val { color: var(--text-dim); }
+
+    @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .section:nth-child(1) { animation-delay: 0.12s; }
+    .section:nth-child(2) { animation-delay: 0.18s; }
+    .section:nth-child(3) { animation-delay: 0.24s; }
+    .section:nth-child(4) { animation-delay: 0.30s; }
+    .addendum:nth-child(1) { animation-delay: 0.36s; }
+    .addendum:nth-child(2) { animation-delay: 0.42s; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @media (max-width: 900px) {
+      .meta-grid { grid-template-columns: 1fr 1fr; }
+      .meta-cell { border-bottom: 1px solid var(--border); }
+      .header-right { display: none; }
+    }
+    @media (max-width: 700px) {
+      .shell { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; }
+      .content { padding: 24px; }
+      .file-header { padding: 28px 24px; }
+      .topbar, .clearance-bar { padding: 10px 20px; flex-wrap: wrap; gap: 10px; }
+    }
   </style>
 </head>
-
 <body>
+<!-- ==========================================================
+  HOW TO FILL IN THIS TEMPLATE — NO CODING NEEDED
+  Read the comments above each section and replace the text.
+  Everything you need to change is marked with  ← EDIT THIS
+  Do NOT touch anything outside the marked areas.
+=========================================================== -->
 
-  <div class="sidebar">
-    <img src="../gsc-logo.png" alt="GSC Logo" class="logo">
-    <a href="../index.html">ABOUT GSC</a>
-    <a href="index.html">ANOMALY ARCHIVE</a>
-    <a href="../journal/">ALEX'S JOURNAL</a>
-    <a href="../incidents/">INCIDENT REPORTS</a>
-  </div>
+<!-- ══════════════════════════════════════════════════════════
+  ENTITY DATA — Change these values to update the whole page.
+  Status options:  contained | observation | restricted | uncontained
+  Clearance options: TIER-1 | TIER-2 | TIER-3
+  Threat level: a number from 1 to 5
+  Threat color: low | mid | high  (green | amber | red)
+══════════════════════════════════════════════════════════ -->
+<script>
+const ENTITY = {
+  id:              "GSC-AX01",            // ← EDIT THIS  e.g. "GSC-CT04"
+  designation:     "Redacted Designation",// ← EDIT THIS  e.g. "The Hollow Man"
+  clearance:       "TIER-2",             // ← EDIT THIS  TIER-1 / TIER-2 / TIER-3
+  status:          "observation",        // ← EDIT THIS  contained / observation / restricted / uncontained
+  discoveryDate:   "██/██/2026",         // ← EDIT THIS  e.g. "03/14/2024" or use ██ to redact
+  origin:          "Classified",         // ← EDIT THIS  e.g. "Eastern Europe" or "Classified"
+  category:        "BIOLOGICAL",         // ← EDIT THIS  e.g. "BIOLOGICAL" / "COGNITOHAZARD" / "MECHANICAL"
+  threatLevel:     3,                    // ← EDIT THIS  1 to 5
+  threatColor:     "mid",               // ← EDIT THIS  low / mid / high
+  lastUpdated:     "2026-03-01",        // ← EDIT THIS  date of last file update
+};
+</script>
 
-  <div class="content">
-    <div class="background-watermark"></div>
+<div class="shell">
 
-    <div class="entity-header">
-      <h1>ENTITY ID: GSC-01</h1>
-      <div class="entity-meta">
-  <p><strong>CONTAINMENT STATUS:</strong> CLASSIFIED</p>
-  <p><strong>RISK LEVEL:</strong> UNKNOWN</p>
-  <p><strong>FILE STATE:</strong> LOCKED</p>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../gsc-logo.png" alt="GSC" class="logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="logo-placeholder" style="display:none;"></div>
+      <div class="sidebar-org">Global Security<br>Cooperation</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <a href="../index.html"><span class="nav-dot"></span>About GSC</a>
+      <a href="index.html"><span class="nav-dot"></span>Anomaly Archive</a>
+      <a href="../journal/"><span class="nav-dot"></span>Alex's Journal</a>
+      <a href="../incidents/"><span class="nav-dot"></span>Incident Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      NODE: INT-04<br>
+      FILE: <span id="sidebarId">--</span><br>
+      UPTIME: <span id="uptime">00:00:00</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+      <span id="topbarPath">INT-NETWORK // ANOMALY ARCHIVE // --</span>
+      <div class="topbar-right">
+        <span class="tier-badge" id="tierBadge">--</span>
+        <span id="syncTime">--</span>
       </div>
-      <p>DESIGNATION: [REDACTED]</p>
     </div>
 
-    <div class="restricted-box">
-      <div class="system-warning">
-  Unauthorized access attempts are logged and reviewed.
-  </div>
-      <div class="restricted-title">
-        ACCESS RESTRICTED
+    <div class="content">
+
+      <a href="index.html" class="back-link">BACK TO ANOMALY ARCHIVE</a>
+
+      <!-- FILE HEADER — auto-filled from ENTITY above -->
+      <div class="file-header" id="fileHeader">
+        <div class="file-header-tag">ENTITY FILE</div>
+        <h1 id="fhId">--</h1>
+        <div class="designation" id="fhDesignation">--</div>
+        <div id="fhStatus"></div>
+        <div class="header-right">
+          CATEGORY: <span class="hl" id="fhCategory">--</span><br>
+          LAST UPDATED: <span class="hl" id="fhUpdated">--</span><br>
+          ACCESS: <span class="hl" id="fhAccess">--</span>
+        </div>
       </div>
 
-      <div class="restricted-text">
-        This file is classified under Tier-3 clearance.
+      <!-- META GRID — auto-filled -->
+      <div class="meta-grid">
+        <div class="meta-cell">
+          <div class="meta-cell-label">DISCOVERY DATE</div>
+          <div class="meta-cell-val" id="mgDate">--</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-cell-label">ORIGIN LOCATION</div>
+          <div class="meta-cell-val" id="mgOrigin">--</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-cell-label">CLASSIFICATION</div>
+          <div class="meta-cell-val" id="mgCategory">--</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-cell-label">THREAT LEVEL</div>
+          <div class="threat-bar" id="mgThreat"></div>
+        </div>
       </div>
 
-      <div class="restricted-text">
-        Observer Units do not possess sufficient authorization.
+      <!-- ══════════════════════════════════════════════════
+        SECTIONS — Edit the text between the <p> tags.
+        To add a new section: copy one full <div class="section">
+        block and paste it below the others.
+        To remove a section: delete the whole block.
+      ══════════════════════════════════════════════════ -->
+      <div class="sections">
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 01</span>
+            <span class="section-title">Summary</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS — write your summary here -->
+            <p>Brief overview of the entity. Describe its basic properties without revealing everything. Keep the tone professional and observational — as if written by a GSC researcher who has studied the subject at a distance.</p>
+            <p>You can have multiple paragraphs. Just add more &lt;p&gt; tags.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 02</span>
+            <span class="section-title">Observed Behavior</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Document known behaviors, patterns, environmental reactions, and interactions with personnel or other entities. Be specific — vague behavior descriptions feel less real.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 03</span>
+            <span class="section-title">Containment Protocol</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Outline current containment procedures and safety measures. What does staff need to do? What must never happen? Protocols work best when they hint at past failures.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 04</span>
+            <span class="section-title">Research Notes</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Additional remarks from researchers or internal analysts. This section can be more personal in tone — written by a named researcher, or left anonymous.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+      </div><!-- end .sections -->
+
+      <!-- ══════════════════════════════════════════════════
+        ADDENDA — Internal update logs. Each one is a separate
+        dated entry. Copy the block to add more addenda.
+        To remove: delete the whole <div class="addendum"> block.
+      ══════════════════════════════════════════════════ -->
+
+      <br><!-- spacer -->
+
+      <div class="addendum">
+        <div class="addendum-header">
+          <span class="addendum-label">ADDENDUM 01</span>
+          <span class="addendum-date">2026-01-15</span><!-- ← EDIT DATE -->
+        </div>
+        <div class="addendum-body">
+          <!-- ↓ EDIT THIS -->
+          Internal update log. Addenda are used to record new developments, incidents, or changes to containment status after the initial file was created. They read like incident notes — factual, terse, sometimes alarming.
+          <!-- ↑ EDIT THIS -->
+        </div>
       </div>
 
-      <div class="clearance-required">
-        REQUIRED CLEARANCE: TIER-3
+      <!-- Copy the block above to add a second addendum:
+      <div class="addendum">
+        <div class="addendum-header">
+          <span class="addendum-label">ADDENDUM 02</span>
+          <span class="addendum-date">2026-02-03</span>
+        </div>
+        <div class="addendum-body">
+          Your addendum text here.
+        </div>
       </div>
-      <div class="locked-preview">
-  <p>FILE SUMMARY: ██████████████████████████████████████</p>
-  <p>INCIDENT HISTORY: █████████████████████████████</p>
-  <p>RESEARCH NOTES: ███████████████████████████</p>
+      -->
+
+    </div><!-- end .content -->
+
+    <div class="clearance-bar">
+      <span>FILE: <span class="cl-val" id="barId">--</span></span>
+      <span>STATUS: <span class="cl-val" id="barStatus">--</span></span>
+      <span>CLEARANCE: <span class="cl-val" id="barClearance">--</span></span>
+      <span>© 2026 GSC INTERNAL NETWORK</span>
+    </div>
+
+  </div><!-- end .main -->
 </div>
 
-      <div class="redacted">
-        ███████████████████████████████
-      </div>
-    </div>
+<script>
+// ── Auto-fill from ENTITY data ────────────────────────────
+const STATUS_MAP = {
+  contained:   { label: 'CONTAINED',    cls: 'hs-contained'   },
+  observation: { label: 'UNDER OBSERVATION', cls: 'hs-observation' },
+  restricted:  { label: 'RESTRICTED',   cls: 'hs-restricted'  },
+  uncontained: { label: 'UNCONTAINED',  cls: 'hs-uncontained' },
+};
+const CLEARANCE_CLS = { 'TIER-1': 't1', 'TIER-2': 't2', 'TIER-3': 't3' };
 
-  </div>
+function init() {
+  const e = ENTITY;
+  const sc = STATUS_MAP[e.status] || STATUS_MAP.observation;
 
+  // Page title
+  document.title = `GSC | ${e.id}`;
+
+  // Topbar
+  document.getElementById('topbarPath').textContent =
+    `INT-NETWORK // ANOMALY ARCHIVE // ${e.id}`;
+  const tb = document.getElementById('tierBadge');
+  tb.textContent = e.clearance;
+  tb.className = 'tier-badge ' + (CLEARANCE_CLS[e.clearance] || '');
+
+  // File header
+  document.getElementById('fhId').textContent          = `ENTITY ID: ${e.id}`;
+  document.getElementById('fhDesignation').textContent = `DESIGNATION: ${e.designation}`;
+  document.getElementById('fhCategory').textContent    = e.category;
+  document.getElementById('fhUpdated').textContent     = e.lastUpdated;
+  document.getElementById('fhAccess').textContent      = e.clearance;
+
+  const statusEl = document.getElementById('fhStatus');
+  statusEl.innerHTML = `<div class="header-status ${sc.cls}">${sc.label}</div>`;
+
+  // Meta grid
+  document.getElementById('mgDate').textContent     = e.discoveryDate;
+  document.getElementById('mgOrigin').textContent   = e.origin;
+  document.getElementById('mgCategory').textContent = e.category;
+
+  // Threat bar
+  const bar = document.getElementById('mgThreat');
+  bar.innerHTML = '';
+  for (let i = 1; i <= 5; i++) {
+    const pip = document.createElement('div');
+    pip.className = 'threat-pip' + (i <= e.threatLevel ? ` filled-${e.threatColor}` : '');
+    bar.appendChild(pip);
+  }
+
+  // Sidebar & bottom bar
+  document.getElementById('sidebarId').textContent  = e.id;
+  document.getElementById('barId').textContent       = e.id;
+  document.getElementById('barStatus').textContent   = sc.label;
+  document.getElementById('barClearance').textContent= e.clearance;
+}
+
+init();
+
+// ── Clock & uptime ────────────────────────────────────────
+function updateTime() {
+  document.getElementById('syncTime').textContent =
+    new Date().toLocaleString('en-GB', { hour12: false });
+}
+updateTime(); setInterval(updateTime, 1000);
+
+const start = Date.now();
+setInterval(() => {
+  const s = Math.floor((Date.now() - start) / 1000);
+  document.getElementById('uptime').textContent =
+    [Math.floor(s/3600), Math.floor((s%3600)/60), s%60]
+    .map(n => String(n).padStart(2,'0')).join(':');
+}, 1000);
+</script>
 </body>
 </html>
