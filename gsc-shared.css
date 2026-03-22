@@ -1,0 +1,306 @@
+/*
+  ============================================================
+  GSC SHARED STYLESHEET — gsc-shared.css
+  Link this in every page inside <head>:
+
+  Root pages (index.html):
+    <link rel="stylesheet" href="gsc-shared.css">
+
+  Subfolder pages (journal/, anomalies/, incidents/):
+    <link rel="stylesheet" href="../gsc-shared.css">
+
+  Place this AFTER your Google Fonts link.
+  ============================================================
+*/
+
+/* ══════════════════════════════════════════════════════════
+   DESKTOP / LAPTOP FIXES — 1024px and above
+   Tighter sidebar, fuller content, no max-width cap
+══════════════════════════════════════════════════════════ */
+
+.sidebar {
+  width: 170px !important;
+  min-width: 170px !important;
+}
+
+.sidebar-nav a {
+  font-size: 11px !important;
+  padding: 8px 16px !important;
+}
+
+/* Remove the max-width cap so content fills the screen */
+.content {
+  max-width: 100% !important;
+  padding: 36px 44px !important;
+}
+
+/* Hero — switch to flex row so meta never overlaps title */
+.hero,
+.file-header {
+  padding: 36px 44px !important;
+  margin-bottom: 26px !important;
+}
+
+/* The inner wrapper for hero content — makes left/right layout */
+.hero-inner,
+.file-header-inner {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: flex-start !important;
+  gap: 32px !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* The meta block sits on the right — never overlaps */
+.hero-meta,
+.header-right {
+  position: static !important;
+  transform: none !important;
+  top: auto !important;
+  right: auto !important;
+  text-align: right !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  font-size: 9px !important;
+  line-height: 2.2 !important;
+}
+
+/* Headings */
+.hero h1 {
+  font-size: 32px !important;
+  letter-spacing: 4px !important;
+}
+
+.file-header h1 {
+  font-size: 13px !important;
+}
+
+.file-header h2 {
+  font-size: 30px !important;
+  letter-spacing: 3px !important;
+}
+
+/* Stats strip */
+.stats-strip { margin-bottom: 22px !important; }
+.stat-cell { padding: 12px 18px !important; }
+.stat-cell-label { font-size: 8px !important; }
+.stat-cell-val { font-size: 20px !important; }
+
+/* Toolbar */
+.search-input { font-size: 11px !important; padding: 8px 12px 8px 30px !important; }
+.filter-btn, .sort-btn { padding: 8px 14px !important; font-size: 9px !important; }
+
+/* Table */
+.archive-table th { padding: 10px 14px !important; font-size: 8px !important; }
+.archive-table td { padding: 12px 14px !important; font-size: 12px !important; }
+.archive-table td.designation { font-size: 14px !important; }
+
+/* Entity file sections */
+.meta-grid { margin-bottom: 22px !important; }
+.meta-cell { padding: 12px 16px !important; }
+.section-header { padding: 11px 22px !important; }
+.section-body { padding: 22px !important; font-size: 14px !important; line-height: 1.78 !important; }
+.addendum-body { padding: 18px 22px !important; font-size: 13px !important; }
+
+/* Journal entries */
+.entry { padding: 22px 28px 22px 40px !important; }
+.entry-title { font-size: 22px !important; }
+.entry-body { font-size: 18px !important; }
+.right-panel { width: 220px !important; min-width: 220px !important; }
+
+/* Bottom bar and notice */
+.clearance-bar { padding: 9px 44px !important; font-size: 9px !important; }
+.topbar { padding: 9px 44px !important; }
+.notice { font-size: 9px !important; }
+.back-link { font-size: 10px !important; margin-bottom: 22px !important; }
+.warn-banner, .warn-strip, .alert-strip { font-size: 10px !important; padding: 10px 16px !important; margin-bottom: 22px !important; }
+.results-info { font-size: 9px !important; }
+
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — 1280px and below (average laptop)
+══════════════════════════════════════════════════════════ */
+@media (max-width: 1280px) {
+  .sidebar { width: 158px !important; min-width: 158px !important; }
+  .content { padding: 30px 36px !important; }
+  .hero, .file-header { padding: 30px 36px !important; }
+  .hero h1 { font-size: 28px !important; }
+  .file-header h2 { font-size: 26px !important; }
+  .clearance-bar, .topbar { padding: 9px 36px !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — 1024px and below (small laptop)
+══════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero-meta,
+  .header-right { display: none !important; }
+
+  .sidebar { width: 148px !important; min-width: 148px !important; }
+  .content { padding: 26px 30px !important; }
+  .hero h1 { font-size: 24px !important; }
+  .file-header h2 { font-size: 22px !important; }
+  .stat-cell-val { font-size: 18px !important; }
+  .right-panel { display: none !important; }
+  .meta-grid { grid-template-columns: 1fr 1fr !important; }
+}
+
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE — 768px and below (mobile)
+   Real website nav, not an app tab bar
+══════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Stack the shell vertically */
+  .shell { flex-direction: column !important; }
+
+  /* ── Sidebar becomes a slim horizontal website header ── */
+  .sidebar {
+    width: 100% !important;
+    min-width: unset !important;
+    height: auto !important;
+    position: static !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 12px 18px !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    gap: 14px !important;
+  }
+
+  /* Hide logo section on mobile — nav takes up the space */
+  .sidebar-logo { display: none !important; }
+  .sidebar-footer { display: none !important; }
+  .nav-label { display: none !important; }
+
+  /* Nav becomes horizontal scrollable link strip — website style */
+  .sidebar-nav {
+    flex: 1 !important;
+    flex-direction: row !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  /* Hide scrollbar on mobile nav */
+  .sidebar-nav::-webkit-scrollbar { display: none !important; }
+
+  .sidebar-nav a {
+    padding: 5px 12px !important;
+    border-left: none !important;
+    border-bottom: 2px solid transparent !important;
+    font-size: 10px !important;
+    letter-spacing: 1px !important;
+    white-space: nowrap !important;
+    flex-shrink: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Disable the sliding background highlight on mobile */
+  .sidebar-nav a::before { display: none !important; }
+
+  .sidebar-nav a.active,
+  .sidebar-nav a:hover {
+    border-left: none !important;
+    border-bottom-color: var(--blue) !important;
+    background: transparent !important;
+  }
+
+  /* Hide the dots — they don't suit horizontal nav */
+  .nav-dot { display: none !important; }
+
+  /* GSC brand label injected via CSS on mobile */
+  .sidebar::before {
+    content: 'GSC';
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--blue);
+    flex-shrink: 0;
+  }
+
+  /* Topbar */
+  .topbar { padding: 7px 18px !important; font-size: 9px !important; }
+
+  /* Content */
+  .content { padding: 18px !important; }
+
+  /* Hero */
+  .hero, .file-header {
+    padding: 20px 18px !important;
+    margin-bottom: 18px !important;
+  }
+
+  /* Stack hero inner vertically on mobile */
+  .hero-inner,
+  .file-header-inner {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+
+  .hero-meta,
+  .header-right { display: none !important; }
+
+  .hero h1 { font-size: 20px !important; letter-spacing: 2px !important; }
+  .hero-sub { font-size: 9px !important; }
+  .file-header h2 { font-size: 18px !important; letter-spacing: 2px !important; }
+
+  /* Alert / warning strips */
+  .alert-strip, .warn-strip, .warn-banner {
+    font-size: 9px !important;
+    padding: 8px 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  /* Stats strip — 2 cols on mobile */
+  .stats-strip { flex-wrap: wrap !important; }
+  .stat-cell { min-width: 50% !important; padding: 10px 14px !important; }
+  .stat-cell-val { font-size: 18px !important; }
+
+  /* Toolbar */
+  .toolbar { flex-wrap: wrap !important; gap: 6px !important; }
+  .filter-btn, .sort-btn { padding: 7px 10px !important; font-size: 8px !important; }
+
+  /* Table — let it scroll horizontally on mobile */
+  .archive-table { font-size: 11px !important; }
+  .archive-table th { padding: 8px 10px !important; font-size: 7px !important; }
+  .archive-table td { padding: 10px !important; font-size: 11px !important; }
+
+  /* Meta grid — 2 cols */
+  .meta-grid { grid-template-columns: 1fr 1fr !important; }
+  .meta-cell { padding: 10px 12px !important; border-bottom: 1px solid var(--border) !important; }
+
+  /* Sections */
+  .section-body { padding: 16px !important; font-size: 13px !important; }
+  .addendum-body { padding: 14px 16px !important; font-size: 12px !important; }
+
+  /* Journal */
+  .entry { padding: 16px 18px 16px 30px !important; }
+  .entry-title { font-size: 19px !important; }
+  .entry-body { font-size: 16px !important; }
+  .right-panel { display: none !important; }
+  .entries-col { padding: 18px !important; }
+
+  /* Bottom bar */
+  .clearance-bar {
+    padding: 8px 18px !important;
+    font-size: 8px !important;
+    gap: 12px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .back-link { font-size: 9px !important; margin-bottom: 16px !important; }
+  .notice { font-size: 8px !important; }
+}
+
+/* Very small phones */
+@media (max-width: 420px) {
+  .hero h1 { font-size: 17px !important; }
+  .file-header h2 { font-size: 15px !important; }
+  .sidebar-nav a { font-size: 9px !important; padding: 5px 9px !important; }
+}
