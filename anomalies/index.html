@@ -18,14 +18,22 @@
       --text:        #c8d8ea;
       --text-dim:    #5a7a9a;
       --text-faint:  #2e4a62;
+      --green:       #2ea852;
+      --amber:       #c28a2e;
+      --red:         #a83232;
       --mono:        'Share Tech Mono', monospace;
+      --sans:        'Barlow', sans-serif;
       --cond:        'Barlow Condensed', sans-serif;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; }
 
-    body::before { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px); pointer-events: none; z-index: 999; }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
+    }
 
     .shell { display: flex; min-height: 100vh; }
 
@@ -46,11 +54,12 @@
     .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
 
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow-y: auto; }
+
     .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 48px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
     .topbar-right { display: flex; gap: 16px; align-items: center; }
     .tier-badge { background: var(--blue-dim); color: var(--blue); padding: 2px 8px; font-size: 10px; letter-spacing: 2px; border: 1px solid var(--blue-dim); }
     .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 6px #3ddc84; animation: pulse-dot 2s ease-in-out infinite; }
-    @keyframes pulse-dot { 0%,100%{opacity:1;}50%{opacity:0.5;} }
+    @keyframes pulse-dot { 0%,100%{opacity:1;box-shadow:0 0 6px #3ddc84;}50%{opacity:0.5;box-shadow:0 0 2px #3ddc84;} }
 
     .content { padding: 48px; flex: 1; }
 
@@ -74,11 +83,11 @@
     .filter-btn:hover { border-color: var(--blue-dim); color: var(--text); }
     .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
 
-    .stats-strip { display: flex; margin-bottom: 28px; border: 1px solid var(--border); animation: fadein 0.4s 0.1s ease both; }
+    .stats-strip { display: flex; gap: 0; margin-bottom: 28px; border: 1px solid var(--border); animation: fadein 0.4s 0.1s ease both; }
     .stat-cell { flex: 1; padding: 14px 20px; border-right: 1px solid var(--border); }
     .stat-cell:last-child { border-right: none; }
     .stat-cell-label { font-size: 9px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 4px; }
-    .stat-cell-val { font-size: 20px; color: var(--blue); font-family: var(--cond); font-weight: 600; }
+    .stat-cell-val { font-size: 20px; color: var(--blue); font-family: var(--cond); font-weight: 600; letter-spacing: 1px; }
     .stat-cell-val.green { color: #3ddc84; }
     .stat-cell-val.amber { color: #e0a040; }
     .stat-cell-val.red   { color: #e05252; }
@@ -88,15 +97,16 @@
 
     .archive-table { width: 100%; border-collapse: collapse; animation: fadein 0.4s 0.15s ease both; }
     .archive-table thead tr { background: var(--panel2); }
-    .archive-table th { padding: 12px 16px; text-align: left; font-size: 9px; letter-spacing: 3px; color: var(--text-faint); border-bottom: 1px solid var(--border2); font-weight: 400; white-space: nowrap; cursor: pointer; user-select: none; transition: color 0.2s; }
-    .archive-table th:hover { color: var(--text-dim); }
+    .archive-table th { padding: 12px 16px; text-align: left; font-size: 9px; letter-spacing: 3px; color: var(--text-faint); border-bottom: 1px solid var(--border2); font-weight: 400; white-space: nowrap; }
+    .archive-table th.sortable { cursor: pointer; user-select: none; transition: color 0.2s; }
+    .archive-table th.sortable:hover { color: var(--text-dim); }
     .archive-table th .sort-arrow { margin-left: 4px; opacity: 0.4; }
     .archive-table th.sorted .sort-arrow { opacity: 1; color: var(--blue); }
     .archive-table tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; }
     .archive-table tbody tr:hover { background: rgba(47,106,205,0.06); }
     .archive-table tbody tr:hover td:first-child { color: var(--blue); }
-    .archive-table td { padding: 16px; font-size: 12px; color: var(--text-dim); letter-spacing: 0.5px; }
-    .archive-table td.designation { color: var(--text); font-family: var(--cond); font-size: 15px; letter-spacing: 1px; }
+    .archive-table td { padding: 16px; font-size: 12px; color: var(--text-dim); letter-spacing: 0.5px; white-space: nowrap; }
+    .archive-table td.designation { color: var(--text); font-family: var(--cond); font-size: 15px; letter-spacing: 1px; white-space: normal; }
     .archive-table td.entity-id { font-size: 13px; letter-spacing: 2px; color: var(--text); }
 
     .status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 2px; padding: 3px 10px; font-weight: 600; }
@@ -111,16 +121,17 @@
     .status-uncontained::before { background: #ff4444; box-shadow: 0 0 6px #ff4444; animation: pulse-dot 0.8s ease-in-out infinite; }
     @keyframes blink-row { 0%,100%{opacity:1;}50%{opacity:0.7;} }
 
-    .clr { font-size: 9px; letter-spacing: 2px; padding: 3px 8px; border: 1px solid var(--border2); color: var(--text-faint); }
-    .clr.t3 { border-color: rgba(224,82,82,0.3); color: rgba(224,82,82,0.7); }
-    .clr.t2 { border-color: rgba(224,160,64,0.3); color: rgba(224,160,64,0.7); }
-    .clr.t1 { border-color: rgba(47,106,205,0.3); color: rgba(47,106,205,0.7); }
+    .clearance { font-size: 9px; letter-spacing: 2px; padding: 3px 8px; border: 1px solid var(--border2); color: var(--text-faint); }
+    .clearance.t3 { border-color: rgba(224,82,82,0.3); color: rgba(224,82,82,0.7); }
+    .clearance.t2 { border-color: rgba(224,160,64,0.3); color: rgba(224,160,64,0.7); }
+    .clearance.t1 { border-color: rgba(47,106,205,0.3); color: rgba(47,106,205,0.7); }
 
-    .archive-table tbody tr td:last-child::after { content: ' →'; opacity: 0; transition: opacity 0.15s; color: var(--blue); }
+    .archive-table tbody tr td:last-child::after { content: '→'; margin-left: 8px; opacity: 0; transition: opacity 0.15s; color: var(--blue); }
     .archive-table tbody tr:hover td:last-child::after { opacity: 1; }
 
     .no-results { text-align: center; padding: 60px; color: var(--text-faint); font-size: 11px; letter-spacing: 2px; display: none; }
-    .notice { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 18px; font-size: 10px; color: var(--text-faint); line-height: 1.8; }
+
+    .notice { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 18px; font-size: 10px; color: var(--text-faint); letter-spacing: 0.5px; line-height: 1.8; }
     .notice strong { color: var(--text-dim); }
 
     .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 10px 48px; font-size: 10px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 32px; flex-shrink: 0; }
@@ -140,6 +151,7 @@
       .stats-strip { flex-wrap: wrap; }
       .stat-cell { min-width: 50%; }
       .topbar, .clearance-bar { padding: 10px 20px; flex-wrap: wrap; gap: 10px; }
+      .archive-table td, .archive-table th { padding: 10px; }
     }
   </style>
 </head>
@@ -168,6 +180,7 @@
   </aside>
 
   <div class="main">
+
     <div class="topbar">
       <span>INT-NETWORK // ANOMALY ARCHIVE // OBSERVER VIEW</span>
       <div class="topbar-right">
@@ -224,11 +237,11 @@
       <table class="archive-table">
         <thead>
           <tr>
-            <th data-col="0">ENTITY ID <span class="sort-arrow">↕</span></th>
-            <th data-col="1">DESIGNATION <span class="sort-arrow">↕</span></th>
-            <th data-col="2">CONTAINMENT STATUS <span class="sort-arrow">↕</span></th>
-            <th data-col="-1">CLEARANCE</th>
-            <th data-col="-1">CATEGORY</th>
+            <th class="sortable" data-col="0">ENTITY ID <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="1">DESIGNATION <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="2">CONTAINMENT STATUS <span class="sort-arrow">↕</span></th>
+            <th>CLEARANCE</th>
+            <th>CATEGORY</th>
           </tr>
         </thead>
         <tbody id="tableBody"></tbody>
@@ -249,6 +262,7 @@
       <span>SESSION: <span class="cl-val" id="sessionId">--</span></span>
       <span>© 2026 GSC INTERNAL NETWORK</span>
     </div>
+
   </div>
 </div>
 
@@ -256,22 +270,22 @@
 // ============================================================
 //  ANOMALY ENTRIES — Edit this array to add or change entities
 //
-//  status:    "contained" | "observation" | "restricted" | "uncontained"
-//  clearance: "TIER-1" | "TIER-2" | "TIER-3"
+//  status options:   "contained" | "observation" | "restricted" | "uncontained"
+//  clearance options: "TIER-1" | "TIER-2" | "TIER-3"
 //
-//  IMPORTANT: For restricted entities set href to:
+//  For RESTRICTED entities, set href to:
 //    "clearance.html?id=GSC-XXXX"
-//  For non-restricted entities link directly:
+//  For all others, link directly to the entity page:
 //    "entity-001.html"
 // ============================================================
-var ANOMALY_ENTRIES = [
+const ANOMALY_ENTRIES = [
   {
     id:          "GSC-CT01",
     designation: "Redacted Designation",
     status:      "restricted",
     clearance:   "TIER-3",
     category:    "UNCLASSIFIED",
-    href:        "clearance.html?id=GSC-CT01"
+    href:        "clearance.html?id=GSC-CT01",
   },
   {
     id:          "GSC-AX02",
@@ -279,7 +293,7 @@ var ANOMALY_ENTRIES = [
     status:      "restricted",
     clearance:   "TIER-3",
     category:    "UNCLASSIFIED",
-    href:        "clearance.html?id=GSC-AX02"
+    href:        "clearance.html?id=GSC-AX02",
   },
   {
     id:          "GSC-AX03",
@@ -287,53 +301,56 @@ var ANOMALY_ENTRIES = [
     status:      "restricted",
     clearance:   "TIER-3",
     category:    "UNCLASSIFIED",
-    href:        "clearance.html?id=GSC-AX03"
-  }
-  // ADD NEW ENTRIES BELOW THIS LINE (remember the comma above):
-  // ,{
+    href:        "clearance.html?id=GSC-AX03",
+  },
+  // ── ADD NEW ENTITIES BELOW ──────────────────────────────
+  // {
   //   id:          "GSC-AX04",
   //   designation: "Your Entity Name",
   //   status:      "contained",
   //   clearance:   "TIER-2",
   //   category:    "BIOLOGICAL",
-  //   href:        "entity-004.html"
-  // }
+  //   href:        "entity-004.html",
+  // },
 ];
 
-var STATUS_CONFIG = {
-  contained:   { cls: "status-contained",   label: "CONTAINED"         },
-  observation: { cls: "status-observation", label: "UNDER OBSERVATION"  },
-  restricted:  { cls: "status-restricted",  label: "RESTRICTED"         },
-  uncontained: { cls: "status-uncontained", label: "UNCONTAINED"        }
+// ── Config ─────────────────────────────────────────────────
+const STATUS_CONFIG = {
+  contained:   { cls: 'status-contained',   label: 'CONTAINED'        },
+  observation: { cls: 'status-observation', label: 'UNDER OBSERVATION' },
+  restricted:  { cls: 'status-restricted',  label: 'RESTRICTED'        },
+  uncontained: { cls: 'status-uncontained', label: 'UNCONTAINED'       },
 };
+const CLEARANCE_CLS = { 'TIER-1': 't1', 'TIER-2': 't2', 'TIER-3': 't3' };
 
-var CLEARANCE_CLS = { "TIER-1": "t1", "TIER-2": "t2", "TIER-3": "t3" };
+// ── State ──────────────────────────────────────────────────
+let activeFilter = 'all';
+let searchQuery  = '';
+let sortCol      = -1;
+let sortAsc      = true;
+let searchTimer  = null;
 
-var activeFilter = "all";
-var searchQuery  = "";
-var sortCol      = -1;
-var sortAsc      = true;
-var searchTimer  = null;
-
-function updateStats(visible) {
-  document.getElementById("statTotal").textContent =
+// ── Stats ──────────────────────────────────────────────────
+function updateStats(visibleCount) {
+  document.getElementById('statTotal').textContent =
     ANOMALY_ENTRIES.length;
-  document.getElementById("statContained").textContent =
-    ANOMALY_ENTRIES.filter(function(e){ return e.status === "contained"; }).length;
-  document.getElementById("statObservation").textContent =
-    ANOMALY_ENTRIES.filter(function(e){ return e.status === "observation"; }).length;
-  document.getElementById("statRestricted").textContent =
-    ANOMALY_ENTRIES.filter(function(e){ return e.status === "restricted" || e.status === "uncontained"; }).length;
-  document.getElementById("resultsInfo").innerHTML =
-    "SHOWING <span>" + visible + "</span> OF <span>" + ANOMALY_ENTRIES.length + "</span> ENTITIES";
+  document.getElementById('statContained').textContent =
+    ANOMALY_ENTRIES.filter(e => e.status === 'contained').length;
+  document.getElementById('statObservation').textContent =
+    ANOMALY_ENTRIES.filter(e => e.status === 'observation').length;
+  document.getElementById('statRestricted').textContent =
+    ANOMALY_ENTRIES.filter(e => e.status === 'restricted' || e.status === 'uncontained').length;
+  document.getElementById('resultsInfo').innerHTML =
+    'SHOWING <span>' + visibleCount + '</span> OF <span>' + ANOMALY_ENTRIES.length + '</span> ENTITIES';
 }
 
+// ── Render ──────────────────────────────────────────────────
 function renderTable() {
-  var tbody = document.getElementById("tableBody");
-  var noRes = document.getElementById("noResults");
+  const tbody = document.getElementById('tableBody');
+  const noRes = document.getElementById('noResults');
 
-  var entries = ANOMALY_ENTRIES.filter(function(e) {
-    if (activeFilter !== "all" && e.status !== activeFilter) return false;
+  let entries = ANOMALY_ENTRIES.filter(function(e) {
+    if (activeFilter !== 'all' && e.status !== activeFilter) return false;
     if (searchQuery) {
       var q = searchQuery.toLowerCase();
       if (
@@ -346,27 +363,113 @@ function renderTable() {
   });
 
   if (sortCol >= 0) {
-    var keys = ["id", "designation", "status"];
-    var key = keys[sortCol];
+    var keys = ['id', 'designation', 'status'];
+    var key  = keys[sortCol];
     if (key) {
       entries = entries.slice().sort(function(a, b) {
-        return sortAsc ? a[key].localeCompare(b[key]) : b[key].localeCompare(a[key]);
+        return sortAsc
+          ? a[key].localeCompare(b[key])
+          : b[key].localeCompare(a[key]);
       });
     }
   }
 
-  tbody.innerHTML = "";
+  tbody.innerHTML = '';
 
   if (!entries.length) {
-    noRes.style.display = "block";
+    noRes.style.display = 'block';
     updateStats(0);
     return;
   }
 
-  noRes.style.display = "none";
+  noRes.style.display = 'none';
   updateStats(entries.length);
 
   entries.forEach(function(e, i) {
     var sc = STATUS_CONFIG[e.status] || STATUS_CONFIG.restricted;
-    var cc = CLEARANCE_CLS[e.clearance] || "";
-    var 
+    var cc = CLEARANCE_CLS[e.clearance] || '';
+
+    var tr = document.createElement('tr');
+    tr.style.animationDelay = (i * 0.04) + 's';
+    tr.style.animation = 'fadein 0.3s ease both';
+
+    tr.innerHTML =
+      '<td class="entity-id">' + e.id + '</td>' +
+      '<td class="designation">' + e.designation + '</td>' +
+      '<td><span class="status ' + sc.cls + '">' + sc.label + '</span></td>' +
+      '<td><span class="clearance ' + cc + '">' + e.clearance + '</span></td>' +
+      '<td>' + e.category + '</td>';
+
+    tr.addEventListener('click', function() {
+      window.location.href = e.href;
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+// ── Sort ───────────────────────────────────────────────────
+document.querySelectorAll('.archive-table th.sortable').forEach(function(th) {
+  th.addEventListener('click', function() {
+    var col = parseInt(th.dataset.col);
+    if (sortCol === col) {
+      sortAsc = !sortAsc;
+    } else {
+      sortCol = col;
+      sortAsc = true;
+    }
+    document.querySelectorAll('.archive-table th').forEach(function(h) {
+      h.classList.remove('sorted');
+    });
+    th.classList.add('sorted');
+    th.querySelector('.sort-arrow').textContent = sortAsc ? '↑' : '↓';
+    renderTable();
+  });
+});
+
+// ── Filters ────────────────────────────────────────────────
+document.querySelectorAll('.filter-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll('.filter-btn').forEach(function(b) {
+      b.classList.remove('active');
+    });
+    btn.classList.add('active');
+    renderTable();
+  });
+});
+
+// ── Search ─────────────────────────────────────────────────
+document.getElementById('searchInput').addEventListener('input', function(e) {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(function() {
+    searchQuery = e.target.value.trim();
+    renderTable();
+  }, 180);
+});
+
+// ── Clock & uptime ─────────────────────────────────────────
+function updateTime() {
+  document.getElementById('syncTime').textContent =
+    new Date().toLocaleString('en-GB', { hour12: false });
+}
+updateTime();
+setInterval(updateTime, 1000);
+
+var startTime = Date.now();
+setInterval(function() {
+  var s = Math.floor((Date.now() - startTime) / 1000);
+  var h = String(Math.floor(s / 3600)).padStart(2, '0');
+  var m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+  var sec = String(s % 60).padStart(2, '0');
+  document.getElementById('uptime').textContent = h + ':' + m + ':' + sec;
+}, 1000);
+
+document.getElementById('sessionId').textContent =
+  'SES-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+
+// ── Init ───────────────────────────────────────────────────
+renderTable();
+</script>
+</body>
+</html>
