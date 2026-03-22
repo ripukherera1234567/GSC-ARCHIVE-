@@ -37,6 +37,7 @@
 .logo-img {
   width: 54px !important;
   height: 54px !important;
+  mix-blend-mode: screen !important;
 }
 
 .logo-placeholder {
