@@ -367,4 +367,192 @@
   function renderAll() {
     const container  = document.getElementById('entriesContainer');
     const noResults  = document.getElementById('noResults');
-    const resultsInfo = document.getElementById('resultsInfo')
+    const resultsInfo = document.getElementById('resultsInfo');
+    const latestId   = getLatestId();
+
+    // Filter
+    let entries = JOURNAL_ENTRIES.filter(entry => {
+      if (activeFilter === 'flagged' && !entry.stamp) return false;
+      if (activeFilter === 'locked'  && !entry.locked) return false;
+      if (activeTag && !(entry.tags || []).includes(activeTag)) return false;
+      if (searchQuery) {
+        const q = searchQuery.toLowerCase();
+        const inTitle = entry.title.toLowerCase().includes(q);
+        const inBody  = entry.body.toLowerCase().includes(q);
+        if (!inTitle && !inBody) return false;
+      }
+      return true;
+    });
+
+    // Sort
+    entries = entries.slice().sort((a,b) =>
+      sortNewest
+        ? b.date.localeCompare(a.date) || b.id.localeCompare(a.id)
+        : a.date.localeCompare(b.date) || a.id.localeCompare(b.id)
+    );
+
+    container.innerHTML = '';
+
+    if (!entries.length) {
+      noResults.style.display = 'block';
+      resultsInfo.textContent = '';
+      return;
+    }
+
+    noResults.style.display = 'none';
+    const total = JOURNAL_ENTRIES.length;
+    resultsInfo.innerHTML = `SHOWING <span>${entries.length}</span> OF <span>${total}</span> ENTRIES`;
+
+    entries.forEach((entry, i) => {
+      const isLatest = entry.id === latestId;
+      const div = document.createElement('div');
+      div.className = 'entry' + (entry.locked ? ' locked' : '') + (isLatest ? ' is-latest' : '');
+      div.style.animationDelay = (i * 0.06) + 's';
+      div.dataset.id = entry.id;
+
+      let inner = '';
+      if (entry.locked) inner += `<div class="lock-overlay"><span class="lock-label">// ACCESS DENIED — CLEARANCE INSUFFICIENT</span></div>`;
+      if (isLatest && !entry.locked) inner += `<div class="latest-badge">LATEST</div>`;
+      if (entry.marginNote) inner += `<div class="margin-note">${escHtml(entry.marginNote)}</div>`;
+
+      const tags = (entry.tags || []).map(t =>
+        `<span class="entry-tag" data-tag="${escHtml(t)}">${escHtml(t)}</span>`
+      ).join('');
+
+      inner += `
+        <div class="entry-header">
+          <div class="entry-header-left">
+            <span class="entry-num">ENTRY // ${escHtml(entry.id)}</span>
+            <span class="entry-date">${escHtml(entry.date)}</span>
+          </div>
+          ${tags ? `<div class="entry-tags">${tags}</div>` : ''}
+        </div>
+        <div class="entry-title">${parseTitle(entry.title)}</div>
+        <div class="entry-body">${parseBody(entry.body, searchQuery)}</div>
+      `;
+      if (entry.stamp) inner += `<div class="stamp">${escHtml(entry.stamp)}</div>`;
+
+      div.innerHTML = inner;
+
+      // Tag click inside entry
+      div.querySelectorAll('.entry-tag').forEach(el => {
+        el.addEventListener('click', e => {
+          e.stopPropagation();
+          const tag = el.dataset.tag;
+          setTag(tag === activeTag ? null : tag);
+        });
+      });
+
+      container.appendChild(div);
+    });
+  }
+
+  // ── Right panel ───────────────────────────────────────────
+  function renderPanel() {
+    const total   = JOURNAL_ENTRIES.length;
+    const flagged = JOURNAL_ENTRIES.filter(e => e.stamp).length;
+    const locked  = JOURNAL_ENTRIES.filter(e => e.locked).length;
+    const sorted  = JOURNAL_ENTRIES.slice().sort((a,b) => b.date.localeCompare(a.date));
+    const lastDate = sorted[0]?.date ?? '—';
+
+    document.getElementById('statTotal').textContent   = total;
+    document.getElementById('statFlagged').textContent = flagged;
+    document.getElementById('statLocked').textContent  = locked;
+    document.getElementById('statLast').textContent    = lastDate;
+
+    // Latest 4 unlocked entries
+    const latest = sorted.filter(e => !e.locked).slice(0, 4);
+    const ll = document.getElementById('latestList');
+    ll.innerHTML = '';
+    latest.forEach(entry => {
+      const d = document.createElement('div');
+      d.className = 'latest-item';
+      d.innerHTML = `
+        <div class="li-num">ENTRY // ${escHtml(entry.id)}</div>
+        <div class="li-title">${parseTitle(entry.title)}</div>
+        <div class="li-date">${escHtml(entry.date)}</div>
+      `;
+      d.addEventListener('click', () => scrollToEntry(entry.id));
+      ll.appendChild(d);
+    });
+
+    // Tag cloud
+    const allTags = [...new Set(JOURNAL_ENTRIES.flatMap(e => e.tags || []))];
+    const tc = document.getElementById('tagCloud');
+    tc.innerHTML = '';
+    allTags.forEach(tag => {
+      const pill = document.createElement('span');
+      pill.className = 'tag-pill' + (tag === activeTag ? ' active' : '');
+      pill.textContent = tag;
+      pill.addEventListener('click', () => setTag(tag === activeTag ? null : tag));
+      tc.appendChild(pill);
+    });
+
+    if (!allTags.length) {
+      tc.innerHTML = `<span style="font-size:10px;color:var(--text-faint);letter-spacing:1px;">NO TAGS YET</span>`;
+    }
+  }
+
+  function scrollToEntry(id) {
+    activeFilter = 'all'; activeTag = null; searchQuery = '';
+    document.getElementById('searchInput').value = '';
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
+    renderAll();
+    setTimeout(() => {
+      const el = document.querySelector(`.entry[data-id="${id}"]`);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+
+  // ── Controls ──────────────────────────────────────────────
+  function setTag(tag) {
+    activeTag = tag;
+    document.querySelectorAll('.tag-pill').forEach(p => p.classList.toggle('active', p.textContent === tag));
+    renderAll();
+  }
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+      searchQuery = e.target.value.trim();
+      renderAll();
+    }, 200);
+  });
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeFilter = btn.dataset.filter;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAll();
+    });
+  });
+
+  const sortBtn = document.getElementById('sortBtn');
+  sortBtn.addEventListener('click', () => {
+    sortNewest = !sortNewest;
+    sortBtn.textContent = sortNewest ? '↓ NEWEST' : '↑ OLDEST';
+    renderAll();
+  });
+
+  // ── Clock & uptime ────────────────────────────────────────
+  function updateTime() {
+    document.getElementById('syncTime').textContent =
+      new Date().toLocaleString('en-GB', { hour12: false });
+  }
+  updateTime(); setInterval(updateTime, 1000);
+
+  const start = Date.now();
+  setInterval(() => {
+    const e = Math.floor((Date.now() - start) / 1000);
+    document.getElementById('uptime').textContent =
+      [Math.floor(e/3600), Math.floor((e%3600)/60), e%60]
+      .map(n => String(n).padStart(2,'0')).join(':');
+  }, 1000);
+
+  // ── Init ──────────────────────────────────────────────────
+  renderAll();
+  renderPanel();
+</script>
+</body>
+</html>
