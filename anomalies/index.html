@@ -1,238 +1,367 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>GSC | Anomaly Archive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: #eef3f8;
-      color: #1e2a38;
-      display: flex;
+    :root {
+      --bg:          #0b1018;
+      --panel:       #101820;
+      --panel2:      #0d1520;
+      --border:      #1a2a3a;
+      --border2:     #1f3048;
+      --blue:        #2f6acd;
+      --blue-dim:    #1e3f7a;
+      --blue-glow:   rgba(47,106,205,0.15);
+      --text:        #c8d8ea;
+      --text-dim:    #5a7a9a;
+      --text-faint:  #2e4a62;
+      --green:       #2ea852;
+      --amber:       #c28a2e;
+      --red:         #a83232;
+      --mono:        'Share Tech Mono', monospace;
+      --sans:        'Barlow', sans-serif;
+      --cond:        'Barlow Condensed', sans-serif;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: 190px;
-      background: #1e2a38;
-      padding: 25px 20px;
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid #c5d1df;
-      min-height: 100vh;
-    }
-    .search-container {
-  margin-bottom: 20px;
-}
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; }
 
-#searchInput {
-  width: 100%;
-  padding: 12px;
-  font-size: 14px;
-  border: 1px solid #d2dbe5;
-  border-radius: 6px;
-  background: #ffffff;
-  outline: none;
-  transition: border 0.2s ease, box-shadow 0.2s ease;
-}
-
-#searchInput:focus {
-  border-color: #2f5fa8;
-  box-shadow: 0 0 0 3px rgba(47, 95, 168, 0.1);
-                             }
-
-    .sidebar a {
-      color: #d8e2f0;
-      text-decoration: none;
-      margin: 12px 0;
-      font-size: 17px;
-      transition: all 0.25s ease;
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
     }
 
-    .sidebar a.active {
-      color: #2f5fa8;
-      border-left: 3px solid #2f5fa8;
-      padding-left: 10px;
-    }
+    .shell { display: flex; min-height: 100vh; }
 
-    .sidebar a:hover {
-      color: #2f5fa8;
-      padding-left: 6px;
-    }
+    /* ── SIDEBAR ── */
+    .sidebar { width: 200px; min-width: 200px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; position: sticky; top: 0; height: 100vh; }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; }
+    .logo-placeholder { width: 64px; height: 64px; border: 2px solid var(--blue-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .logo-placeholder::after { content: 'GSC'; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 2px; color: var(--blue); }
+    .sidebar-org { font-family: var(--cond); font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-align: center; text-transform: uppercase; }
+    .sidebar-nav { flex: 1; padding: 20px 0; display: flex; flex-direction: column; }
+    .nav-label { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); padding: 0 20px; margin-bottom: 8px; margin-top: 16px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text-dim); text-decoration: none; font-family: var(--cond); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; border-left: 2px solid transparent; transition: all 0.2s; position: relative; }
+    .sidebar-nav a::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue-glow); transition: width 0.2s; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--blue); border-left-color: var(--blue); }
+    .sidebar-nav a:hover::before, .sidebar-nav a.active::before { width: 100%; }
+    .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; transition: background 0.2s; }
+    .sidebar-nav a:hover .nav-dot, .sidebar-nav a.active .nav-dot { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+    .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
 
-    .logo {
-      width: 75%;
-      max-width: 150px;
-      margin-bottom: 25px;
-      align-self: center;
-    }
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow-y: auto; }
 
-    /* Content */
-    .content {
-      flex: 1;
-      padding: 60px;
-      max-width: 1000px;
-    }
+    .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 48px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
+    .topbar-right { display: flex; gap: 16px; align-items: center; }
+    .tier-badge { background: var(--blue-dim); color: var(--blue); padding: 2px 8px; font-size: 10px; letter-spacing: 2px; border: 1px solid var(--blue-dim); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: #3ddc84; box-shadow: 0 0 6px #3ddc84; animation: pulse-dot 2s ease-in-out infinite; }
+    @keyframes pulse-dot { 0%,100%{opacity:1;box-shadow:0 0 6px #3ddc84;}50%{opacity:0.5;box-shadow:0 0 2px #3ddc84;} }
 
-    .page-header {
-      margin-bottom: 30px;
-    }
+    /* ── CONTENT ── */
+    .content { padding: 48px; flex: 1; }
 
-    .page-header h1 {
-      margin: 0;
-      font-size: 30px;
-      letter-spacing: 2px;
-      color: #2f5fa8;
-    }
+    /* Hero */
+    .hero { position: relative; border: 1px solid var(--border2); background: linear-gradient(135deg, #0d1820 0%, #111c2b 100%); padding: 44px 48px; margin-bottom: 32px; overflow: hidden; animation: fadein 0.4s ease both; }
+    .hero::before { content: ''; position: absolute; top: -60px; right: -60px; width: 280px; height: 280px; border-radius: 50%; background: radial-gradient(circle, rgba(47,106,205,0.10) 0%, transparent 70%); pointer-events: none; }
+    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue-dim), transparent); }
+    .hero-tag { font-size: 9px; letter-spacing: 4px; color: var(--blue); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .hero-tag::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--blue); }
+    .hero h1 { font-family: var(--cond); font-weight: 700; font-size: 38px; letter-spacing: 5px; color: #e8f0fa; line-height: 1; margin-bottom: 8px; }
+    .hero-sub { font-size: 11px; letter-spacing: 3px; color: var(--text-dim); }
+    .hero-meta { position: absolute; top: 44px; right: 48px; text-align: right; font-size: 10px; color: var(--text-faint); line-height: 2; }
+    .hero-meta span { color: var(--text-dim); }
 
-    .page-header p {
-      margin-top: 8px;
-      font-size: 14px;
-      color: #6f8199;
-      letter-spacing: 1px;
-    }
+    /* Toolbar */
+    .toolbar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; animation: fadein 0.4s 0.05s ease both; }
 
-    .status-bar {
-      margin-bottom: 40px;
-      padding: 12px;
-      background-color: #e4ebf3;
-      border: 1px solid #d2dbe5;
-      font-size: 13px;
-      letter-spacing: 1px;
-      color: #2e3b4e;
-    }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-wrap::before { content: '//'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text-faint); pointer-events: none; }
+    .search-input { width: 100%; background: var(--panel); border: 1px solid var(--border2); color: var(--text); font-family: var(--mono); font-size: 12px; padding: 9px 12px 9px 34px; letter-spacing: 1px; outline: none; transition: border-color 0.2s; }
+    .search-input::placeholder { color: var(--text-faint); }
+    .search-input:focus { border-color: var(--blue); }
 
-    /* Archive Table */
-    .archive-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 15px;
-    }
+    .filter-btn { background: var(--panel); border: 1px solid var(--border2); color: var(--text-dim); font-family: var(--mono); font-size: 10px; letter-spacing: 1.5px; padding: 9px 16px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--blue-dim); color: var(--text); }
+    .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
 
-    .archive-table th {
-      text-align: left;
-      padding: 12px;
-      border-bottom: 2px solid #d2dbe5;
-      font-size: 13px;
-      letter-spacing: 1px;
-      color: #6f8199;
-    }
+    /* Stats strip */
+    .stats-strip { display: flex; gap: 0; margin-bottom: 28px; border: 1px solid var(--border); animation: fadein 0.4s 0.1s ease both; }
+    .stat-cell { flex: 1; padding: 14px 20px; border-right: 1px solid var(--border); }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell-label { font-size: 9px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 4px; }
+    .stat-cell-val { font-size: 20px; color: var(--blue); font-family: var(--cond); font-weight: 600; letter-spacing: 1px; }
+    .stat-cell-val.green { color: var(--green); }
+    .stat-cell-val.amber { color: var(--amber); }
+    .stat-cell-val.red   { color: #e05252; }
 
-    .archive-table td {
-      padding: 14px 12px;
-      border-bottom: 1px solid #dbe3ed;
-    }
+    /* Results info */
+    .results-info { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; margin-bottom: 16px; }
+    .results-info span { color: var(--blue); }
 
-    .archive-table tr {
-      transition: background 0.2s ease;
-      cursor: pointer;
-    }
+    /* ── TABLE ── */
+    .archive-table { width: 100%; border-collapse: collapse; animation: fadein 0.4s 0.15s ease both; }
 
-    .archive-table tr:hover {
-      background: #e4ebf3;
-    }
+    .archive-table thead tr { background: var(--panel2); }
+    .archive-table th { padding: 12px 16px; text-align: left; font-size: 9px; letter-spacing: 3px; color: var(--text-faint); border-bottom: 1px solid var(--border2); font-weight: 400; white-space: nowrap; }
+    .archive-table th.sortable { cursor: pointer; user-select: none; transition: color 0.2s; }
+    .archive-table th.sortable:hover { color: var(--text-dim); }
+    .archive-table th .sort-arrow { margin-left: 4px; opacity: 0.4; }
+    .archive-table th.sorted .sort-arrow { opacity: 1; color: var(--blue); }
 
-    .status-contained {
-      color: #2f8a4c;
-      font-weight: 600;
-    }
+    .archive-table tbody tr { border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.15s; position: relative; }
+    .archive-table tbody tr:hover { background: rgba(47,106,205,0.06); }
+    .archive-table tbody tr:hover td:first-child { color: var(--blue); }
 
-    .status-observation {
-      color: #c28a2e;
-      font-weight: 600;
-    }
+    .archive-table td { padding: 16px; font-size: 12px; color: var(--text-dim); letter-spacing: 0.5px; white-space: nowrap; }
+    .archive-table td.designation { color: var(--text); font-family: var(--cond); font-size: 15px; letter-spacing: 1px; white-space: normal; }
+    .archive-table td.entity-id { font-size: 13px; letter-spacing: 2px; color: var(--text); }
 
-    .status-restricted {
-      color: #a83232;
-      font-weight: 600;
-    }
+    /* Status pills */
+    .status { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; letter-spacing: 2px; padding: 3px 10px; border-radius: 0; font-weight: 600; }
+    .status::before { content: ''; width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .status-contained    { color: #3ddc84; border: 1px solid rgba(61,220,132,0.3); background: rgba(61,220,132,0.06); }
+    .status-contained::before { background: #3ddc84; box-shadow: 0 0 4px #3ddc84; }
+    .status-observation  { color: #e0a040; border: 1px solid rgba(224,160,64,0.3); background: rgba(224,160,64,0.06); }
+    .status-observation::before { background: #e0a040; }
+    .status-restricted   { color: #e05252; border: 1px solid rgba(224,82,82,0.3); background: rgba(224,82,82,0.06); }
+    .status-restricted::before { background: #e05252; box-shadow: 0 0 4px rgba(224,82,82,0.5); animation: pulse-dot 1.5s ease-in-out infinite; }
+    .status-uncontained  { color: #ff4444; border: 1px solid rgba(255,68,68,0.5); background: rgba(255,68,68,0.08); animation: blink-row 2s ease-in-out infinite; }
+    .status-uncontained::before { background: #ff4444; box-shadow: 0 0 6px #ff4444; animation: pulse-dot 0.8s ease-in-out infinite; }
 
+    @keyframes blink-row { 0%,100%{opacity:1;}50%{opacity:0.7;} }
+
+    /* Clearance badge */
+    .clearance { font-size: 9px; letter-spacing: 2px; padding: 3px 8px; border: 1px solid var(--border2); color: var(--text-faint); }
+    .clearance.t3 { border-color: rgba(224,82,82,0.3); color: rgba(224,82,82,0.7); }
+    .clearance.t2 { border-color: rgba(224,160,64,0.3); color: rgba(224,160,64,0.7); }
+    .clearance.t1 { border-color: rgba(47,106,205,0.3); color: rgba(47,106,205,0.7); }
+
+    /* Row arrow indicator */
+    .archive-table tbody tr td:last-child::after { content: '→'; margin-left: 8px; opacity: 0; transition: opacity 0.15s; color: var(--blue); }
+    .archive-table tbody tr:hover td:last-child::after { opacity: 1; }
+
+    /* No results */
+    .no-results { text-align: center; padding: 60px; color: var(--text-faint); font-size: 11px; letter-spacing: 2px; display: none; }
+
+    /* Notice */
+    .notice { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 18px; font-size: 10px; color: var(--text-faint); letter-spacing: 0.5px; line-height: 1.8; }
+    .notice strong { color: var(--text-dim); }
+
+    /* Bottom bar */
+    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 10px 48px; font-size: 10px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 32px; flex-shrink: 0; }
+    .cl-val { color: var(--text-dim); }
+
+    @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @media (max-width: 768px) {
+      .shell { flex-direction: column; }
+      .sidebar { width: 100%; height: auto; position: static; }
+      .content { padding: 24px; }
+      .hero { padding: 28px 24px; }
+      .hero-meta { display: none; }
+      .stats-strip { flex-wrap: wrap; }
+      .stat-cell { min-width: 50%; }
+      .topbar, .clearance-bar { padding: 10px 20px; flex-wrap: wrap; gap: 10px; }
+      .archive-table td, .archive-table th { padding: 10px 10px; }
+    }
   </style>
 </head>
-
 <body>
+<div class="shell">
 
-  <div class="sidebar">
-    <img src="../gsc-logo.png" alt="GSC Logo" class="logo">
-    <a href="../index.html">ABOUT GSC</a>
-    <a href="index.html" class="active">ANOMALY ARCHIVE</a>
-    <a href="../journal/">ALEX'S JOURNAL</a>
-    <a href="../incidents/">INCIDENT REPORTS</a>
-  </div>
-
-  <div class="content">
-
-    <div class="page-header">
-      <h1>ANOMALY ARCHIVE</h1>
-      <p>CLASSIFIED ENTITY DATABASE – OBSERVER VIEW</p>
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../gsc-logo.png" alt="GSC" class="logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="logo-placeholder" style="display:none;"></div>
+      <div class="sidebar-org">Global Security<br>Cooperation</div>
     </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <a href="../index.html"><span class="nav-dot"></span>About GSC</a>
+      <a href="index.html" class="active"><span class="nav-dot"></span>Anomaly Archive</a>
+      <a href="../journal/"><span class="nav-dot"></span>Alex's Journal</a>
+      <a href="../incidents/"><span class="nav-dot"></span>Incident Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      NODE: INT-04<br>
+      DB: ANOMALY-ARCHIVE<br>
+      UPTIME: <span id="uptime">00:00:00</span>
+    </div>
+  </aside>
 
-    <div class="status-bar">
-      <div class="search-container">
-  <input type="text" id="searchInput" placeholder="Search by Entity ID or Designation..." onkeyup="filterTable()">
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+      <span>INT-NETWORK // ANOMALY ARCHIVE // OBSERVER VIEW</span>
+      <div class="topbar-right">
+        <span class="tier-badge">TIER-2 ACCESS</span>
+        <div class="status-dot"></div>
+        <span id="syncTime">--</span>
       </div>
-      TOTAL REGISTERED ENTITIES: 04 | LAST UPDATE: AUTO-SYNC ENABLED
     </div>
 
-    <table class="archive-table">
-      <tr>
-        <th>ENTITY ID</th>
-        <th>DESIGNATION</th>
-        <th>CONTAINMENT STATUS</th>
-        <th>CLEARANCE</th>
-      </tr>
+    <div class="content">
 
-      <tr onclick="location.href='entity-001.html'">
-        <td>GSC-CT01</td>
-        <td>Redacted Designation</td>
-        <td class="status-restricted">RESTRICTED</td>
-        <td>TIER-3</td>
-      </tr>
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-tag">CLASSIFIED DATABASE</div>
+        <h1>ANOMALY ARCHIVE</h1>
+        <div class="hero-sub">CLASSIFIED ENTITY DATABASE — OBSERVER VIEW</div>
+        <div class="hero-meta">
+          DB-REV: <span>9.2.1</span><br>
+          SYNC: <span>AUTO</span><br>
+          ACCESS: <span>RESTRICTED</span>
+        </div>
+      </div>
 
-      <tr onclick="location.href='entity-template.html'">
-        <td>GSC-AX02</td>
-        <td>Redacted Designation</td>
-        <td class="status-restricted">RESTRICTED</td>
-        <td>TIER-3</td>
-      </tr>
+      <!-- Stats strip -->
+      <div class="stats-strip">
+        <div class="stat-cell">
+          <div class="stat-cell-label">REGISTERED ENTITIES</div>
+          <div class="stat-cell-val" id="statTotal">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">CONTAINED</div>
+          <div class="stat-cell-val green" id="statContained">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">UNDER OBSERVATION</div>
+          <div class="stat-cell-val amber" id="statObservation">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">RESTRICTED / CRITICAL</div>
+          <div class="stat-cell-val red" id="statRestricted">—</div>
+        </div>
+      </div>
 
-      <tr onclick="location.href='entity-03.html'">
-        <td>GSC-AX03</td>
-        <td>Restricted Entry</td>
-        <td class="status-restricted">RESTRICTED</td>
-        <td>TIER-3</td>
-      </tr>
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input class="search-input" id="searchInput" type="text" placeholder="SEARCH BY ID OR DESIGNATION..." autocomplete="off" spellcheck="false">
+        </div>
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="contained">CONTAINED</button>
+        <button class="filter-btn" data-filter="observation">OBSERVATION</button>
+        <button class="filter-btn" data-filter="restricted">RESTRICTED</button>
+      </div>
 
-    </table>
+      <div class="results-info" id="resultsInfo"></div>
+
+      <!-- Table -->
+      <table class="archive-table" id="archiveTable">
+        <thead>
+          <tr>
+            <th class="sortable" data-col="0">ENTITY ID <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="1">DESIGNATION <span class="sort-arrow">↕</span></th>
+            <th class="sortable" data-col="2">CONTAINMENT STATUS <span class="sort-arrow">↕</span></th>
+            <th>CLEARANCE</th>
+            <th>CATEGORY</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows injected by JS -->
+        </tbody>
+      </table>
+
+      <div class="no-results" id="noResults">// NO ENTITIES MATCH QUERY</div>
+
+      <div class="notice">
+        <strong>ACCESS NOTICE:</strong> Entities marked RESTRICTED require Tier-3 clearance for full file access.
+        Unauthorized access attempts are logged and flagged to the Intelligence Oversight Council under GSC Charter §4.7.
+      </div>
+
+    </div>
+
+    <div class="clearance-bar">
+      <span>DB: ANOMALY-ARCHIVE</span>
+      <span>NODE: <span class="cl-val">INT-04</span></span>
+      <span>SESSION: <span class="cl-val" id="sessionId">--</span></span>
+      <span>© 2026 GSC INTERNAL NETWORK</span>
+    </div>
 
   </div>
-  <script>
-function filterTable() {
-  const input = document.getElementById("searchInput");
-  const filter = input.value.toUpperCase();
-  const table = document.querySelector(".archive-table");
-  const tr = table.getElementsByTagName("tr");
+</div>
 
-  for (let i = 1; i < tr.length; i++) {
-    let td1 = tr[i].getElementsByTagName("td")[0];
-    let td2 = tr[i].getElementsByTagName("td")[1];
+<!-- ============================================================
+     ANOMALY DATA — Edit this array to add/edit entities.
+     Fields:
+       id:         "GSC-AX01"
+       designation: "Name shown in table (use Redacted Designation if classified)"
+       status:     "contained" | "observation" | "restricted" | "uncontained"
+       clearance:  "TIER-1" | "TIER-2" | "TIER-3"
+       category:   short tag e.g. "BIOLOGICAL", "COGNITOHAZARD", "MECHANICAL"
+       href:       link to the entity page e.g. "entity-001.html"
+============================================================ -->
+<script>
+const ANOMALY_ENTRIES = [
+  {
+    id:          "GSC-CT01",
+    designation: "Redacted Designation",
+    status:      "restricted",
+    clearance:   "TIER-3",
+    category:    "UNCLASSIFIED",
+    href:        "entity-001.html",
+  },
+  {
+    id:          "GSC-AX02",
+    designation: "Redacted Designation",
+    status:      "restricted",
+    clearance:   "TIER-3",
+    category:    "UNCLASSIFIED",
+    href:        "entity-template.html",
+  },
+  {
+    id:          "GSC-AX03",
+    designation: "Restricted Entry",
+    status:      "restricted",
+    clearance:   "TIER-3",
+    category:    "UNCLASSIFIED",
+    href:        "entity-03.html",
+  },
+  // ── ADD NEW ENTITIES BELOW ──────────────────────────────
+  // {
+  //   id:          "GSC-AX04",
+  //   designation: "Your Entity Name",
+  //   status:      "contained",       // contained | observation | restricted | uncontained
+  //   clearance:   "TIER-2",
+  //   category:    "BIOLOGICAL",
+  //   href:        "entity-004.html",
+  // },
+];
 
-    if (td1 || td2) {
-      let txtValue1 = td1.textContent || td1.innerText;
-      let txtValue2 = td2.textContent || td2.innerText;
+// ── Status config ──────────────────────────────────────────
+const STATUS_CONFIG = {
+  contained:   { cls: 'status-contained',   label: 'CONTAINED'    },
+  observation: { cls: 'status-observation', label: 'OBSERVATION'  },
+  restricted:  { cls: 'status-restricted',  label: 'RESTRICTED'   },
+  uncontained: { cls: 'status-uncontained', label: 'UNCONTAINED'  },
+};
 
-      if (
-        txtValue1.toUpperCase().indexOf(filter) > -1 ||
-        txtValue2.toUpperCase().indexOf(filter) > -1
-      ) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
-      }
-    }
-  }
-}
-  </script>
+const CLEARANCE_CLS = { 'TIER-1': 't1', 'TIER-2': 't2', 'TIER-3': 't3' };
 
-</body>
-</html>
+// ── State ──────────────────────────────────────────────────
+let activeFilter = 'all';
+let searchQuery  = '';
+let sortCol      = -1;
+let sortAsc      = true;
+let searchTimer  = null;
+
+// ── Stats ──────────────────────────────────────────────────
+function updateStats(visible) {
+  document.getElementById('statTotal').textContent      = ANOMALY_ENTRIES.length;
+  document.getElementById('statContained').textContent  = ANOMALY_ENTRIES.filter(e => e.status === 'contained').length;
+  document.getElementById('statObservation').textContent= ANOMALY_ENTRIES.filter(e => e.status === 'observation').length;
+  document.getElementById('statRestricted').textContent = ANOMALY_ENTRIES.filter(e => e.status === 'restricted' || e.status === 'unc
