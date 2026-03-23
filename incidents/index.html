@@ -1,218 +1,484 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-<title>GSC | Incident Archive</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GSC | Incident Archive</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../gsc-shared.css">
+  <style>
+    :root {
+      --bg:         #0b1018;
+      --panel:      #101820;
+      --panel2:     #0d1520;
+      --border:     #1a2a3a;
+      --border2:    #1f3048;
+      --blue:       #2f6acd;
+      --blue-dim:   #1e3f7a;
+      --blue-glow:  rgba(47,106,205,0.15);
+      --text:       #c8d8ea;
+      --text-dim:   #5a7a9a;
+      --text-faint: #2e4a62;
+      --green:      #3ddc84;
+      --amber:      #e0a040;
+      --red:        #e05252;
+      --mono:       'Share Tech Mono', monospace;
+      --sans:       'Barlow', sans-serif;
+      --cond:       'Barlow Condensed', sans-serif;
+    }
 
-<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--mono); overflow-x: hidden; }
 
-body{
-margin:0;
-font-family: Arial, sans-serif;
-background:#eef3f8;
-display:flex;
-}
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
+    }
 
-/* Sidebar */
+    .shell { display: flex; min-height: 100vh; }
 
-.sidebar{
-width:190px;
-background:#1e2a38;
-padding:25px 20px;
-display:flex;
-flex-direction:column;
-border-right:1px solid #c5d1df;
-min-height:100vh;
-position:fixed;
-}
+    /* ── SIDEBAR ── */
+    .sidebar { width: 200px; min-width: 200px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; position: sticky; top: 0; height: 100vh; }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; mix-blend-mode: screen; }
+    .logo-placeholder { width: 64px; height: 64px; border: 2px solid var(--blue-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .logo-placeholder::after { content: 'GSC'; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 2px; color: var(--blue); }
+    .sidebar-org { font-family: var(--cond); font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-align: center; text-transform: uppercase; }
+    .sidebar-nav { flex: 1; padding: 20px 0; display: flex; flex-direction: column; }
+    .nav-label { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); padding: 0 20px; margin-bottom: 8px; margin-top: 16px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text-dim); text-decoration: none; font-family: var(--cond); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; border-left: 2px solid transparent; transition: all 0.2s; position: relative; }
+    .sidebar-nav a::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue-glow); transition: width 0.2s; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--blue); border-left-color: var(--blue); }
+    .sidebar-nav a:hover::before, .sidebar-nav a.active::before { width: 100%; }
+    .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; transition: background 0.2s; }
+    .sidebar-nav a:hover .nav-dot, .sidebar-nav a.active .nav-dot { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+    .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
 
-.sidebar a{
-color:#d8e2f0;
-text-decoration:none;
-margin:12px 0;
-font-size:16px;
-transition:0.2s;
-}
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow-y: auto; }
 
-.sidebar a:hover{
-color:#2f5fa8;
-padding-left:5px;
-}
+    .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 44px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
+    .topbar-right { display: flex; gap: 16px; align-items: center; }
+    .tier-badge { background: var(--blue-dim); color: var(--blue); padding: 2px 8px; font-size: 10px; letter-spacing: 2px; border: 1px solid var(--blue-dim); }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); box-shadow: 0 0 5px var(--green); animation: pdot 2s ease-in-out infinite; }
+    @keyframes pdot { 0%,100%{opacity:1;}50%{opacity:0.4;} }
 
-.logo{
-width:120px;
-margin-bottom:25px;
-align-self:center;
-}
+    /* ── CONTENT ── */
+    .content { padding: 40px 44px; flex: 1; }
 
-/* Main Content */
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      border: 1px solid var(--border2);
+      background: linear-gradient(135deg, #0d1820 0%, #111c2b 100%);
+      padding: 40px 44px; margin-bottom: 28px; overflow: hidden;
+      animation: fadein 0.4s ease both;
+    }
+    .hero::before { content: ''; position: absolute; top: -50px; right: -50px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(47,106,205,0.10), transparent 70%); pointer-events: none; }
+    .hero::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue-dim), transparent); }
 
-.content{
-margin-left:230px;
-padding:40px;
-max-width:900px;
-}
+    .hero-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 28px; position: relative; z-index: 1; }
+    .hero-left { flex: 1; min-width: 0; }
+    .hero-tag { font-size: 9px; letter-spacing: 4px; color: var(--blue); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+    .hero-tag::before { content: ''; display: inline-block; width: 18px; height: 1px; background: var(--blue); }
+    .hero h1 { font-family: var(--cond); font-weight: 700; font-size: 34px; letter-spacing: 4px; color: #e8f0fa; line-height: 1; margin-bottom: 8px; }
+    .hero-sub { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
+    .hero-meta { font-size: 9px; color: var(--text-faint); line-height: 2.2; text-align: right; flex-shrink: 0; white-space: nowrap; }
+    .hero-meta span { color: var(--text-dim); }
 
-/* Header */
+    /* ── STATS STRIP ── */
+    .stats-strip { display: flex; border: 1px solid var(--border); margin-bottom: 24px; animation: fadein 0.4s 0.08s ease both; }
+    .stat-cell { flex: 1; padding: 12px 18px; border-right: 1px solid var(--border); }
+    .stat-cell:last-child { border-right: none; }
+    .stat-cell-label { font-size: 8px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 4px; }
+    .stat-cell-val { font-family: var(--cond); font-size: 20px; font-weight: 600; color: var(--blue); }
+    .stat-cell-val.red { color: var(--red); }
+    .stat-cell-val.amber { color: var(--amber); }
+    .stat-cell-val.green { color: var(--green); }
 
-h1{
-margin-bottom:5px;
-color:#2f5fa8;
-}
+    /* ── TOOLBAR ── */
+    .toolbar { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; animation: fadein 0.4s 0.1s ease both; }
+    .search-wrap { position: relative; flex: 1; min-width: 200px; }
+    .search-wrap::before { content: '//'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--text-faint); pointer-events: none; }
+    .search-input { width: 100%; background: var(--panel); border: 1px solid var(--border2); color: var(--text); font-family: var(--mono); font-size: 11px; padding: 9px 12px 9px 32px; letter-spacing: 1px; outline: none; transition: border-color 0.2s; }
+    .search-input::placeholder { color: var(--text-faint); }
+    .search-input:focus { border-color: var(--blue); }
+    .filter-btn { background: var(--panel); border: 1px solid var(--border2); color: var(--text-dim); font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; padding: 9px 14px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; white-space: nowrap; }
+    .filter-btn:hover { border-color: var(--blue-dim); color: var(--text); }
+    .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
 
-.warning{
-color:#6f8199;
-margin-bottom:25px;
-}
+    .results-info { font-size: 9px; color: var(--text-faint); letter-spacing: 1px; margin-bottom: 16px; }
+    .results-info span { color: var(--blue); }
 
-/* Search Bar */
+    /* ── INCIDENT CARDS ── */
+    .incident-list { display: flex; flex-direction: column; gap: 12px; }
 
-#searchBar{
-padding:10px;
-width:300px;
-font-size:16px;
-margin-bottom:25px;
-border:1px solid #c5d1df;
-border-radius:6px;
-}
+    .incident-card {
+      border: 1px solid var(--border);
+      background: var(--panel);
+      position: relative; overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      animation: fadein 0.4s ease both;
+      text-decoration: none;
+      display: block;
+    }
+    .incident-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--blue-dim); transition: background 0.2s;
+    }
+    .incident-card:hover { border-color: var(--blue-dim); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .incident-card:hover::before { background: var(--blue); }
 
-/* Incident Cards */
+    /* Severity left border colors */
+    .incident-card.sev-critical::before { background: var(--red); box-shadow: 0 0 8px rgba(224,82,82,0.4); }
+    .incident-card.sev-high::before    { background: var(--amber); }
+    .incident-card.sev-moderate::before{ background: #4a9acd; }
+    .incident-card.sev-low::before     { background: var(--green); }
 
-.incident-list{
-display:flex;
-flex-direction:column;
-gap:20px;
-}
+    .incident-card:hover.sev-critical::before { box-shadow: 0 0 12px rgba(224,82,82,0.6); }
 
-.incident-card{
-border:1px solid #d2dbe5;
-padding:20px;
-border-radius:8px;
-background:#e4ebf3;
-transition:0.25s;
-}
+    .card-inner { padding: 20px 24px 20px 28px; display: flex; align-items: center; gap: 20px; }
 
-.incident-card:hover{
-background:#eef3f8;
-border-color:#2f5fa8;
-}
+    .card-id {
+      font-size: 10px; letter-spacing: 3px; color: var(--text-faint);
+      white-space: nowrap; flex-shrink: 0; min-width: 80px;
+    }
 
-.incident-title{
-font-weight:bold;
-font-size:18px;
-margin-bottom:6px;
-}
+    .card-main { flex: 1; min-width: 0; }
+    .card-title { font-family: var(--cond); font-size: 17px; letter-spacing: 1px; color: var(--text); margin-bottom: 5px; }
+    .card-meta { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; display: flex; gap: 16px; flex-wrap: wrap; }
+    .card-meta-item { display: flex; align-items: center; gap: 5px; }
+    .card-meta-item::before { content: ''; width: 3px; height: 3px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; }
 
-.incident-meta{
-font-size:14px;
-color:#5f7a9c;
-}
+    .card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
 
-.incident-card a{
-display:block;
-text-decoration:none;
-color:#1e2a38;
-}
+    .sev-badge {
+      font-size: 8px; letter-spacing: 2px; padding: 2px 8px;
+      border: 1px solid; font-family: var(--mono); white-space: nowrap;
+    }
+    .sev-badge.critical { color: var(--red);   border-color: rgba(224,82,82,0.4); background: rgba(224,82,82,0.06); }
+    .sev-badge.high     { color: var(--amber); border-color: rgba(224,160,64,0.4); background: rgba(224,160,64,0.06); }
+    .sev-badge.moderate { color: #4a9acd;      border-color: rgba(74,154,205,0.4); background: rgba(74,154,205,0.06); }
+    .sev-badge.low      { color: var(--green); border-color: rgba(61,220,132,0.4); background: rgba(61,220,132,0.06); }
 
-</style>
+    .card-arrow { font-size: 12px; color: var(--text-faint); transition: color 0.2s, transform 0.2s; }
+    .incident-card:hover .card-arrow { color: var(--blue); transform: translateX(3px); }
+
+    /* No results */
+    .no-results { text-align: center; padding: 60px; color: var(--text-faint); font-size: 11px; letter-spacing: 2px; display: none; }
+
+    /* Notice */
+    .notice { margin-top: 32px; border-top: 1px solid var(--border); padding-top: 16px; font-size: 9px; color: var(--text-faint); letter-spacing: 0.5px; line-height: 1.9; }
+    .notice strong { color: var(--text-dim); }
+
+    /* Bottom bar */
+    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 9px 44px; font-size: 9px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 28px; flex-shrink: 0; flex-wrap: wrap; }
+    .cl-val { color: var(--text-dim); }
+
+    @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .incident-card:nth-child(1) { animation-delay: 0.10s; }
+    .incident-card:nth-child(2) { animation-delay: 0.16s; }
+    .incident-card:nth-child(3) { animation-delay: 0.22s; }
+    .incident-card:nth-child(4) { animation-delay: 0.28s; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @media (max-width: 768px) {
+      .content { padding: 18px; }
+      .hero { padding: 22px 18px; margin-bottom: 18px; }
+      .hero-inner { flex-direction: column; gap: 10px; }
+      .hero-meta { display: none; }
+      .hero h1 { font-size: 22px; }
+      .stats-strip { flex-wrap: wrap; }
+      .stat-cell { min-width: 50%; }
+      .card-inner { flex-wrap: wrap; gap: 12px; padding: 14px 16px 14px 22px; }
+      .card-right { flex-direction: row; align-items: center; }
+      .clearance-bar { padding: 8px 18px; gap: 12px; }
+      .topbar { padding: 8px 18px; font-size: 9px; }
+    }
+  </style>
 </head>
-
-
 <body>
+<div class="shell">
 
-<!-- Sidebar -->
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="/GSC-ARCHIVE-/gsc-logo.png" alt="GSC" class="logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="logo-placeholder" style="display:none;"></div>
+      <div class="sidebar-org">Global Security<br>Cooperation</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <a href="../index.html"><span class="nav-dot"></span>About GSC</a>
+      <a href="../anomalies/"><span class="nav-dot"></span>Anomaly Archive</a>
+      <a href="../journal/"><span class="nav-dot"></span>Alex's Journal</a>
+      <a href="index.html" class="active"><span class="nav-dot"></span>Incident Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      NODE: INT-04<br>
+      DB: INCIDENT-ARCHIVE<br>
+      UPTIME: <span id="uptime">00:00:00</span>
+    </div>
+  </aside>
 
-<div class="sidebar">
+  <!-- MAIN -->
+  <div class="main">
 
-<img src="../gsc-logo.png" alt="GSC Logo" class="logo">
+    <div class="topbar">
+      <span>INT-NETWORK // INCIDENT ARCHIVE // OBSERVER VIEW</span>
+      <div class="topbar-right">
+        <span class="tier-badge">TIER-2 ACCESS</span>
+        <div class="status-dot"></div>
+        <span id="syncTime">--</span>
+      </div>
+    </div>
 
-<a href="../index.html">ABOUT GSC</a>
-<a href="../anomalies/">ANOMALY ARCHIVE</a>
-<a href="../journal/">ALEX'S JOURNAL</a>
-<a href="index.html">INCIDENT REPORTS</a>
+    <div class="content">
 
+      <!-- HERO -->
+      <div class="hero">
+        <div class="hero-inner">
+          <div class="hero-left">
+            <div class="hero-tag">INCIDENT DATABASE</div>
+            <h1>INCIDENT REPORT ARCHIVE</h1>
+            <div class="hero-sub">FIELD OPERATIONS LOG — OBSERVER VIEW</div>
+          </div>
+          <div class="hero-meta">
+            DB-REV: <span>2.4.0</span><br>
+            SYNC: <span>AUTO</span><br>
+            ACCESS: <span>RESTRICTED</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-strip">
+        <div class="stat-cell">
+          <div class="stat-cell-label">TOTAL INCIDENTS</div>
+          <div class="stat-cell-val" id="statTotal">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">CRITICAL</div>
+          <div class="stat-cell-val red" id="statCritical">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">HIGH</div>
+          <div class="stat-cell-val amber" id="statHigh">—</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-cell-label">RESOLVED</div>
+          <div class="stat-cell-val green" id="statResolved">—</div>
+        </div>
+      </div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar">
+        <div class="search-wrap">
+          <input class="search-input" id="searchInput" type="text" placeholder="SEARCH INCIDENTS..." autocomplete="off" spellcheck="false">
+        </div>
+        <button class="filter-btn active" data-filter="all">ALL</button>
+        <button class="filter-btn" data-filter="critical">CRITICAL</button>
+        <button class="filter-btn" data-filter="high">HIGH</button>
+        <button class="filter-btn" data-filter="moderate">MODERATE</button>
+        <button class="filter-btn" data-filter="low">LOW</button>
+      </div>
+
+      <div class="results-info" id="resultsInfo"></div>
+
+      <!-- INCIDENT LIST -->
+      <div class="incident-list" id="incidentList"></div>
+      <div class="no-results" id="noResults">// NO INCIDENTS MATCH QUERY</div>
+
+      <div class="notice">
+        <strong>ACCESS NOTICE:</strong> Some incident reports may be restricted pending review by the Intelligence Oversight Council.
+        Unauthorized access or distribution of incident documentation is a Class-2 violation under GSC Charter §5.1.
+      </div>
+
+    </div>
+
+    <div class="clearance-bar">
+      <span>DB: INCIDENT-ARCHIVE</span>
+      <span>NODE: <span class="cl-val">INT-04</span></span>
+      <span>SESSION: <span class="cl-val" id="sessionId">--</span></span>
+      <span>© 2026 GSC INTERNAL NETWORK</span>
+    </div>
+
+  </div>
 </div>
 
+<!-- ============================================================
+  INCIDENT DATA — Edit this array to add or change incidents.
 
-<!-- Content -->
+  severity:  "critical" | "high" | "moderate" | "low"
+  status:    "open" | "resolved" | "under-review" | "classified"
+  href:      link to the individual incident page
 
-<div class="content">
-
-<h1>INCIDENT REPORT ARCHIVE</h1>
-
-<p class="warning">
-Access to incident documentation may require appropriate clearance.
-</p>
-
-<input
-type="text"
-id="searchBar"
-placeholder="Search incidents..."
-onkeyup="searchIncidents()"
->
-
-<div class="incident-list" id="incidentList">
-
-
-<div class="incident-card">
-<a href="incident-001.html">
-
-<div class="incident-title">
-Incident 001 – Hemoglobin Tree Breach
-</div>
-
-<div class="incident-meta">
-Date: 11 Feb 2026 | Location: Site-03
-</div>
-
-</a>
-</div>
-
-
-<div class="incident-card">
-<a href="incident-002.html">
-
-<div class="incident-title">
-Incident 002 – Observation Chamber Failure
-</div>
-
-<div class="incident-meta">
-Date: 21 Feb 2026 | Location: Site-01
-</div>
-
-</a>
-</div>
-
-
-</div>
-
-</div>
-
-
+  To add a new incident copy a block and paste it inside the
+  array. Make sure entries are separated by commas.
+============================================================ -->
 <script>
+var INCIDENTS = [
+  {
+    id:       "INC-001",
+    title:    "Hemoglobin Tree Breach",
+    date:     "11 Feb 2026",
+    location: "Site-03",
+    severity: "critical",
+    status:   "resolved",
+    href:     "incident-001.html",
+  },
+  {
+    id:       "INC-002",
+    title:    "Observation Chamber Failure",
+    date:     "21 Feb 2026",
+    location: "Site-01",
+    severity: "high",
+    status:   "under-review",
+    href:     "incident-002.html",
+  },
+  // ── ADD NEW INCIDENTS BELOW ─────────────────────────────
+  // {
+  //   id:       "INC-003",
+  //   title:    "Your Incident Title",
+  //   date:     "DD Mon YYYY",
+  //   location: "Site-XX",
+  //   severity: "moderate",   // critical | high | moderate | low
+  //   status:   "open",       // open | resolved | under-review | classified
+  //   href:     "incident-003.html",
+  // },
+];
 
-function searchIncidents(){
+// ── Config ──────────────────────────────────────────────────
+var SEV_LABEL = {
+  critical: "CRITICAL",
+  high:     "HIGH",
+  moderate: "MODERATE",
+  low:      "LOW",
+};
 
-let input=document.getElementById("searchBar").value.toLowerCase();
+var STATUS_LABEL = {
+  "open":         "OPEN",
+  "resolved":     "RESOLVED",
+  "under-review": "UNDER REVIEW",
+  "classified":   "CLASSIFIED",
+};
 
-let incidents=document.getElementsByClassName("incident-card");
+// ── State ────────────────────────────────────────────────────
+var activeFilter = "all";
+var searchQuery  = "";
+var searchTimer  = null;
 
-for(let i=0;i<incidents.length;i++){
-
-let text=incidents[i].innerText.toLowerCase();
-
-if(text.includes(input)){
-incidents[i].style.display="";
+// ── Stats ────────────────────────────────────────────────────
+function updateStats(visible) {
+  document.getElementById("statTotal").textContent    = INCIDENTS.length;
+  document.getElementById("statCritical").textContent = INCIDENTS.filter(function(i){ return i.severity === "critical"; }).length;
+  document.getElementById("statHigh").textContent     = INCIDENTS.filter(function(i){ return i.severity === "high"; }).length;
+  document.getElementById("statResolved").textContent = INCIDENTS.filter(function(i){ return i.status === "resolved"; }).length;
+  document.getElementById("resultsInfo").innerHTML =
+    "SHOWING <span>" + visible + "</span> OF <span>" + INCIDENTS.length + "</span> INCIDENTS";
 }
-else{
-incidents[i].style.display="none";
+
+// ── Render ────────────────────────────────────────────────────
+function renderIncidents() {
+  var list   = document.getElementById("incidentList");
+  var noRes  = document.getElementById("noResults");
+
+  var items = INCIDENTS.filter(function(inc) {
+    if (activeFilter !== "all" && inc.severity !== activeFilter) return false;
+    if (searchQuery) {
+      var q = searchQuery.toLowerCase();
+      if (
+        inc.id.toLowerCase().indexOf(q) === -1 &&
+        inc.title.toLowerCase().indexOf(q) === -1 &&
+        inc.location.toLowerCase().indexOf(q) === -1
+      ) return false;
+    }
+    return true;
+  });
+
+  list.innerHTML = "";
+
+  if (!items.length) {
+    noRes.style.display = "block";
+    updateStats(0);
+    return;
+  }
+
+  noRes.style.display = "none";
+  updateStats(items.length);
+
+  items.forEach(function(inc, i) {
+    var a = document.createElement("a");
+    a.className = "incident-card sev-" + inc.severity;
+    a.href = inc.href;
+    a.style.animationDelay = (i * 0.06) + "s";
+
+    a.innerHTML =
+      "<div class='card-inner'>" +
+        "<div class='card-id'>" + inc.id + "</div>" +
+        "<div class='card-main'>" +
+          "<div class='card-title'>" + inc.title + "</div>" +
+          "<div class='card-meta'>" +
+            "<span class='card-meta-item'>" + inc.date + "</span>" +
+            "<span class='card-meta-item'>" + inc.location + "</span>" +
+            "<span class='card-meta-item'>" + (STATUS_LABEL[inc.status] || inc.status) + "</span>" +
+          "</div>" +
+        "</div>" +
+        "<div class='card-right'>" +
+          "<span class='sev-badge " + inc.severity + "'>" + (SEV_LABEL[inc.severity] || inc.severity) + "</span>" +
+          "<span class='card-arrow'>→</span>" +
+        "</div>" +
+      "</div>";
+
+    list.appendChild(a);
+  });
 }
 
-}
+// ── Filters ──────────────────────────────────────────────────
+document.querySelectorAll(".filter-btn").forEach(function(btn) {
+  btn.addEventListener("click", function() {
+    activeFilter = btn.dataset.filter;
+    document.querySelectorAll(".filter-btn").forEach(function(b){ b.classList.remove("active"); });
+    btn.classList.add("active");
+    renderIncidents();
+  });
+});
 
-}
+// ── Search ───────────────────────────────────────────────────
+document.getElementById("searchInput").addEventListener("input", function(e) {
+  clearTimeout(searchTimer);
+  var val = e.target.value;
+  searchTimer = setTimeout(function() {
+    searchQuery = val.trim();
+    renderIncidents();
+  }, 180);
+});
 
+// ── Clock & uptime ───────────────────────────────────────────
+function updateTime() {
+  document.getElementById("syncTime").textContent =
+    new Date().toLocaleString("en-GB", { hour12: false });
+}
+updateTime(); setInterval(updateTime, 1000);
+
+var startTime = Date.now();
+setInterval(function() {
+  var s = Math.floor((Date.now() - startTime) / 1000);
+  document.getElementById("uptime").textContent =
+    [Math.floor(s/3600), Math.floor((s%3600)/60), s%60]
+    .map(function(n){ return String(n).padStart(2,"0"); }).join(":");
+}, 1000);
+
+document.getElementById("sessionId").textContent =
+  "SES-" + Math.random().toString(36).substring(2,8).toUpperCase();
+
+// ── Init ──────────────────────────────────────────────────────
+renderIncidents();
 </script>
-
 </body>
 </html>
