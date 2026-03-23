@@ -37,13 +37,12 @@
       pointer-events: none; z-index: 999;
     }
 
-    /* ── LAYOUT ── */
     .shell { display: flex; min-height: 100vh; }
 
     /* ── SIDEBAR ── */
     .sidebar { width: 200px; min-width: 200px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; position: sticky; top: 0; height: 100vh; }
     .sidebar-logo { display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
-    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; }
+    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; mix-blend-mode: screen; }
     .logo-placeholder { width: 64px; height: 64px; border: 2px solid var(--blue-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
     .logo-placeholder::after { content: 'GSC'; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 2px; color: var(--blue); }
     .sidebar-org { font-family: var(--cond); font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-align: center; text-transform: uppercase; }
@@ -58,74 +57,95 @@
     .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
 
     /* ── MAIN ── */
-    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow-y: auto; }
 
     .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 36px; display: flex; align-items: center; justify-content: space-between; font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
     .topbar-right { display: flex; gap: 16px; align-items: center; }
     .warning-badge { background: var(--amber-dim); color: var(--amber); padding: 2px 8px; font-size: 10px; letter-spacing: 2px; border: 1px solid rgba(224,160,64,0.3); }
 
-    /* ── TWO-COLUMN BODY ── */
-    .body-layout { display: flex; flex: 1; min-height: 0; }
+    /* ── CONTENT WRAPPER ── */
+    /* Positions entries and collapsible panel side by side */
+    .content-wrap {
+      flex: 1;
+      display: flex;
+      position: relative;
+      overflow: hidden;
+    }
 
-    /* ── LEFT: ENTRIES ── */
-    .entries-col { flex: 1; min-width: 0; overflow-y: auto; padding: 36px 36px 36px 36px; display: flex; flex-direction: column; }
+    /* ── ENTRIES AREA — always full width by default ── */
+    .entries-area {
+      flex: 1;
+      min-width: 0;
+      overflow-y: auto;
+      padding: 40px 48px;
+      transition: padding-right 0.3s ease;
+    }
 
-    /* ── RIGHT: PANEL ── */
-    .right-panel { width: 260px; min-width: 260px; background: var(--panel2); border-left: 1px solid var(--border); overflow-y: auto; display: flex; flex-direction: column; flex-shrink: 0; }
+    /* When panel is open, shrink right padding slightly */
+    .entries-area.panel-open {
+      padding-right: 36px;
+    }
 
     /* ── PAGE HEADER ── */
-    .page-header { margin-bottom: 28px; animation: fadein 0.4s ease both; }
+    .page-header { margin-bottom: 24px; animation: fadein 0.4s ease both; }
     .sys-label { font-size: 9px; letter-spacing: 4px; color: var(--amber); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
     .sys-label::before { content: ''; display: inline-block; width: 20px; height: 1px; background: var(--amber); }
-    .page-header h1 { font-family: var(--hand); font-size: 48px; font-weight: 700; color: #e8d8c0; line-height: 1; margin-bottom: 6px; }
+    .page-header h1 { font-family: var(--hand); font-size: 52px; font-weight: 700; color: #e8d8c0; line-height: 1; margin-bottom: 6px; }
     .page-header .meta { font-size: 10px; color: var(--text-faint); letter-spacing: 2px; }
 
-    /* ── TOOLBAR ── */
-    .toolbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; animation: fadein 0.4s 0.05s ease both; }
-
-    /* Search */
-    .search-wrap { position: relative; flex: 1; min-width: 180px; }
-    .search-wrap::before { content: '//'; position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 11px; color: var(--text-faint); pointer-events: none; }
-    .search-input {
-      width: 100%; background: var(--panel); border: 1px solid var(--border2);
-      color: var(--text); font-family: var(--mono); font-size: 12px;
-      padding: 9px 12px 9px 34px; letter-spacing: 1px;
-      outline: none; transition: border-color 0.2s;
+    /* ── SLIM TOOLBAR BAR ── */
+    .toolbar-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      animation: fadein 0.4s 0.05s ease both;
     }
+
+    .search-wrap { position: relative; flex: 1; min-width: 160px; }
+    .search-wrap::before { content: '//'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 10px; color: var(--text-faint); pointer-events: none; }
+    .search-input { width: 100%; background: transparent; border: none; border-bottom: 1px solid var(--border2); color: var(--text); font-family: var(--mono); font-size: 11px; padding: 5px 10px 5px 28px; letter-spacing: 1px; outline: none; transition: border-color 0.2s; }
     .search-input::placeholder { color: var(--text-faint); }
-    .search-input:focus { border-color: var(--blue); }
+    .search-input:focus { border-bottom-color: var(--blue); }
 
-    /* Filter buttons */
-    .filters { display: flex; gap: 6px; flex-wrap: wrap; }
-    .filter-btn {
-      background: var(--panel); border: 1px solid var(--border2);
-      color: var(--text-dim); font-family: var(--mono); font-size: 10px;
-      letter-spacing: 1.5px; padding: 8px 14px; cursor: pointer;
-      transition: all 0.2s; text-transform: uppercase; white-space: nowrap;
-    }
-    .filter-btn:hover { border-color: var(--blue-dim); color: var(--text); }
+    /* Divider between search and filters */
+    .tb-divider { width: 1px; height: 20px; background: var(--border2); flex-shrink: 0; }
+
+    .filter-btn { background: transparent; border: 1px solid transparent; color: var(--text-faint); font-family: var(--mono); font-size: 9px; letter-spacing: 1.5px; padding: 4px 10px; cursor: pointer; transition: all 0.2s; text-transform: uppercase; white-space: nowrap; }
+    .filter-btn:hover { color: var(--text); border-color: var(--border2); }
     .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
 
-    /* Sort */
-    .sort-btn {
-      background: var(--panel); border: 1px solid var(--border2);
-      color: var(--text-dim); font-family: var(--mono); font-size: 10px;
-      letter-spacing: 1.5px; padding: 8px 14px; cursor: pointer;
-      transition: all 0.2s; white-space: nowrap;
-    }
+    .sort-btn { background: transparent; border: 1px solid var(--border2); color: var(--text-dim); font-family: var(--mono); font-size: 9px; letter-spacing: 1px; padding: 4px 10px; cursor: pointer; transition: all 0.2s; white-space: nowrap; flex-shrink: 0; }
     .sort-btn:hover { border-color: var(--blue-dim); color: var(--text); }
 
+    /* Panel toggle button — sits at the end of toolbar */
+    .panel-toggle {
+      background: transparent; border: 1px solid var(--border2);
+      color: var(--text-dim); font-family: var(--mono); font-size: 9px;
+      letter-spacing: 1px; padding: 4px 10px; cursor: pointer;
+      transition: all 0.2s; white-space: nowrap; flex-shrink: 0;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .panel-toggle:hover { border-color: var(--blue-dim); color: var(--blue); }
+    .panel-toggle.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+    .panel-toggle-icon { font-size: 10px; transition: transform 0.3s; }
+    .panel-toggle.active .panel-toggle-icon { transform: rotate(180deg); }
+
     /* Results info */
-    .results-info { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; margin-bottom: 20px; }
+    .results-info { font-size: 9px; color: var(--text-faint); letter-spacing: 1px; margin-bottom: 18px; }
     .results-info span { color: var(--blue); }
 
     /* ── ENTRIES ── */
-    .entries { display: flex; flex-direction: column; gap: 24px; flex: 1; }
+    .entries { display: flex; flex-direction: column; gap: 22px; }
 
     .entry {
       position: relative; background: #0e1a26;
       border: 1px solid var(--border); border-left: none;
-      padding: 28px 32px 28px 44px;
+      padding: 28px 36px 28px 48px;
       transition: border-color 0.2s, box-shadow 0.2s;
       animation: fadein 0.4s ease both;
     }
@@ -133,96 +153,140 @@
     .entry::after { content: ''; position: absolute; top: 0; left: 6px; right: 0; bottom: 0; background: repeating-linear-gradient(180deg, transparent 0px, transparent 27px, rgba(47,106,205,0.04) 27px, rgba(47,106,205,0.04) 28px); pointer-events: none; }
     .entry:hover { border-color: var(--border2); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
 
-    /* Latest badge */
     .entry.is-latest::before { opacity: 1; background: repeating-linear-gradient(180deg, #4a8aff 0px, #4a8aff 8px, #2f6acd 8px, #2f6acd 16px, #5a9aff 16px, #5a9aff 24px); }
     .latest-badge { position: absolute; top: 14px; right: 14px; background: var(--blue-dim); color: var(--blue); font-size: 9px; letter-spacing: 2px; padding: 2px 8px; border: 1px solid var(--blue-dim); z-index: 5; }
 
-    .entry-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; position: relative; z-index: 1; gap: 12px; flex-wrap: wrap; }
+    .entry-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; position: relative; z-index: 1; gap: 10px; flex-wrap: wrap; }
     .entry-header-left { display: flex; align-items: baseline; gap: 14px; }
     .entry-num { font-size: 10px; letter-spacing: 3px; color: var(--text-faint); }
     .entry-date { font-size: 10px; color: var(--text-faint); letter-spacing: 1px; }
-    .entry-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-    .entry-tag { font-size: 9px; letter-spacing: 1px; padding: 2px 7px; border: 1px solid var(--border2); color: var(--text-faint); cursor: pointer; transition: all 0.15s; }
+    .entry-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .entry-tag { font-size: 8px; letter-spacing: 1px; padding: 2px 7px; border: 1px solid var(--border2); color: var(--text-faint); cursor: pointer; transition: all 0.15s; }
     .entry-tag:hover { border-color: var(--blue-dim); color: var(--blue); }
 
-    .entry-title { font-family: var(--hand); font-size: 24px; font-weight: 600; color: #ddc8a8; margin-bottom: 12px; position: relative; z-index: 1; }
-    .entry-body { font-family: var(--hand); font-size: 19px; color: #b8c8d8; line-height: 1.75; position: relative; z-index: 1; white-space: pre-line; }
+    .entry-title { font-family: var(--hand); font-size: 26px; font-weight: 600; color: #ddc8a8; margin-bottom: 12px; position: relative; z-index: 1; }
+    .entry-body { font-family: var(--hand); font-size: 20px; color: #b8c8d8; line-height: 1.78; position: relative; z-index: 1; white-space: pre-line; }
 
-    /* Highlighted search match */
     .entry-body mark { background: rgba(47,106,205,0.3); color: #9ecbff; border-radius: 2px; padding: 0 2px; }
 
     .redact-s { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 2.5em; user-select: none; cursor: not-allowed; vertical-align: middle; }
-    .redact-m { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 5em;   user-select: none; cursor: not-allowed; vertical-align: middle; }
+    .redact-m { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 5em; user-select: none; cursor: not-allowed; vertical-align: middle; }
     .redact-l { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 2px; width: 8.5em; user-select: none; cursor: not-allowed; vertical-align: middle; }
 
     .stamp { display: inline-block; border: 2px solid var(--red); color: var(--red); font-family: var(--cond); font-size: 11px; letter-spacing: 3px; padding: 3px 10px; transform: rotate(-3deg); margin-top: 12px; position: relative; z-index: 1; }
 
-    .margin-note { position: absolute; right: -10px; top: 50%; transform: translateY(-50%) rotate(2deg); background: #1c2a1a; border: 1px solid #2a4a28; padding: 8px 12px; font-family: var(--hand); font-size: 13px; color: #7ab870; max-width: 120px; line-height: 1.4; z-index: 10; box-shadow: 2px 2px 8px rgba(0,0,0,0.4); display: none; }
+    .margin-note { position: absolute; right: -10px; top: 50%; transform: translateY(-50%) rotate(2deg); background: #1c2a1a; border: 1px solid #2a4a28; padding: 8px 12px; font-family: var(--hand); font-size: 14px; color: #7ab870; max-width: 130px; line-height: 1.4; z-index: 10; box-shadow: 2px 2px 8px rgba(0,0,0,0.4); display: none; }
+
+    @media (min-width: 1200px) {
+      .margin-note { display: block; right: -150px; }
+    }
 
     .entry.locked { opacity: 0.45; pointer-events: none; filter: blur(0.4px); }
     .entry.locked .entry-body { filter: blur(4px); user-select: none; }
     .lock-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 20; pointer-events: all; }
     .lock-label { font-size: 11px; letter-spacing: 3px; color: var(--text-faint); border: 1px solid var(--border2); padding: 6px 16px; background: var(--bg); }
 
-    /* No results */
     .no-results { text-align: center; padding: 60px 20px; color: var(--text-faint); font-size: 12px; letter-spacing: 2px; display: none; }
-    .no-results .nr-icon { font-size: 28px; margin-bottom: 12px; opacity: 0.3; }
 
-    /* ── RIGHT PANEL ── */
-    .panel-section { padding: 20px; border-bottom: 1px solid var(--border); }
-    .panel-title { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    /* ── COLLAPSIBLE RIGHT PANEL ── */
+    .right-panel {
+      width: 0;
+      min-width: 0;
+      background: var(--panel2);
+      border-left: 1px solid transparent;
+      overflow: hidden;
+      transition: width 0.3s ease, min-width 0.3s ease, border-color 0.3s ease;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .right-panel.open {
+      width: 240px;
+      min-width: 240px;
+      border-left-color: var(--border);
+    }
+
+    .right-panel-inner {
+      width: 240px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .panel-section { padding: 18px 20px; border-bottom: 1px solid var(--border); }
+    .panel-title { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .panel-title::before { content: ''; display: inline-block; width: 12px; height: 1px; background: var(--text-faint); }
 
-    /* Stats */
-    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
+    .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 11px; }
     .stat-row:last-child { border-bottom: none; }
     .stat-label { color: var(--text-faint); letter-spacing: 1px; }
     .stat-val { color: var(--blue); font-size: 14px; }
     .stat-val.amber { color: var(--amber); }
     .stat-val.red { color: rgba(224,80,80,0.9); }
 
-    /* Latest entries list */
-    .latest-item { padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+    .latest-item { padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
     .latest-item:last-child { border-bottom: none; }
     .latest-item:hover .li-title { color: var(--blue); }
-    .li-num { font-size: 9px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 3px; }
+    .li-num { font-size: 8px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 2px; }
     .li-title { font-family: var(--hand); font-size: 16px; color: var(--text-dim); transition: color 0.15s; }
-    .li-date { font-size: 9px; color: var(--text-faint); margin-top: 2px; }
+    .li-date { font-size: 8px; color: var(--text-faint); margin-top: 2px; }
 
-    /* Tag cloud */
-    .tag-cloud { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tag-pill { font-size: 9px; letter-spacing: 1px; padding: 4px 10px; border: 1px solid var(--border2); color: var(--text-faint); cursor: pointer; transition: all 0.15s; }
+    .tag-cloud { display: flex; flex-wrap: wrap; gap: 5px; }
+    .tag-pill { font-size: 8px; letter-spacing: 1px; padding: 4px 9px; border: 1px solid var(--border2); color: var(--text-faint); cursor: pointer; transition: all 0.15s; }
     .tag-pill:hover, .tag-pill.active { border-color: var(--blue-dim); color: var(--blue); background: var(--blue-glow); }
 
     /* ── BOTTOM BAR ── */
-    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 10px 36px; font-size: 10px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 32px; flex-shrink: 0; }
+    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 10px 36px; font-size: 10px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 32px; flex-shrink: 0; flex-wrap: wrap; }
     .cl-val { color: var(--text-dim); }
 
-    /* ── ANIMATIONS ── */
     @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .entry:nth-child(1) { animation-delay: 0.10s; }
+    .entry:nth-child(2) { animation-delay: 0.16s; }
+    .entry:nth-child(3) { animation-delay: 0.22s; }
+    .entry:nth-child(4) { animation-delay: 0.28s; }
 
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
 
-    @media (max-width: 900px) {
-      .right-panel { display: none; }
-    }
-    @media (max-width: 700px) {
-      .shell { flex-direction: column; }
-      .sidebar { width: 100%; height: auto; position: static; }
-      .entries-col { padding: 20px; }
-      .topbar, .clearance-bar { padding: 10px 20px; flex-wrap: wrap; gap: 10px; }
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .entries-area { padding: 18px; }
+      .page-header h1 { font-size: 38px; }
+      .toolbar-bar { padding: 7px 10px; gap: 6px; }
+      .search-input { font-size: 10px; }
+      .filter-btn, .sort-btn, .panel-toggle { font-size: 8px; padding: 4px 8px; }
+      .tb-divider { display: none; }
+      .entry { padding: 20px 22px 20px 36px; }
+      .entry-title { font-size: 22px; }
+      .entry-body { font-size: 17px; }
+      /* Panel becomes full overlay on mobile */
+      .right-panel.open {
+        position: fixed; top: 0; right: 0; bottom: 0;
+        width: 80% !important; min-width: unset !important;
+        z-index: 200; box-shadow: -8px 0 32px rgba(0,0,0,0.5);
+      }
+      .right-panel-inner { width: 100%; }
+      /* Backdrop */
+      .panel-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 199; }
+      .panel-backdrop.visible { display: block; }
+      .clearance-bar { padding: 8px 18px; font-size: 8px; gap: 12px; }
     }
   </style>
 </head>
 <body>
+
+<!-- Mobile backdrop for panel -->
+<div class="panel-backdrop" id="backdrop" onclick="closePanel()"></div>
+
 <div class="shell">
 
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-logo">
-      <img src="../gsc-logo.png" alt="GSC" class="logo-img"
+      <img src="/GSC-ARCHIVE-/gsc-logo.png" alt="GSC" class="logo-img"
            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
       <div class="logo-placeholder" style="display:none;"></div>
       <div class="sidebar-org">Global Security<br>Cooperation</div>
@@ -252,307 +316,45 @@
       </div>
     </div>
 
-    <div class="body-layout">
+    <div class="content-wrap">
 
-      <!-- ENTRIES COLUMN -->
-      <div class="entries-col">
+      <!-- ENTRIES AREA -->
+      <div class="entries-area" id="entriesArea">
 
+        <!-- Page header -->
         <div class="page-header">
           <div class="sys-label">PERSONNEL FILE — UNSANITIZED</div>
           <h1>Alex's Journal</h1>
           <div class="meta">SUBJECT: KOVACS, ALEX M. &nbsp;|&nbsp; CLEARANCE: TIER-1 &nbsp;|&nbsp; ROLE: RESEARCH INTERN</div>
         </div>
 
-        <!-- TOOLBAR -->
-        <div class="toolbar">
+        <!-- SLIM TOOLBAR -->
+        <div class="toolbar-bar">
           <div class="search-wrap">
             <input class="search-input" id="searchInput" type="text" placeholder="SEARCH ENTRIES..." autocomplete="off" spellcheck="false">
           </div>
-          <div class="filters">
-            <button class="filter-btn active" data-filter="all">ALL</button>
-            <button class="filter-btn" data-filter="flagged">FLAGGED</button>
-            <button class="filter-btn" data-filter="locked">LOCKED</button>
-          </div>
-          <button class="sort-btn" id="sortBtn" title="Toggle sort order">↓ NEWEST</button>
+          <div class="tb-divider"></div>
+          <button class="filter-btn active" data-filter="all">ALL</button>
+          <button class="filter-btn" data-filter="flagged">FLAGGED</button>
+          <button class="filter-btn" data-filter="locked">LOCKED</button>
+          <div class="tb-divider"></div>
+          <button class="sort-btn" id="sortBtn">↓ NEWEST</button>
+          <button class="panel-toggle" id="panelToggle" onclick="togglePanel()">
+            <span class="panel-toggle-icon">▶</span> FILE INFO
+          </button>
         </div>
 
         <div class="results-info" id="resultsInfo"></div>
 
         <div class="entries" id="entriesContainer"></div>
-        <div class="no-results" id="noResults">
-          <div class="nr-icon">//</div>
-          NO ENTRIES MATCH QUERY
-        </div>
+        <div class="no-results" id="noResults">// NO ENTRIES MATCH QUERY</div>
 
       </div>
 
-      <!-- RIGHT PANEL -->
-      <aside class="right-panel">
+      <!-- COLLAPSIBLE RIGHT PANEL — hidden by default -->
+      <aside class="right-panel" id="rightPanel">
+        <div class="right-panel-inner">
 
-        <!-- Stats -->
-        <div class="panel-section">
-          <div class="panel-title">FILE STATS</div>
-          <div class="stat-row"><span class="stat-label">TOTAL ENTRIES</span><span class="stat-val" id="statTotal">—</span></div>
-          <div class="stat-row"><span class="stat-label">FLAGGED</span><span class="stat-val amber" id="statFlagged">—</span></div>
-          <div class="stat-row"><span class="stat-label">LOCKED</span><span class="stat-val red" id="statLocked">—</span></div>
-          <div class="stat-row"><span class="stat-label">LAST ENTRY</span><span class="stat-val" id="statLast" style="font-size:11px;">—</span></div>
-        </div>
-
-        <!-- Latest entries -->
-        <div class="panel-section">
-          <div class="panel-title">LATEST ENTRIES</div>
-          <div id="latestList"></div>
-        </div>
-
-        <!-- Tag filter -->
-        <div class="panel-section">
-          <div class="panel-title">FILTER BY TAG</div>
-          <div class="tag-cloud" id="tagCloud"></div>
-        </div>
-
-      </aside>
-    </div>
-
-    <div class="clearance-bar">
-      <span>FILE: JOURNAL-AKV</span>
-      <span>SUBJECT: <span class="cl-val">KOVACS, A.M.</span></span>
-      <span>STATUS: <span class="cl-val">ACTIVE</span></span>
-      <span>© 2026 GSC INTERNAL NETWORK</span>
-    </div>
-  </div>
-</div>
-
-<script src="journal-entries.js"></script>
-<script>
-  // ── State ─────────────────────────────────────────────────
-  let activeFilter  = 'all';
-  let activeTag     = null;
-  let searchQuery   = '';
-  let sortNewest    = true;
-  let searchTimeout = null;
-
-  // ── Parsers ───────────────────────────────────────────────
-  function escHtml(t) {
-    return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
-
-  function parseRedactions(text) {
-    return text
-      .replace(/\[REDACTED-S\]/g, '<span class="redact-s">████</span>')
-      .replace(/\[REDACTED-L\]/g, '<span class="redact-l">██████████████</span>')
-      .replace(/\[REDACTED\]/g,   '<span class="redact-m">████████</span>');
-  }
-
-  function parseBody(text, highlight) {
-    let safe = escHtml(text);
-    safe = parseRedactions(safe);
-    if (highlight) {
-      const esc = highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      safe = safe.replace(new RegExp(`(${esc})`, 'gi'), '<mark>$1</mark>');
-    }
-    return safe;
-  }
-
-  function parseTitle(text) {
-    return parseRedactions(escHtml(text));
-  }
-
-  // ── Render ────────────────────────────────────────────────
-  function getLatestId() {
-    const visible = JOURNAL_ENTRIES.filter(e => !e.locked);
-    if (!visible.length) return null;
-    return visible.slice().sort((a,b) => b.date.localeCompare(a.date))[0].id;
-  }
-
-  function renderAll() {
-    const container  = document.getElementById('entriesContainer');
-    const noResults  = document.getElementById('noResults');
-    const resultsInfo = document.getElementById('resultsInfo');
-    const latestId   = getLatestId();
-
-    // Filter
-    let entries = JOURNAL_ENTRIES.filter(entry => {
-      if (activeFilter === 'flagged' && !entry.stamp) return false;
-      if (activeFilter === 'locked'  && !entry.locked) return false;
-      if (activeTag && !(entry.tags || []).includes(activeTag)) return false;
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        const inTitle = entry.title.toLowerCase().includes(q);
-        const inBody  = entry.body.toLowerCase().includes(q);
-        if (!inTitle && !inBody) return false;
-      }
-      return true;
-    });
-
-    // Sort
-    entries = entries.slice().sort((a,b) =>
-      sortNewest
-        ? b.date.localeCompare(a.date) || b.id.localeCompare(a.id)
-        : a.date.localeCompare(b.date) || a.id.localeCompare(b.id)
-    );
-
-    container.innerHTML = '';
-
-    if (!entries.length) {
-      noResults.style.display = 'block';
-      resultsInfo.textContent = '';
-      return;
-    }
-
-    noResults.style.display = 'none';
-    const total = JOURNAL_ENTRIES.length;
-    resultsInfo.innerHTML = `SHOWING <span>${entries.length}</span> OF <span>${total}</span> ENTRIES`;
-
-    entries.forEach((entry, i) => {
-      const isLatest = entry.id === latestId;
-      const div = document.createElement('div');
-      div.className = 'entry' + (entry.locked ? ' locked' : '') + (isLatest ? ' is-latest' : '');
-      div.style.animationDelay = (i * 0.06) + 's';
-      div.dataset.id = entry.id;
-
-      let inner = '';
-      if (entry.locked) inner += `<div class="lock-overlay"><span class="lock-label">// ACCESS DENIED — CLEARANCE INSUFFICIENT</span></div>`;
-      if (isLatest && !entry.locked) inner += `<div class="latest-badge">LATEST</div>`;
-      if (entry.marginNote) inner += `<div class="margin-note">${escHtml(entry.marginNote)}</div>`;
-
-      const tags = (entry.tags || []).map(t =>
-        `<span class="entry-tag" data-tag="${escHtml(t)}">${escHtml(t)}</span>`
-      ).join('');
-
-      inner += `
-        <div class="entry-header">
-          <div class="entry-header-left">
-            <span class="entry-num">ENTRY // ${escHtml(entry.id)}</span>
-            <span class="entry-date">${escHtml(entry.date)}</span>
-          </div>
-          ${tags ? `<div class="entry-tags">${tags}</div>` : ''}
-        </div>
-        <div class="entry-title">${parseTitle(entry.title)}</div>
-        <div class="entry-body">${parseBody(entry.body, searchQuery)}</div>
-      `;
-      if (entry.stamp) inner += `<div class="stamp">${escHtml(entry.stamp)}</div>`;
-
-      div.innerHTML = inner;
-
-      // Tag click inside entry
-      div.querySelectorAll('.entry-tag').forEach(el => {
-        el.addEventListener('click', e => {
-          e.stopPropagation();
-          const tag = el.dataset.tag;
-          setTag(tag === activeTag ? null : tag);
-        });
-      });
-
-      container.appendChild(div);
-    });
-  }
-
-  // ── Right panel ───────────────────────────────────────────
-  function renderPanel() {
-    const total   = JOURNAL_ENTRIES.length;
-    const flagged = JOURNAL_ENTRIES.filter(e => e.stamp).length;
-    const locked  = JOURNAL_ENTRIES.filter(e => e.locked).length;
-    const sorted  = JOURNAL_ENTRIES.slice().sort((a,b) => b.date.localeCompare(a.date));
-    const lastDate = sorted[0]?.date ?? '—';
-
-    document.getElementById('statTotal').textContent   = total;
-    document.getElementById('statFlagged').textContent = flagged;
-    document.getElementById('statLocked').textContent  = locked;
-    document.getElementById('statLast').textContent    = lastDate;
-
-    // Latest 4 unlocked entries
-    const latest = sorted.filter(e => !e.locked).slice(0, 4);
-    const ll = document.getElementById('latestList');
-    ll.innerHTML = '';
-    latest.forEach(entry => {
-      const d = document.createElement('div');
-      d.className = 'latest-item';
-      d.innerHTML = `
-        <div class="li-num">ENTRY // ${escHtml(entry.id)}</div>
-        <div class="li-title">${parseTitle(entry.title)}</div>
-        <div class="li-date">${escHtml(entry.date)}</div>
-      `;
-      d.addEventListener('click', () => scrollToEntry(entry.id));
-      ll.appendChild(d);
-    });
-
-    // Tag cloud
-    const allTags = [...new Set(JOURNAL_ENTRIES.flatMap(e => e.tags || []))];
-    const tc = document.getElementById('tagCloud');
-    tc.innerHTML = '';
-    allTags.forEach(tag => {
-      const pill = document.createElement('span');
-      pill.className = 'tag-pill' + (tag === activeTag ? ' active' : '');
-      pill.textContent = tag;
-      pill.addEventListener('click', () => setTag(tag === activeTag ? null : tag));
-      tc.appendChild(pill);
-    });
-
-    if (!allTags.length) {
-      tc.innerHTML = `<span style="font-size:10px;color:var(--text-faint);letter-spacing:1px;">NO TAGS YET</span>`;
-    }
-  }
-
-  function scrollToEntry(id) {
-    activeFilter = 'all'; activeTag = null; searchQuery = '';
-    document.getElementById('searchInput').value = '';
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === 'all'));
-    renderAll();
-    setTimeout(() => {
-      const el = document.querySelector(`.entry[data-id="${id}"]`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  }
-
-  // ── Controls ──────────────────────────────────────────────
-  function setTag(tag) {
-    activeTag = tag;
-    document.querySelectorAll('.tag-pill').forEach(p => p.classList.toggle('active', p.textContent === tag));
-    renderAll();
-  }
-
-  document.getElementById('searchInput').addEventListener('input', e => {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-      searchQuery = e.target.value.trim();
-      renderAll();
-    }, 200);
-  });
-
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      activeFilter = btn.dataset.filter;
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      renderAll();
-    });
-  });
-
-  const sortBtn = document.getElementById('sortBtn');
-  sortBtn.addEventListener('click', () => {
-    sortNewest = !sortNewest;
-    sortBtn.textContent = sortNewest ? '↓ NEWEST' : '↑ OLDEST';
-    renderAll();
-  });
-
-  // ── Clock & uptime ────────────────────────────────────────
-  function updateTime() {
-    document.getElementById('syncTime').textContent =
-      new Date().toLocaleString('en-GB', { hour12: false });
-  }
-  updateTime(); setInterval(updateTime, 1000);
-
-  const start = Date.now();
-  setInterval(() => {
-    const e = Math.floor((Date.now() - start) / 1000);
-    document.getElementById('uptime').textContent =
-      [Math.floor(e/3600), Math.floor((e%3600)/60), e%60]
-      .map(n => String(n).padStart(2,'0')).join(':');
-  }, 1000);
-
-  // ── Init ──────────────────────────────────────────────────
-  renderAll();
-  renderPanel();
-</script>
-</body>
-</html>
+          <div class="panel-section">
+            <div class="panel-title">FILE STATS</div>
+            <div class="stat-row"><span class="stat-label">TOTAL ENTRIES</span><span class=
