@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GSC | Incident Report</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../gsc-shared.css">
+  <style>
+    :root {
+      --bg:         #0b1018;
+      --panel:      #101820;
+      --panel2:     #0d1520;
+      --border:     #1a2a3a;
+      --border2:    #1f3048;
+      --blue:       #2f6acd;
+      --blue-dim:   #1e3f7a;
+      --blue-glow:  rgba(47,106,205,0.15);
+      --text:       #c8d8ea;
+      --text-dim:   #5a7a9a;
+      --text-faint: #2e4a62;
+      --green:      #3ddc84;
+      --amber:      #e0a040;
+      --red:        #e05252;
+      --mono:       'Share Tech Mono', monospace;
+      --sans:       'Barlow', sans-serif;
+      --cond:       'Barlow Condensed', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); font-weight: 300; overflow-x: hidden; }
+
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px);
+      pointer-events: none; z-index: 999;
+    }
+
+    .shell { display: flex; min-height: 100vh; }
+
+    /* ── SIDEBAR ── */
+    .sidebar { width: 200px; min-width: 200px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 28px 0; position: sticky; top: 0; height: 100vh; }
+    .sidebar-logo { display: flex; flex-direction: column; align-items: center; padding: 0 20px 24px; border-bottom: 1px solid var(--border); }
+    .logo-img { width: 64px; height: 64px; object-fit: contain; filter: drop-shadow(0 0 10px rgba(47,106,205,0.4)); margin-bottom: 10px; mix-blend-mode: screen; }
+    .logo-placeholder { width: 64px; height: 64px; border: 2px solid var(--blue-dim); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+    .logo-placeholder::after { content: 'GSC'; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: 2px; color: var(--blue); }
+    .sidebar-org { font-family: var(--cond); font-size: 10px; letter-spacing: 2px; color: var(--text-dim); text-align: center; text-transform: uppercase; }
+    .sidebar-nav { flex: 1; padding: 20px 0; display: flex; flex-direction: column; }
+    .nav-label { font-size: 9px; letter-spacing: 3px; color: var(--text-faint); padding: 0 20px; margin-bottom: 8px; margin-top: 16px; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 10px 20px; color: var(--text-dim); text-decoration: none; font-family: var(--cond); font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; border-left: 2px solid transparent; transition: all 0.2s; position: relative; }
+    .sidebar-nav a::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--blue-glow); transition: width 0.2s; }
+    .sidebar-nav a:hover, .sidebar-nav a.active { color: var(--blue); border-left-color: var(--blue); }
+    .sidebar-nav a:hover::before, .sidebar-nav a.active::before { width: 100%; }
+    .nav-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--text-faint); flex-shrink: 0; transition: background 0.2s; }
+    .sidebar-nav a:hover .nav-dot, .sidebar-nav a.active .nav-dot { background: var(--blue); box-shadow: 0 0 6px var(--blue); }
+    .sidebar-footer { padding: 16px 20px 0; border-top: 1px solid var(--border); font-family: var(--mono); font-size: 9px; color: var(--text-faint); line-height: 1.8; }
+
+    /* ── MAIN ── */
+    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; min-width: 0; }
+
+    .topbar { background: var(--panel); border-bottom: 1px solid var(--border); padding: 10px 44px; display: flex; align-items: center; justify-content: space-between; font-family: var(--mono); font-size: 11px; color: var(--text-faint); letter-spacing: 1px; flex-shrink: 0; }
+    .topbar-right { display: flex; gap: 16px; align-items: center; }
+
+    /* Severity badge in topbar — color set by JS */
+    .sev-badge { font-size: 9px; letter-spacing: 2px; padding: 2px 9px; border: 1px solid; }
+    .sev-badge.critical { color: var(--red);   border-color: rgba(224,82,82,0.5);  background: rgba(224,82,82,0.08); }
+    .sev-badge.high     { color: var(--amber); border-color: rgba(224,160,64,0.5); background: rgba(224,160,64,0.08); }
+    .sev-badge.moderate { color: #4a9acd;      border-color: rgba(74,154,205,0.5); background: rgba(74,154,205,0.08); }
+    .sev-badge.low      { color: var(--green); border-color: rgba(61,220,132,0.5); background: rgba(61,220,132,0.08); }
+
+    /* ── CONTENT ── */
+    .content { padding: 40px 44px; flex: 1; max-width: 960px; }
+
+    /* Back link */
+    .back-link { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; color: var(--text-faint); text-decoration: none; margin-bottom: 24px; transition: color 0.2s; }
+    .back-link:hover { color: var(--blue); }
+    .back-link::before { content: '←'; }
+
+    /* ── FILE HEADER ── */
+    .file-header {
+      position: relative;
+      border: 1px solid var(--border2);
+      background: linear-gradient(135deg, #0d1820 0%, #111c2b 100%);
+      padding: 40px 44px; margin-bottom: 28px; overflow: hidden;
+      animation: fadein 0.4s ease both;
+    }
+    .file-header::before { content: ''; position: absolute; top: -50px; right: -50px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(47,106,205,0.10), transparent 70%); pointer-events: none; }
+    .file-header::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--blue-dim), transparent); }
+
+    /* Left severity stripe on header */
+    .file-header .sev-stripe { position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
+    .file-header .sev-stripe.critical { background: var(--red); box-shadow: 0 0 12px rgba(224,82,82,0.4); }
+    .file-header .sev-stripe.high     { background: var(--amber); }
+    .file-header .sev-stripe.moderate { background: #4a9acd; }
+    .file-header .sev-stripe.low      { background: var(--green); }
+
+    .file-header-inner { display: flex; justify-content: space-between; align-items: flex-start; gap: 28px; position: relative; z-index: 1; }
+    .file-header-left { flex: 1; min-width: 0; }
+
+    .file-header-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 4px; color: var(--blue); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .file-header-tag::before { content: ''; display: inline-block; width: 18px; height: 1px; background: var(--blue); }
+
+    .file-header h1 { font-family: var(--cond); font-size: 13px; letter-spacing: 3px; color: var(--text-dim); margin-bottom: 4px; }
+    .file-header h2 { font-family: var(--cond); font-weight: 700; font-size: 28px; letter-spacing: 3px; color: #e8f0fa; margin-bottom: 14px; line-height: 1.1; }
+
+    .header-status { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 2px; padding: 4px 12px; border: 1px solid; }
+    .header-status.open         { color: var(--red);   border-color: rgba(224,82,82,0.4);  background: rgba(224,82,82,0.06); }
+    .header-status.resolved     { color: var(--green); border-color: rgba(61,220,132,0.4); background: rgba(61,220,132,0.06); }
+    .header-status.under-review { color: var(--amber); border-color: rgba(224,160,64,0.4); background: rgba(224,160,64,0.06); }
+    .header-status.classified   { color: var(--text-dim); border-color: var(--border2); background: var(--panel2); }
+    .header-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; box-shadow: 0 0 5px currentColor; }
+
+    .header-right { font-family: var(--mono); font-size: 9px; color: var(--text-faint); line-height: 2.2; text-align: right; flex-shrink: 0; white-space: nowrap; }
+    .header-right span { color: var(--text-dim); }
+
+    /* ── META GRID ── */
+    .meta-grid { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--border); margin-bottom: 28px; animation: fadein 0.4s 0.08s ease both; }
+    .meta-cell { padding: 14px 18px; border-right: 1px solid var(--border); }
+    .meta-cell:last-child { border-right: none; }
+    .meta-label { font-family: var(--mono); font-size: 8px; letter-spacing: 2px; color: var(--text-faint); margin-bottom: 5px; }
+    .meta-val { font-family: var(--cond); font-size: 14px; letter-spacing: 1px; color: var(--text); }
+    .meta-val.red   { color: var(--red); }
+    .meta-val.amber { color: var(--amber); }
+
+    /* ── SECTIONS ── */
+    .sections { display: flex; flex-direction: column; gap: 20px; }
+
+    .section { border: 1px solid var(--border); background: var(--panel); animation: fadein 0.4s ease both; }
+    .section-header { display: flex; align-items: center; gap: 12px; padding: 12px 22px; border-bottom: 1px solid var(--border); background: var(--panel2); }
+    .section-num { font-family: var(--mono); font-size: 8px; letter-spacing: 2px; color: var(--text-faint); }
+    .section-title { font-family: var(--cond); font-weight: 600; font-size: 13px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
+    .section-body { padding: 22px; font-size: 14px; line-height: 1.8; color: var(--text-dim); }
+    .section-body p + p { margin-top: 12px; }
+
+    /* Redaction */
+    .redact   { display: inline-block; background: #111; color: transparent; border-radius: 2px; padding: 0 3px; user-select: none; cursor: not-allowed; vertical-align: middle; }
+    .redact-s { width: 3em; }
+    .redact-m { width: 6em; }
+    .redact-l { width: 10em; }
+
+    /* Personnel table */
+    .personnel-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-family: var(--mono); font-size: 12px; }
+    .personnel-table th { text-align: left; padding: 8px 14px; font-size: 8px; letter-spacing: 2px; color: var(--text-faint); border-bottom: 1px solid var(--border2); font-weight: 400; }
+    .personnel-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); color: var(--text-dim); }
+    .personnel-table tr:last-child td { border-bottom: none; }
+    .personnel-table td:first-child { color: var(--text); }
+
+    /* ── ADDENDA ── */
+    .addendum { border: 1px solid var(--border); border-left: 3px solid var(--blue); background: #090f18; animation: fadein 0.4s ease both; }
+    .addendum.warn { border-left-color: var(--amber); }
+    .addendum.alert { border-left-color: var(--red); }
+    .addendum-header { display: flex; align-items: center; gap: 14px; padding: 11px 22px; border-bottom: 1px solid var(--border); }
+    .addendum-label { font-family: var(--mono); font-size: 10px; letter-spacing: 3px; color: var(--blue); }
+    .addendum.warn  .addendum-label { color: var(--amber); }
+    .addendum.alert .addendum-label { color: var(--red); }
+    .addendum-author { font-family: var(--mono); font-size: 9px; color: var(--text-faint); }
+    .addendum-date { font-family: var(--mono); font-size: 9px; color: var(--text-faint); margin-left: auto; }
+    .addendum-body { padding: 18px 22px; font-size: 14px; line-height: 1.8; color: var(--text-dim); }
+
+    /* Bottom bar */
+    .clearance-bar { background: var(--panel); border-top: 1px solid var(--border); padding: 9px 44px; font-family: var(--mono); font-size: 9px; letter-spacing: 2px; color: var(--text-faint); display: flex; gap: 28px; flex-shrink: 0; flex-wrap: wrap; }
+    .cl-val { color: var(--text-dim); }
+
+    @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .section:nth-child(1) { animation-delay: 0.10s; }
+    .section:nth-child(2) { animation-delay: 0.16s; }
+    .section:nth-child(3) { animation-delay: 0.22s; }
+    .section:nth-child(4) { animation-delay: 0.28s; }
+    .addendum:nth-child(1) { animation-delay: 0.34s; }
+    .addendum:nth-child(2) { animation-delay: 0.40s; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+    @media (max-width: 900px) {
+      .meta-grid { grid-template-columns: 1fr 1fr; }
+      .meta-cell { border-bottom: 1px solid var(--border); }
+      .header-right { display: none; }
+    }
+    @media (max-width: 700px) {
+      .content { padding: 18px; }
+      .file-header { padding: 22px 18px; }
+      .file-header-inner { flex-direction: column; gap: 10px; }
+      .file-header h2 { font-size: 20px; }
+      .topbar, .clearance-bar { padding: 8px 18px; flex-wrap: wrap; gap: 10px; }
+      .section-body, .addendum-body { padding: 16px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!--
+  ================================================================
+  HOW TO FILL IN THIS TEMPLATE — NO CODING NEEDED
+  Everything you need to change is marked with  ← EDIT THIS
+  Do NOT touch anything outside the marked areas.
+  ================================================================
+-->
+
+<!-- ============================================================
+  STEP 1 — Fill in the incident data block below.
+  This automatically updates the header, meta grid,
+  topbar badge, and bottom bar.
+
+  severity options:  "critical" | "high" | "moderate" | "low"
+  status options:    "open" | "resolved" | "under-review" | "classified"
+============================================================ -->
+<script>
+var INCIDENT = {
+  id:           "INC-001",               // ← EDIT  e.g. "INC-003"
+  title:        "Hemoglobin Tree Breach", // ← EDIT  the incident name
+  date:         "11 Feb 2026",            // ← EDIT  date of incident
+  location:     "Site-03",               // ← EDIT  e.g. "Site-01" or "Classified"
+  reportedBy:   "Field Agent ████████",   // ← EDIT  who filed the report
+  severity:     "critical",              // ← EDIT  critical / high / moderate / low
+  status:       "resolved",             // ← EDIT  open / resolved / under-review / classified
+  clearance:    "TIER-2",               // ← EDIT  TIER-1 / TIER-2 / TIER-3
+  lastUpdated:  "2026-02-15",           // ← EDIT  date of last file update
+};
+</script>
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="/GSC-ARCHIVE-/gsc-logo.png" alt="GSC" class="logo-img"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <div class="logo-placeholder" style="display:none;"></div>
+      <div class="sidebar-org">Global Security<br>Cooperation</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Navigation</div>
+      <a href="../index.html"><span class="nav-dot"></span>About GSC</a>
+      <a href="../anomalies/"><span class="nav-dot"></span>Anomaly Archive</a>
+      <a href="../journal/"><span class="nav-dot"></span>Alex's Journal</a>
+      <a href="index.html" class="active"><span class="nav-dot"></span>Incident Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      NODE: INT-04<br>
+      FILE: <span id="sidebarId">--</span><br>
+      UPTIME: <span id="uptime">00:00:00</span>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <div class="topbar">
+      <span id="topbarPath">INT-NETWORK // INCIDENT ARCHIVE // --</span>
+      <div class="topbar-right">
+        <span class="sev-badge" id="topbarBadge">--</span>
+        <span id="syncTime">--</span>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <a href="index.html" class="back-link">BACK TO INCIDENT ARCHIVE</a>
+
+      <!-- FILE HEADER — auto filled -->
+      <div class="file-header" id="fileHeader">
+        <div class="sev-stripe" id="sevStripe"></div>
+        <div class="file-header-inner">
+          <div class="file-header-left">
+            <div class="file-header-tag">INCIDENT REPORT</div>
+            <h1 id="fhId">--</h1>
+            <h2 id="fhTitle">--</h2>
+            <div class="header-status" id="fhStatus"></div>
+          </div>
+          <div class="header-right">
+            SEVERITY: <span id="fhSeverity">--</span><br>
+            CLEARANCE: <span id="fhClearance">--</span><br>
+            UPDATED: <span id="fhUpdated">--</span><br>
+            FILED BY: <span id="fhReporter">--</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- META GRID — auto filled -->
+      <div class="meta-grid">
+        <div class="meta-cell">
+          <div class="meta-label">INCIDENT DATE</div>
+          <div class="meta-val" id="mgDate">--</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">LOCATION</div>
+          <div class="meta-val" id="mgLocation">--</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">SEVERITY</div>
+          <div class="meta-val" id="mgSeverity">--</div>
+        </div>
+        <div class="meta-cell">
+          <div class="meta-label">CURRENT STATUS</div>
+          <div class="meta-val" id="mgStatus">--</div>
+        </div>
+      </div>
+
+      <!-- ============================================================
+        STEP 2 — Write your sections below.
+        Edit the text between the <p> tags.
+        To add a new section: copy a full <div class="section"> block.
+        To remove a section: delete the whole block.
+        To rename a section: change the text in <span class="section-title">
+      ============================================================ -->
+      <div class="sections">
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 01</span>
+            <span class="section-title">Incident Summary</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Provide a brief factual overview of what happened. When, where, what was observed, and what the immediate response was. Keep the tone clinical and report-like.</p>
+            <p>Second paragraph if needed. Use &lt;p&gt; tags for each paragraph.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 02</span>
+            <span class="section-title">Sequence of Events</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Detail the chronological sequence. What happened first, what followed, how personnel responded. Be specific about times if relevant — specificity makes incident reports feel real.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 03</span>
+            <span class="section-title">Personnel Involved</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS — you can use the table below or just write paragraphs -->
+            <p>List or describe the personnel involved in or affected by the incident.</p>
+
+            <table class="personnel-table">
+              <thead>
+                <tr>
+                  <th>NAME / ID</th>
+                  <th>ROLE</th>
+                  <th>STATUS</th>
+                  <th>NOTES</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="redact redact-m">████████</span></td>
+                  <td>Field Agent</td>
+                  <td>Uninjured</td>
+                  <td>First on scene</td>
+                </tr>
+                <tr>
+                  <td><span class="redact redact-m">████████</span></td>
+                  <td>Research Staff</td>
+                  <td>Minor injuries</td>
+                  <td>Evacuated to medical</td>
+                </tr>
+                <!-- Add more rows by copying a <tr> block -->
+              </tbody>
+            </table>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 04</span>
+            <span class="section-title">Containment Response</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Describe what containment or response measures were taken. What protocols were activated, which teams responded, and whether the response was successful.</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">// 05</span>
+            <span class="section-title">Analyst Notes</span>
+          </div>
+          <div class="section-body">
+            <!-- ↓ EDIT THIS -->
+            <p>Additional observations, theories, or recommendations from the reviewing analyst. This section can be more speculative in tone — what does this incident suggest about the anomaly or the situation?</p>
+            <!-- ↑ EDIT THIS -->
+          </div>
+        </div>
+
+      </div><!-- end .sections -->
+
+      <br>
+
+      <!-- ============================================================
+        STEP 3 — Add addenda (update logs after the initial report).
+        Each addendum is a dated update entry.
+
+        Addendum styles:
+          class="addendum"        → blue left border (standard)
+          class="addendum warn"   → amber left border (warning)
+          class="addendum alert"  → red left border (urgent)
+
+        To add more: copy a full <div class="addendum"> block.
+        To remove: delete the whole block.
+      ============================================================ -->
+
+      <div class="addendum">
+        <div class="addendum-header">
+          <span class="addendum-label">ADDENDUM 01</span>
+          <span class="addendum-author">— Reviewing Officer</span>
+          <span class="addendum-date">2026-02-15</span><!-- ← EDIT DATE -->
+        </div>
+        <div class="addendum-body">
+          <!-- ↓ EDIT THIS -->
+          Follow-up notes added after the initial report was filed. Addenda are used to record new information, changes in status, or updates to the investigation.
+          <!-- ↑ EDIT THIS -->
+        </div>
+      </div>
+
+      <!-- Copy this block to add a second addendum:
+      <br>
+      <div class="addendum warn">
+        <div class="addendum-header">
+          <span class="addendum-label">ADDENDUM 02</span>
+          <span class="addendum-author">— Your Name/Role</span>
+          <span class="addendum-date">2026-MM-DD</span>
+        </div>
+        <div class="addendum-body">
+          Your addendum text here.
+        </div>
+      </div>
+      -->
+
+    </div><!-- end .content -->
+
+    <div class="clearance-bar">
+      <span>FILE: <span class="cl-val" id="barId">--</span></span>
+      <span>STATUS: <span class="cl-val" id="barStatus">--</span></span>
+      <span>CLEARANCE: <span class="cl-val" id="barClearance">--</span></span>
+      <span>© 2026 GSC INTERNAL NETWORK</span>
+    </div>
+
+  </div>
+</div>
+
+<!-- Auto-fills header and meta from INCIDENT data above -->
+<script>
+var SEV_LABELS  = { critical:"CRITICAL", high:"HIGH", moderate:"MODERATE", low:"LOW" };
+var STAT_LABELS = { "open":"OPEN", "resolved":"RESOLVED", "under-review":"UNDER REVIEW", "classified":"CLASSIFIED" };
+var SEV_COLORS  = { critical:"red", high:"amber", moderate:"", low:"green" };
+
+function init() {
+  var I = INCIDENT;
+  var sevLabel  = SEV_LABELS[I.severity]  || I.severity.toUpperCase();
+  var statLabel = STAT_LABELS[I.status]   || I.status.toUpperCase();
+  var sevColor  = SEV_COLORS[I.severity]  || "";
+
+  // Page title
+  document.title = "GSC | " + I.id + " — " + I.title;
+
+  // Topbar
+  document.getElementById("topbarPath").textContent = "INT-NETWORK // INCIDENT ARCHIVE // " + I.id;
+  var badge = document.getElementById("topbarBadge");
+  badge.textContent = sevLabel;
+  badge.className = "sev-badge " + I.severity;
+
+  // File header
+  document.getElementById("fhId").textContent       = "INCIDENT ID: " + I.id;
+  document.getElementById("fhTitle").textContent    = I.title;
+  document.getElementById("fhSeverity").textContent = sevLabel;
+  document.getElementById("fhClearance").textContent= I.clearance;
+  document.getElementById("fhUpdated").textContent  = I.lastUpdated;
+  document.getElementById("fhReporter").textContent = I.reportedBy;
+
+  var stripe = document.getElementById("sevStripe");
+  stripe.className = "sev-stripe " + I.severity;
+
+  var statusEl = document.getElementById("fhStatus");
+  statusEl.textContent = statLabel;
+  statusEl.className = "header-status " + I.status;
+
+  // Meta grid
+  document.getElementById("mgDate").textContent     = I.date;
+  document.getElementById("mgLocation").textContent = I.location;
+  document.getElementById("mgSeverity").textContent = sevLabel;
+  document.getElementById("mgSeverity").className   = "meta-val " + sevColor;
+  document.getElementById("mgStatus").textContent   = statLabel;
+
+  // Sidebar & bottom bar
+  document.getElementById("sidebarId").textContent  = I.id;
+  document.getElementById("barId").textContent      = I.id;
+  document.getElementById("barStatus").textContent  = statLabel;
+  document.getElementById("barClearance").textContent = I.clearance;
+}
+
+init();
+
+function updateTime() {
+  document.getElementById("syncTime").textContent =
+    new Date().toLocaleString("en-GB", { hour12: false });
+}
+updateTime(); setInterval(updateTime, 1000);
+
+var start = Date.now();
+setInterval(function() {
+  var s = Math.floor((Date.now() - start) / 1000);
+  document.getElementById("uptime").textContent =
+    [Math.floor(s/3600), Math.floor((s%3600)/60), s%60]
+    .map(function(n){ return String(n).padStart(2,"0"); }).join(":");
+}, 1000);
+</script>
+</body>
+</html>
